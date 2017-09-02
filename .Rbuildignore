@@ -1,0 +1,13 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^README\.Rmd$
+^README\.md
+^README-.*\.png$
+^\.travis\.yml$
+^\.lintr$
+^appveyor\.yml$
+^codecov\.yml$
+^cran-comments\.md$
+^docs/
+
+^CONDUCT\.md$
