@@ -4,25 +4,20 @@
 \alias{fn_number_cases_spread}
 \title{Travel-related disease cases spreaded to other countries from an infectious country}
 \usage{
-fn_number_cases_spread(time_window_days, num_infec_cases_in_time_window,
-  pop_country, annual_travellers_to_other_countries,
-  annual_travellers_from_other_countries, avg_length_stay_days, mean_incubation,
+fn_number_cases_spread(x, code, time_window_days,
+  num_infec_cases_in_time_window, avg_length_stay_days, mean_incubation,
   var_incubation, mean_infectious, var_infectious)
 }
 \arguments{
+\item{x}{an \code{epiflows} object}
+
+\item{code}{a character string denoting location (country) code}
+
 \item{time_window_days}{number of days between the first and last confirmed
 disease cases in infectious country}
 
 \item{num_infec_cases_in_time_window}{cumulative number of confirmed cases
 reported in infectious country in time window W}
-
-\item{pop_country}{population of the infectious country}
-
-\item{annual_travellers_to_other_countries}{annual number of travellers from
-infectious country to other countries}
-
-\item{annual_travellers_from_other_countries}{annual number of travellers
-from other countries to the infectious country}
 
 \item{avg_length_stay_days}{average length of stay in days of travellers from
 other countries visiting the infectious country.
@@ -51,4 +46,24 @@ their stay in the infectious country and returning to their home country
 (importations).
 The mean and 95% confidence intervals are obtained by numerically sampling
 10,000 times the incubation and infectious period distributions.
+}
+\examples{
+flows <- make_epiflows(Mex_travel_2009[[2]], Mex_travel_2009[[1]])
+num_countries <- nrow(flows$linelist)
+avg_length_stay_days <- rpois(num_countries, 30)
+fn_number_cases_spread(
+  flows,
+  "MEX",
+  time_window_days = 365,
+  num_infec_cases_in_time_window = 1000,
+  avg_length_stay_days = avg_length_stay_days,
+  mean_incubation = 4.6,
+  var_incubation = 2.7,
+  mean_infectious = 4.5,
+  var_infectious = 0.6
+)
+
+}
+\author{
+Paula Moraga
 }

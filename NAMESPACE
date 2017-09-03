@@ -2,6 +2,7 @@
 
 S3method("[",epiflows)
 S3method(print,epiflows)
+export(fn_number_cases_spread)
 export(get_flow_data)
 export(get_location_data)
 export(make_epiflows)

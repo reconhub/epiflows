@@ -5,3 +5,5 @@
 ^\.httr-oauth
 *~$
 ^inst/doc
+.Rproj.user
+*.Rproj
