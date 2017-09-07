@@ -1,9 +1,9 @@
-^\.Rproj.user
-^\.Rhistory
-^\.RData
-^\.Ruserdata
-^\.httr-oauth
-*~$
-^inst/doc
+*.Rproj.user
 .Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.httr-oauth
+*~
+inst/doc
 *.Rproj
