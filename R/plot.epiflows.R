@@ -60,7 +60,8 @@ plot.epiflows <- function(x,
         as.numeric(loc[lon_lat_columns]),
         n = 100,
         addStartEnd = TRUE,
-        sp = TRUE
+        sp = TRUE,
+        breakAtDateLine = TRUE
       )
       sp::Lines(connection@lines[[1]]@Lines, ID = loc["code"])
     },
