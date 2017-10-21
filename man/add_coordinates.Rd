@@ -5,7 +5,7 @@
 \title{Add location coordinates}
 \usage{
 add_coordinates(x, loc_column = "country", lon_lat_columns = c("lon",
-  "lat"))
+  "lat"), overwrite = FALSE)
 }
 \arguments{
 \item{x}{An \code{epiflows} object.}
@@ -15,6 +15,9 @@ add_coordinates(x, loc_column = "country", lon_lat_columns = c("lon",
 
 \item{lon_lat_columns}{Names of the appended columns with longitudes
 and latitudes, respectively (default: "lon" and "lat").}
+
+\item{overwrite}{If TRUE, retrieves all geocodes, even those already
+retrieved. If FALSE (default), overwrites only NAs.}
 }
 \value{
 An updated \code{epiflows} object.
