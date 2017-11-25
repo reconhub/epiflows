@@ -37,7 +37,13 @@ plot.epiflows <- function(ef,
         lon_lat_columns = lon_lat_columns
       )
   }
-  
+  if (any(is.na(ef$locationsdata[, lon_lat_columns]))) {
+    stop(
+      "NA values present in location coordinates. ",
+      "Please rerun `add_coordinates()` before plotting"
+    )
+  }
+
   ## Data
   flow_data <- get_flow_data(ef, origin, direction = "from")
   loc_codes <- names(flow_data)
