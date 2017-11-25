@@ -11,7 +11,7 @@
 #' the location.
 #' 
 #' @examples
-#' flows <- make_epiflows(Mex_travel_2009)
+#' flows <- do.call(make_epiflows, Mex_travel_2009)
 #' get_flow_data(flows, "MEX", direction = "both")
 #'
 #' @author Pawel Piatkowski

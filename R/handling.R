@@ -19,9 +19,9 @@
   if (!is.character(i)) {
     stop("Please specify a character vector of location codes")
   }
-  linelist <- subset(ef$linelist, code %in% i)
+  locationsdata <- subset(ef$locationsdata, code %in% i)
   flows <- as.data.frame(ef$flows[i, i])
   rownames(flows) <- colnames(flows) <- i
-  make_epiflows(linelist, flows)
+  make_epiflows(flows, locationsdata)
 }
 

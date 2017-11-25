@@ -1,7 +1,7 @@
 #' Add location coordinates
 #' 
 #' Adds longitude/latitude values to location data within an epiflows object.
-#' Coordinates are added to object's location linelist as `lon` and `lat`
+#' Coordinates are added to object's locationsdata slot as `lon` and `lat`
 #' columns.
 #' 
 #' @param ef An \code{epiflows} object.
@@ -17,9 +17,9 @@
 #' @author Pawel Piatkowski
 #' 
 #' @examples
-#' flows <- make_epiflows(Mex_travel_2009[[2]], Mex_travel_2009[[1]])
+#' flows <- do.call(make_epiflows, Mex_travel_2009)
 #' flows <- add_coordinates(flows)
-#' flows$linelist
+#' flows$locationsdata
 #' 
 #' @export
 add_coordinates <- function(ef,
@@ -29,24 +29,24 @@ add_coordinates <- function(ef,
   if (!"epiflows" %in% class(ef)) {
     stop("`ef` must be an object of class epiflows")
   }
-  if (!loc_column %in% names(ef$linelist)) {
+  if (!loc_column %in% names(ef$locationsdata)) {
     stop(sprintf("`%s` is not a valid column name", loc_column))
   }
   if (!is.character(lon_lat_columns) || length(lon_lat_columns) != 2) {
     stop("`lon_lat_columns` should contain exactly two character strings")
   }
-  if (!overwrite && all(lon_lat_columns %in% names(ef$linelist))) {
+  if (!overwrite && all(lon_lat_columns %in% names(ef$locationsdata))) {
     # If overwrite == FALSE and lon/lat columns already exist,
     # overwrite only rows with NA lon and lat
-    which_rows <- apply(is.na(ef$linelist[, lon_lat_columns]), 1, all)
-    print(ef$linelist[which_rows, loc_column])
-    ef$linelist[which_rows, lon_lat_columns] <- ggmap::geocode(
-      as.character(ef$linelist[which_rows, loc_column])
+    which_rows <- apply(is.na(ef$locationsdata[, lon_lat_columns]), 1, all)
+    print(ef$locationsdata[which_rows, loc_column])
+    ef$locationsdata[which_rows, lon_lat_columns] <- ggmap::geocode(
+      as.character(ef$locationsdata[which_rows, loc_column])
     )
   } else {
     # Otherwise, get all geocodes and write them to lon/lat columns
-    ef$linelist[, lon_lat_columns] <- ggmap::geocode(
-      as.character(ef$linelist[, loc_column])
+    ef$locationsdata[, lon_lat_columns] <- ggmap::geocode(
+      as.character(ef$locationsdata[, loc_column])
     )
   }
   ef

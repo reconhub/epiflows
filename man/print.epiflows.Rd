@@ -15,7 +15,7 @@
 Displays a short summary of an \code{epiflows} object.
 }
 \examples{
-flows <- make_epiflows(Mex_travel_2009)
+flows <- do.call(make_epiflows, Mex_travel_2009)
 print(flows)
 
 }

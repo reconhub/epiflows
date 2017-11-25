@@ -21,7 +21,7 @@ Returns a vector (if direction is "both") or a list of 2 elements
 (if direction is "to" or "from") to and/or from the specified location.
 }
 \examples{
-flows <- make_epiflows(Mex_travel_2009)
+flows <- do.call(make_epiflows, Mex_travel_2009)
 get_flow_data(flows, "MEX", direction = "both")
 
 }

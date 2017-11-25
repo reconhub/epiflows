@@ -15,7 +15,7 @@
 #' 
 #' @author Paula Moraga, Pawel Piatkowski
 #' 
-#' flows <- make_epiflows(Mex_travel_2009[[2]], Mex_travel_2009[[1]])
+#' flows <- do.call(make_epiflows, Mex_travel_2009)
 #' flows <- add_coordinates(flows)
 #' plot(flows, "MEX")
 #' 
@@ -26,11 +26,11 @@ plot.epiflows <- function(ef,
                           loc_column = "country",
                           lon_lat_columns = c("lon", "lat")) {
   # Add coordinates if needed
-  linelist_names <- names(ef$linelist)
-  if (!loc_column %in% linelist_names) {
-    stop("`%s` not found in ef$linelist")
+  location_cols <- names(ef$locationsdata)
+  if (!loc_column %in% location_cols) {
+    stop("`%s` not found in ef$locationsdata")
   }
-  if (!all(lon_lat_columns %in% linelist_names)) {
+  if (!all(lon_lat_columns %in% location_cols)) {
     ef %<>%
       add_coordinates(
         loc_column = loc_column,

@@ -4,14 +4,14 @@
 \alias{make_epiflows}
 \title{Make an `epiflows` object}
 \usage{
-make_epiflows(linelist, flows)
+make_epiflows(flows, locationsdata)
 }
 \arguments{
-\item{linelist}{A data frame of location data. Locations should be uniquely
-identified by codes from the `code` column.}
-
 \item{flows}{A numeric matrix of flows between locations. Row and column
 names must denote location codes.}
+
+\item{locationsdata}{A data frame of location data. Locations should be uniquely
+identified by codes from the `code` column.}
 }
 \value{
 An \code{epiflows} object.
@@ -22,7 +22,7 @@ an object of class `epiflows`. An error is thrown if the input is invalid.
 }
 \examples{
 input_data <- Mex_travel_2009
-make_epiflows(input_data[[2]], input_data[[1]])
+make_epiflows(input_data[[1]], input_data[[2]])
 
 }
 \author{

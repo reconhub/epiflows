@@ -30,7 +30,7 @@ location of origin.
 \author{
 Paula Moraga, Pawel Piatkowski
 
-flows <- make_epiflows(Mex_travel_2009[[2]], Mex_travel_2009[[1]])
+flows <- do.call(make_epiflows, Mex_travel_2009)
 flows <- add_coordinates(flows)
 plot(flows, "MEX")
 }

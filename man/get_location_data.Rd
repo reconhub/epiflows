@@ -12,14 +12,14 @@ get_location_data(ef, codes)
 \item{codes}{A character vector of location codes.}
 }
 \value{
-A dataframe structured identically to the input linelist,
+A dataframe structured identically to the input location data,
 but limited to the specified locations.
 }
 \description{
 Returns data for the specified location(s).
 }
 \examples{
-flows <- make_epiflows(Mex_travel_2009)
+flows <- do.call(make_epiflows, Mex_travel_2009)
 get_location_data(flows, "MEX")
 
 }

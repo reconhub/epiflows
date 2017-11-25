@@ -24,13 +24,13 @@ An updated \code{epiflows} object.
 }
 \description{
 Adds longitude/latitude values to location data within an epiflows object.
-Coordinates are added to object's location linelist as `lon` and `lat`
+Coordinates are added to object's locationsdata slot as `lon` and `lat`
 columns.
 }
 \examples{
-flows <- make_epiflows(Mex_travel_2009[[2]], Mex_travel_2009[[1]])
+flows <- do.call(make_epiflows, Mex_travel_2009)
 flows <- add_coordinates(flows)
-flows$linelist
+flows$locationsdata
 
 }
 \author{

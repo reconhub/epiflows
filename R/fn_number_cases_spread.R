@@ -29,8 +29,8 @@
 #' of cases spread to each country
 #' 
 #' @examples 
-#' flows <- make_epiflows(Mex_travel_2009[[2]], Mex_travel_2009[[1]])
-#' num_countries <- nrow(flows$linelist)
+#' flows <- do.call(make_epiflows, Mex_travel_2009)
+#' num_countries <- nrow(flows$locationsdata)
 #' avg_length_stay_days <- rpois(num_countries, 30)
 #' fn_number_cases_spread(
 #'   flows,
