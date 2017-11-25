@@ -10,7 +10,7 @@
 #' The mean and 95% confidence intervals are obtained by numerically sampling
 #' 10,000 times the incubation and infectious period distributions.
 #'
-#' @param x an \code{epiflows} object
+#' @param ef an \code{epiflows} object
 #' @param code a character string denoting location (country) code
 #' @param time_window_days number of days between the first and last confirmed
 #' disease cases in infectious country
@@ -47,7 +47,7 @@
 #' @author Paula Moraga
 #' 
 #' @export
-fn_number_cases_spread <- function(x,
+fn_number_cases_spread <- function(ef,
                                    code,
                                    time_window_days,
                                    num_infec_cases_in_time_window,
@@ -57,10 +57,10 @@ fn_number_cases_spread <- function(x,
                                    mean_infectious,
                                    var_infectious) {
 
-  # Get flow and location data from x
-  annual_travellers_to_other_countries <- get_flow_data(x, code, direction = "from")
-  annual_travellers_from_other_countries <- get_flow_data(x, code, direction = "to")
-  pop_country <- get_location_data(x, code)$population
+  # Get flow and location data from ef
+  annual_travellers_to_other_countries <- get_flow_data(ef, code, direction = "from")
+  annual_travellers_from_other_countries <- get_flow_data(ef, code, direction = "to")
+  pop_country <- get_location_data(ef, code)$population
   
   # Number of countries
   num_countries <- length(annual_travellers_to_other_countries)

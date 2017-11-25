@@ -3,7 +3,7 @@
 #' Returns a vector (if direction is "both") or a list of 2 elements
 #' (if direction is "to" or "from") to and/or from the specified location.
 #'
-#' @param x An \code{epiflows} object.
+#' @param ef An \code{epiflows} object.
 #' @param code A character string denoting location code.
 #' @param direction If "to" or "from", the function returns a vector
 #' of flows to or from the location, respectively.
@@ -17,13 +17,13 @@
 #' @author Pawel Piatkowski
 #'
 #' @export
-get_flow_data <- function(x, code, direction = "both") {
+get_flow_data <- function(ef, code, direction = "both") {
   if (length(code) != 1) {
     stop("`code` must be a vector of length 1")
   }
-  from <- unlist(x$flows[code, ])
-  to <- x$flows[, code]
-  names(to) <- rownames(x$flows)
+  from <- unlist(ef$flows[code, ])
+  to <- ef$flows[, code]
+  names(to) <- rownames(ef$flows)
 
   switch(
     direction,

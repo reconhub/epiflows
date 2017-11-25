@@ -4,10 +4,10 @@
 \alias{[.epiflows}
 \title{Subset `epiflows` objects}
 \usage{
-\method{[}{epiflows}(x, i, ...)
+\method{[}{epiflows}(ef, i, ...)
 }
 \arguments{
-\item{x}{An \code{epiflows} object.}
+\item{ef}{An \code{epiflows} object.}
 
 \item{i}{A character vector of one or more location codes.}
 

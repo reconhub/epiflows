@@ -3,7 +3,7 @@
 #' Returns an interactive map of population flows from the specified
 #' location of origin.
 #' 
-#' @param x An \code{epiflows} object.
+#' @param ef An \code{epiflows} object.
 #' @param origin Code of the location of origin.
 #' @param title Plot title.
 #' @param loc_column Name of the column where location names are stored
@@ -20,18 +20,18 @@
 #' plot(flows, "MEX")
 #' 
 #' @export
-plot.epiflows <- function(x,
+plot.epiflows <- function(ef,
                           origin,
                           title = sprintf("Flows from %s", origin_name),
                           loc_column = "country",
                           lon_lat_columns = c("lon", "lat")) {
   # Add coordinates if needed
-  linelist_names <- names(x$linelist)
+  linelist_names <- names(ef$linelist)
   if (!loc_column %in% linelist_names) {
-    stop("`%s` not found in x$linelist")
+    stop("`%s` not found in ef$linelist")
   }
   if (!all(lon_lat_columns %in% linelist_names)) {
-    x %<>%
+    ef %<>%
       add_coordinates(
         loc_column = loc_column,
         lon_lat_columns = lon_lat_columns
@@ -39,10 +39,10 @@ plot.epiflows <- function(x,
   }
   
   ## Data
-  flow_data <- get_flow_data(x, origin, direction = "from")
+  flow_data <- get_flow_data(ef, origin, direction = "from")
   loc_codes <- names(flow_data)
   flow_df <- data.frame(code = loc_codes, count = flow_data)
-  location_df <- get_location_data(x, loc_codes)
+  location_df <- get_location_data(ef, loc_codes)
   origin_data <- location_df[location_df$code == origin, ]
   origin_name <- origin_data[[loc_column]]
   locs_with_flows <- merge(

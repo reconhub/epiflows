@@ -4,10 +4,10 @@
 \alias{get_location_data}
 \title{Get location data}
 \usage{
-get_location_data(x, codes)
+get_location_data(ef, codes)
 }
 \arguments{
-\item{x}{An \code{epiflows} object}
+\item{ef}{An \code{epiflows} object}
 
 \item{codes}{A character vector of location codes.}
 }

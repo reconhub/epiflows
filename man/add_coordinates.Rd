@@ -4,11 +4,11 @@
 \alias{add_coordinates}
 \title{Add location coordinates}
 \usage{
-add_coordinates(x, loc_column = "country", lon_lat_columns = c("lon",
+add_coordinates(ef, loc_column = "country", lon_lat_columns = c("lon",
   "lat"), overwrite = FALSE)
 }
 \arguments{
-\item{x}{An \code{epiflows} object.}
+\item{ef}{An \code{epiflows} object.}
 
 \item{loc_column}{Name of the column where location names are stored
 (default: "country").}

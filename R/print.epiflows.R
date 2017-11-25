@@ -2,7 +2,7 @@
 #'
 #' Displays a short summary of an \code{epiflows} object.
 #'
-#' @param x An \code{epiflows} object.
+#' @param ef An \code{epiflows} object.
 #' @param ... Additional parameters (not used).
 #'
 #' @examples
@@ -12,17 +12,17 @@
 #' @author Pawel Piatkowski
 #'
 #' @export
-print.epiflows <- function(x, ...) {
-  fields <- names(x)
+print.epiflows <- function(ef, ...) {
+  fields <- names(ef)
   if (!"linelist" %in% fields) {
     stop("Not a valid `epiflows` object")
   }
-  locations <- sort(x$linelist$code)
+  locations <- sort(ef$linelist$code)
   cat("\nAn `epiflows` object\n")
   cat("Locations:\n  ")
   cat(paste(locations, collapse = ", "))
   cat("\nMetadata slots:\n  ")
-  cat(paste(names(x$linelist), collapse = ", "))
+  cat(paste(names(ef$linelist), collapse = ", "))
   cat("\n\n")
 }
 

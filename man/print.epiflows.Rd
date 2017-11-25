@@ -4,10 +4,10 @@
 \alias{print.epiflows}
 \title{Print method from epiflows objects}
 \usage{
-\method{print}{epiflows}(x, ...)
+\method{print}{epiflows}(ef, ...)
 }
 \arguments{
-\item{x}{An \code{epiflows} object.}
+\item{ef}{An \code{epiflows} object.}
 
 \item{...}{Additional parameters (not used).}
 }

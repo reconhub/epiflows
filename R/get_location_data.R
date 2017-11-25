@@ -2,7 +2,7 @@
 #'
 #' Returns data for the specified location(s).
 #'
-#' @param x An \code{epiflows} object
+#' @param ef An \code{epiflows} object
 #' @param codes A character vector of location codes.
 #'
 #' @return A dataframe structured identically to the input linelist,
@@ -15,10 +15,10 @@
 #' @author Pawel Piatkowski
 #'
 #' @export
-get_location_data <- function(x, codes) {
+get_location_data <- function(ef, codes) {
   if (!is.vector(codes)) {
     stop("`codes` must be a vector")
   }
-  subset(x$linelist, code %in% codes)
+  subset(ef$linelist, code %in% codes)
 }
 

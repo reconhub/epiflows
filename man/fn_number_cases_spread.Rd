@@ -4,12 +4,12 @@
 \alias{fn_number_cases_spread}
 \title{Travel-related disease cases spreaded to other countries from an infectious country}
 \usage{
-fn_number_cases_spread(x, code, time_window_days,
+fn_number_cases_spread(ef, code, time_window_days,
   num_infec_cases_in_time_window, avg_length_stay_days, mean_incubation,
   var_incubation, mean_infectious, var_infectious)
 }
 \arguments{
-\item{x}{an \code{epiflows} object}
+\item{ef}{an \code{epiflows} object}
 
 \item{code}{a character string denoting location (country) code}
 

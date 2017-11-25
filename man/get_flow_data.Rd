@@ -4,10 +4,10 @@
 \alias{get_flow_data}
 \title{Get flow data for a given location}
 \usage{
-get_flow_data(x, code, direction = "both")
+get_flow_data(ef, code, direction = "both")
 }
 \arguments{
-\item{x}{An \code{epiflows} object.}
+\item{ef}{An \code{epiflows} object.}
 
 \item{code}{A character string denoting location code.}
 
