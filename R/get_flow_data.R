@@ -21,6 +21,9 @@ get_flow_data <- function(ef, code, direction = "both") {
   if (length(code) != 1) {
     stop("`code` must be a vector of length 1")
   }
+  if (!code %in% get_codes(ef)) {
+    stop("Code not found: ", code)
+  }
   from <- unlist(ef$flows[code, ])
   to <- ef$flows[, code]
   names(to) <- rownames(ef$flows)

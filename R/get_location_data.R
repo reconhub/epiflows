@@ -19,6 +19,9 @@ get_location_data <- function(ef, codes) {
   if (!is.vector(codes)) {
     stop("`codes` must be a vector")
   }
-  subset(ef$locationsdata, code %in% codes)
+  matching_codes <- codes %in% get_codes(ef)
+  if (!all(matching_codes)) {
+    stop("Code not found: ", codes[!matching_codes])
+  }
+  ef$locationsdata[match(codes, ef$locationsdata$code), ]
 }
-

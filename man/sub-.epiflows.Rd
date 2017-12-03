@@ -20,7 +20,7 @@ An \code{epiflows} object.
 Returns a subset of an epiflows object based on location code(s).
 }
 \examples{
-flows <- Mex_travel_2009
+flows <- do.call(make_epiflows, Mex_travel_2009)
 flows["MEX"]
 
 }
