@@ -31,7 +31,7 @@ The main features of the package include:
 -   `epiflows`: an S3 class for storing flow data, as well as country metadata
 -   `make_epiflows`: a constructor for `epiflows`
 -   `add_coordinates`: add latitude/longitude to the location data in an `epiflows` object using `ggmap::geocode()`
--   `fn_number_cases_spread`: calculate estimates (point estimate and 95% CI) for disease spread from flow data
+-   `estimate_risk_spread`: calculate estimates (point estimate and 95% CI) for disease spread from flow data
 -   `get_flow_data`: return flow data to and/or from specified location
 -   `get_location_data`: return metadata for specified location(s)
 -   `x[i]`: subset an `epiflows` object to location(s) *i*
