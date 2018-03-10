@@ -1,7 +1,7 @@
 #' Get flow data for a given location
 #'
-#' Returns a vector (if direction is "both") or a list of 2 elements
-#' (if direction is "to" or "from") to and/or from the specified location.
+#' Returns a vector (if direction is "to" or "from") or a list of 2 elements
+#' (if direction is "both") to and/or from the specified location.
 #'
 #' @param ef An \code{epiflows} object.
 #' @param code A character string denoting location code.
@@ -25,7 +25,7 @@ get_flow_data <- function(ef, code, direction = "both") {
     stop("Code not found: ", code)
   }
   from <- unlist(ef$flows[code, ])
-  to <- ef$flows[, code]
+  to <- ef$flows[[code]]
   names(to) <- rownames(ef$flows)
 
   switch(

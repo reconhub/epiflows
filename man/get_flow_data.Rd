@@ -17,8 +17,8 @@ If set to "both" - a two-element list with flows both to and from
 the location.}
 }
 \description{
-Returns a vector (if direction is "both") or a list of 2 elements
-(if direction is "to" or "from") to and/or from the specified location.
+Returns a vector (if direction is "to" or "from") or a list of 2 elements
+(if direction is "both") to and/or from the specified location.
 }
 \examples{
 flows <- do.call(make_epiflows, Mex_travel_2009)

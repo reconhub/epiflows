@@ -5,20 +5,54 @@
 #' 
 #' @param flows A numeric matrix of flows between locations. Row and column
 #' names must denote location codes.
-#' @param locationsdata A data frame of location data. Locations should be uniquely
-#' identified by codes from the `code` column.
+#' @param to An optional named vector of flows to the specified location.
+#' If `flows` is missing, an epiflows object is created from two
+#' vectors and a location code. Instead of flows between all locations, the
+#' flow matrix will comprise only flows to and from the specified location.
+#' `to` must ba a named vector of flows to the location.
+#' @param from An optional named vector of flows from the specified location
+#' (see above).
+#' @param code An optional location code (see above).
+#' @param locationsdata A data frame of location data. Locations should be
+#' uniquely identified by codes from the `code` column.
 #' 
 #' @return An \code{epiflows} object.
 #'
 #' @examples
 #' input_data <- Mex_travel_2009
-#' make_epiflows(input_data[[1]], input_data[[2]])
+#' flows <- input_data[[1]]
+#' 
+#' # Using flow matrix
+#' make_epiflows(flows, input_data[[2]])
+#' 
+#' # Using to/from vectors
+#' to <- structure(flows[["MEX"]], names = rownames(flows))
+#' from <- unlist(flows["MEX", ])
+#' make_epiflows(
+#'   to = to,
+#'   from = from,
+#'   code = "MEX",
+#'   locationsdata = input_data[[2]]
+#' )
 #' 
 #' @author Pawel Piatkowski
 #'
 #' @export
-make_epiflows <- function(flows, locationsdata) {
+make_epiflows <- function(flows,
+                          locationsdata,
+                          to = NULL,
+                          from = NULL,
+                          code = NULL) {
   locationsdata <- validate_line_list(locationsdata)
+  if (missing(flows)) {
+    validate_flow_vectors(to, from, code)
+    num_flows <- length(to)
+    flows <- matrix(0, ncol = num_flows, nrow = num_flows)
+    colnames(flows) <- names(from)
+    rownames(flows) <- names(to)
+    flows[code, ] <- from
+    flows[, code] <- to
+  }
   flows <- validate_flows(flows, locationsdata)
 
   structure(
@@ -80,3 +114,19 @@ validate_flows <- function(flows, locationsdata) {
   flows
 }
 
+validate_flow_vectors <- function(to, from, code) {
+  if (is.null(to) || is.null(from) || is.null(code)) {
+    stop("`make_epiflows()` requires either a flow matrix, or two vectors and a code")
+  }
+  if (length(code) != 1 || !is.character(code)) {
+    stop("`code` must be a single character string")
+  }
+  if (length(to) != length(from)) {
+    stop("`to` and `from` must be of equal length")
+  }
+  if (!code %in% names(to) || !code %in% names(from)) {
+    stop(
+      sprintf("'%s' missing from flow vectors", code)
+    )
+  }
+}

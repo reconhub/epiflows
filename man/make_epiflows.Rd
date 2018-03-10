@@ -4,14 +4,25 @@
 \alias{make_epiflows}
 \title{Make an `epiflows` object}
 \usage{
-make_epiflows(flows, locationsdata)
+make_epiflows(flows, locationsdata, to = NULL, from = NULL, code = NULL)
 }
 \arguments{
 \item{flows}{A numeric matrix of flows between locations. Row and column
 names must denote location codes.}
 
-\item{locationsdata}{A data frame of location data. Locations should be uniquely
-identified by codes from the `code` column.}
+\item{locationsdata}{A data frame of location data. Locations should be
+uniquely identified by codes from the `code` column.}
+
+\item{to}{An optional named vector of flows to the specified location.
+If `flows` is missing, an epiflows object is created from two
+vectors and a location code. Instead of flows between all locations, the
+flow matrix will comprise only flows to and from the specified location.
+`to` must ba a named vector of flows to the location.}
+
+\item{from}{An optional named vector of flows from the specified location
+(see above).}
+
+\item{code}{An optional location code (see above).}
 }
 \value{
 An \code{epiflows} object.
@@ -22,7 +33,20 @@ an object of class `epiflows`. An error is thrown if the input is invalid.
 }
 \examples{
 input_data <- Mex_travel_2009
-make_epiflows(input_data[[1]], input_data[[2]])
+flows <- input_data[[1]]
+
+# Using flow matrix
+make_epiflows(flows, input_data[[2]])
+
+# Using to/from vectors
+to <- structure(flows[["MEX"]], names = rownames(flows))
+from <- unlist(flows["MEX", ])
+make_epiflows(
+  to = to,
+  from = from,
+  code = "MEX",
+  locationsdata = input_data[[2]]
+)
 
 }
 \author{
