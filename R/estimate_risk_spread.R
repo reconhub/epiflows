@@ -182,7 +182,7 @@ estimate_risk_spread <- function(ef,
   ## INI Total
   total <- exportations + importations
   meancases <- colMeans(total, na.rm = TRUE)
-  quant <- t(apply(total, 2, quantile, c(.025, .975), na.rm = TRUE))
+  quant <- t(apply(total, 2, stats::quantile, c(.025, .975), na.rm = TRUE))
 
   data.frame(mean_cases = meancases, lower_limit_95CI = quant[, 1], upper_limit_95CI = quant[, 2])
 }
