@@ -12,7 +12,8 @@
 #' respectively (default: "lon" and "lat").
 #' 
 #' @return A \code{leaflet} object
-#' 
+#' @importFrom magrittr "%>%"
+#' @importFrom magrittr "%<>%"
 #' @author Paula Moraga, Pawel Piatkowski
 #' 
 #' flows <- do.call(make_epiflows, Mex_travel_2009)
