@@ -17,7 +17,8 @@ Imports:
     ggmap,
     geosphere,
     sp,
-    htmlwidgets
+    htmlwidgets,
+    stats
 Suggests:
     testthat,
     roxygen2,
