@@ -18,7 +18,8 @@ Imports:
     sp,
     htmlwidgets,
     stats,
-    magrittr
+    magrittr,
+    htmltools
 Suggests:
     testthat,
     roxygen2,
