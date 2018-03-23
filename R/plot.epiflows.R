@@ -3,13 +3,14 @@
 #' Returns an interactive map of population flows from the specified
 #' location of origin.
 #' 
-#' @param ef An \code{epiflows} object.
+#' @param x An \code{epiflows} object.
 #' @param origin Code of the location of origin.
 #' @param title Plot title.
 #' @param loc_column Name of the column where location names are stored
 #' (default: "country").
 #' @param lon_lat_columns Names of the columns with longitudes and latitudes,
 #' respectively (default: "lon" and "lat").
+#' @param ... Additional parameters (not used).
 #' 
 #' @return A \code{leaflet} object
 #' @importFrom magrittr "%>%"
@@ -21,24 +22,25 @@
 #' plot(flows, "MEX")
 #' 
 #' @export
-plot.epiflows <- function(ef,
+plot.epiflows <- function(x,
                           origin,
                           title = sprintf("Flows from %s", origin_name),
                           loc_column = "country",
-                          lon_lat_columns = c("lon", "lat")) {
+                          lon_lat_columns = c("lon", "lat"),
+                          ...) {
   # Add coordinates if needed
-  location_cols <- names(ef$locationsdata)
+  location_cols <- names(x$locationsdata)
   if (!loc_column %in% location_cols) {
-    stop("`%s` not found in ef$locationsdata")
+    stop("`%s` not found in x$locationsdata")
   }
   if (!all(lon_lat_columns %in% location_cols)) {
-    ef %<>%
+    x %<>%
       add_coordinates(
         loc_column = loc_column,
         lon_lat_columns = lon_lat_columns
       )
   }
-  if (any(is.na(ef$locationsdata[, lon_lat_columns]))) {
+  if (any(is.na(x$locationsdata[, lon_lat_columns]))) {
     stop(
       "NA values present in location coordinates. ",
       "Please rerun `add_coordinates()` before plotting"
@@ -46,10 +48,10 @@ plot.epiflows <- function(ef,
   }
 
   ## Data
-  flow_data <- get_flow_data(ef, origin, direction = "from")
+  flow_data <- get_flow_data(x, origin, direction = "from")
   loc_codes <- names(flow_data)
   flow_df <- data.frame(code = loc_codes, count = flow_data)
-  location_df <- get_location_data(ef, loc_codes)
+  location_df <- get_location_data(x, loc_codes)
   origin_data <- location_df[location_df$code == origin, ]
   origin_name <- origin_data[[loc_column]]
   locs_with_flows <- merge(

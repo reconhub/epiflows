@@ -4,11 +4,12 @@
 \alias{plot.epiflows}
 \title{Plot a flow map}
 \usage{
-\method{plot}{epiflows}(ef, origin, title = sprintf("Flows from \%s",
-  origin_name), loc_column = "country", lon_lat_columns = c("lon", "lat"))
+\method{plot}{epiflows}(x, origin, title = sprintf("Flows from \%s",
+  origin_name), loc_column = "country", lon_lat_columns = c("lon", "lat"),
+  ...)
 }
 \arguments{
-\item{ef}{An \code{epiflows} object.}
+\item{x}{An \code{epiflows} object.}
 
 \item{origin}{Code of the location of origin.}
 
@@ -19,6 +20,8 @@
 
 \item{lon_lat_columns}{Names of the columns with longitudes and latitudes,
 respectively (default: "lon" and "lat").}
+
+\item{...}{Additional parameters (not used).}
 }
 \value{
 A \code{leaflet} object
