@@ -46,6 +46,12 @@ make_epiflows <- function(flows,
   locationsdata <- validate_line_list(locationsdata)
   if (missing(flows)) {
     validate_flow_vectors(to, from, code)
+    if (!code %in% names(to)) {
+      to[[code]] <- 0
+    }
+    if (!code %in% names(from)) {
+      from[[code]] <- 0
+    }
     num_flows <- length(to)
     flows <- matrix(0, ncol = num_flows, nrow = num_flows)
     colnames(flows) <- names(from)
@@ -123,10 +129,5 @@ validate_flow_vectors <- function(to, from, code) {
   }
   if (length(to) != length(from)) {
     stop("`to` and `from` must be of equal length")
-  }
-  if (!code %in% names(to) || !code %in% names(from)) {
-    stop(
-      sprintf("'%s' missing from flow vectors", code)
-    )
   }
 }
