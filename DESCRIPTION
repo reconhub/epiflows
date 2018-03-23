@@ -6,7 +6,7 @@ Authors@R: c(person("Pawel", "Piatkowski", email = "pawel.piatkowski@posteo.net"
     person("Isobel", "Blake", email = "isobel.blake@imperial.ac.uk", role = "aut"),
     person("Thibaut", "Jombart", email = "thibautjombart@gmail.com", role = "aut"))
 Description: A collection of tools for the processing and visualisation of flow data.
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends:
