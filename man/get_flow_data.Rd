@@ -4,12 +4,12 @@
 \alias{get_flow_data}
 \title{Get flow data for a given location}
 \usage{
-get_flow_data(ef, code, direction = "both")
+get_flow_data(ef, code = NULL, direction = "both")
 }
 \arguments{
 \item{ef}{An \code{epiflows} object.}
 
-\item{code}{A character string denoting location code.}
+\item{code}{[OBSOLETE] A character string denoting location code.}
 
 \item{direction}{If "to" or "from", the function returns a vector
 of flows to or from the location, respectively.

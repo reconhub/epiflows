@@ -24,7 +24,7 @@ make_epiflows <- function(to,
                           code,
                           locationsdata) {
   locationsdata <- validate_line_list(locationsdata)
-  flows <- validate_flow_vectors(to, from)
+  flows <- validate_flow_vectors(to, from, locationsdata)
   code <- validate_origin(code, locationsdata)
 
   structure(

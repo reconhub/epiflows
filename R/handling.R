@@ -24,7 +24,12 @@
     stop("Code not found: ", i[!matching_codes])
   }
   locationsdata <- get_location_data(ef, i)
-  flows <- as.data.frame(ef$flows[i, i])
-  rownames(flows) <- colnames(flows) <- i
-  make_epiflows(flows, locationsdata)
+  to <- get_flow_data(ef, direction = "to")[i]
+  from <- get_flow_data(ef, direction = "from")[i]
+  make_epiflows(
+    to = to,
+    from = from,
+    code = ef$origin,
+    locationsdata = locationsdata
+  )
 }

@@ -1,7 +1,15 @@
 context("Test get_flow_data()")
 
 test_that("Correct flow data are returned", {
-  ef <- do.call(make_epiflows, Mex_travel_2009)
+  flows <- Mex_travel_2009[[1]]
+  to <- structure(flows[["MEX"]], names = rownames(flows))
+  from <- unlist(flows["MEX", ])
+  ef <- make_epiflows(
+    to = to,
+    from = from,
+    code = "MEX",
+    locationsdata = Mex_travel_2009[[2]]
+  )
   # Flows to Mexico
   flows_to <- get_flow_data(ef, "MEX", direction = "to")
   expect_equal(sum(flows_to), 36746233)
