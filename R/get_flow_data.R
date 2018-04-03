@@ -4,7 +4,6 @@
 #' (if direction is "both") to and/or from the specified location.
 #'
 #' @param ef An \code{epiflows} object.
-#' @param code [OBSOLETE] A character string denoting location code.
 #' @param direction If "to" or "from", the function returns a vector
 #' of flows to or from the location, respectively.
 #' If set to "both" - a two-element list with flows both to and from
@@ -12,12 +11,12 @@
 #' 
 #' @examples
 #' flows <- do.call(make_epiflows, Mex_travel_2009)
-#' get_flow_data(flows, "MEX", direction = "both")
+#' get_flow_data(flows, direction = "both")
 #'
 #' @author Pawel Piatkowski
 #'
 #' @export
-get_flow_data <- function(ef, code = NULL, direction = "both") {
+get_flow_data <- function(ef, direction = "both") {
   switch(
     direction,
     "to" = ef$flows$to,

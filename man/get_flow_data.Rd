@@ -4,12 +4,10 @@
 \alias{get_flow_data}
 \title{Get flow data for a given location}
 \usage{
-get_flow_data(ef, code = NULL, direction = "both")
+get_flow_data(ef, direction = "both")
 }
 \arguments{
 \item{ef}{An \code{epiflows} object.}
-
-\item{code}{[OBSOLETE] A character string denoting location code.}
 
 \item{direction}{If "to" or "from", the function returns a vector
 of flows to or from the location, respectively.
@@ -22,7 +20,7 @@ Returns a vector (if direction is "to" or "from") or a list of 2 elements
 }
 \examples{
 flows <- do.call(make_epiflows, Mex_travel_2009)
-get_flow_data(flows, "MEX", direction = "both")
+get_flow_data(flows, direction = "both")
 
 }
 \author{

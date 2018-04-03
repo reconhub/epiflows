@@ -48,7 +48,7 @@ plot.epiflows <- function(x,
   }
 
   ## Data
-  flow_data <- get_flow_data(x, origin, direction = "from")
+  flow_data <- get_flow_data(x, direction = "from")
   loc_codes <- names(flow_data)
   flow_df <- data.frame(code = loc_codes, count = flow_data)
   location_df <- get_location_data(x, loc_codes)
