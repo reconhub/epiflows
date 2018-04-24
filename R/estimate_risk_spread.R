@@ -85,8 +85,8 @@ estimate_risk_spread <- function(ef,
   # Get flow and location data from ef
   # number_travellers_to_other_countries and number_travellers_from_other_countries
   # refer to the number of travellers in the time window
-  number_travellers_to_other_countries <- get_flow_data(ef, location_code, direction = "from")
-  number_travellers_from_other_countries <- get_flow_data(ef, location_code, direction = "to")
+  number_travellers_to_other_countries <- get_flow_data(ef, direction = "from")
+  number_travellers_from_other_countries <- get_flow_data(ef, direction = "to")
   pop_country <- get_location_data(ef, location_code)$population
   
   # Number of countries

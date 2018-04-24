@@ -18,11 +18,10 @@ print.epiflows <- function(x, ...) {
     stop("Not a valid `epiflows` object")
   }
   locations <- sort(x$locationsdata$code)
-  cat("\nAn `epiflows` object\n")
+  cat(sprintf("\nAn `epiflows` object for %s\n", x$origin))
   cat("Locations:\n  ")
   cat(paste(locations, collapse = ", "))
   cat("\nMetadata slots:\n  ")
   cat(paste(names(x$locationsdata), collapse = ", "))
   cat("\n\n")
 }
-
