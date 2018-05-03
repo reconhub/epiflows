@@ -93,8 +93,8 @@ plot.epiflows <- function(x,
   
   leaflet::leaflet(data = sldf) %>%
     leaflet::setView(
-      lng = -50,
-      lat = 20,
+      lng = origin_data[,lon_lat_columns[1]],
+      lat = origin_data[,lon_lat_columns[2]],
       zoom = 2
     ) %>%
     leaflet::addTiles(
