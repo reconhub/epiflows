@@ -35,7 +35,7 @@
 #' Examples: \code{rnorm(n, mean, sd)}, \code{rlnorm(n, meanlog, sdlog)}, \code{rgamma(n, shape, rate)}, \code{rweibull(n, shape, scale)}, \code{rexp(n, rate)}
 #' 
 #' @examples 
-#' load("YF_Brazil.RData")
+#' data(YF_Brazil)
 #' indstate <- 1 # "Espirito Santo" (indstate = 1), "Minas Gerais" (indstate = 2), "Southeast Brazil" (indstate = 5)
 #'
 #' res <- estimate_risk_spread(
