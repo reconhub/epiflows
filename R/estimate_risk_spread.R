@@ -44,7 +44,7 @@
 #'   first_date_cases = YF_states$first_date_cases[indstate],
 #'   last_date_cases = YF_states$last_date_cases[indstate],
 #'   num_infec_cases_in_time_window = YF_states$num_infec_cases_in_time_window[indstate],
-#'   avg_length_stay_days = YF_states$avg_length_stay_days[indstate],
+#'   avg_length_stay_days = length_of_stay,
 #'   distribution_incubation = rlnorm,
 #'   params_incubation = c(1.46, 0.35),
 #'   distribution_infectious = rnorm,
@@ -52,7 +52,7 @@
 #'   num_simulations = 100000,
 #'   number_travellers_to_other_countries = T_D[indstate,],
 #'   number_travellers_from_other_countries = T_O[indstate,],
-#'   pop_S = pop_S[indstate]
+#'   pop_S = YF_states$population[indstate]
 #' )
 #' head(res)
 #' 
@@ -177,7 +177,7 @@ estimate_risk_spread <- function(ef,
   ## Total
   total <- exportations + importations
   meancases <- colMeans(total, na.rm = TRUE)
-  quant <- t(apply(total, 2, quantile, c(.025, .975), na.rm = TRUE))
+  quant <- t(apply(total, 2, stats::quantile, c(.025, .975), na.rm = TRUE))
 
   return(data.frame(mean_cases = meancases, lower_limit_95CI = quant[, 1], upper_limit_95CI = quant[, 2]))
   
