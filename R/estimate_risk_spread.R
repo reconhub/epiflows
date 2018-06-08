@@ -9,12 +9,13 @@
 #' The mean and 95% confidence intervals are obtained by numerically sampling
 #' num_simulations times from the incubation and infectious period distributions.
 #'
-#' @param ef an \code{epiflows} object. It contains the number of travellers
-#' to and from other locations in the time window
 #' @param location_code a character string denoting the infectious location code
+#' @param location_population population of the infectious location
+#' @param num_cases_time_window cumulative number of cases in infectious location in time window
 #' @param first_date_cases string with the date of the first disease case in infectious location ("YYYY-MM-DD")
 #' @param last_date_cases string with the date of the last disease case in infectious location ("YYYY-MM-DD")
-#' @param num_infec_cases_in_time_window cumulative number of cases in infectious location in time window
+#' @param num_travellers_to_other_locations number of travellers from the infectious location visiting other locations (T_D)
+#' @param num_travellers_from_other_locations number of travellers from other locations visiting the infectious location (T_O)
 #' @param avg_length_stay_days average length of stay in days of travellers from
 #' other locations visiting the infectious location. This can be a common number
 #' for all locations or a vector with different numbers for each location
@@ -25,7 +26,7 @@
 #' @param num_simulations number of simulations from the incubation and infectious distributions
 #'
 #' @return data.frame with the mean and lower and upper limits of a 95% confidence interval of the number
-#' of cases spread to each country
+#' of cases spread to each location
 #' 
 #' @details
 #' parameters \code{distribution_incubation} and \code{distribution_infectious} denote the random generation distributions of the
@@ -39,20 +40,19 @@
 #' indstate <- 1 # "Espirito Santo" (indstate = 1), "Minas Gerais" (indstate = 2), "Southeast Brazil" (indstate = 5)
 #'
 #' res <- estimate_risk_spread(
-#'   ef = NULL,
-#'   location_code = YF_states$location_code[indstate],
-#'   first_date_cases = YF_states$first_date_cases[indstate],
-#'   last_date_cases = YF_states$last_date_cases[indstate],
-#'   num_infec_cases_in_time_window = YF_states$num_infec_cases_in_time_window[indstate],
-#'   avg_length_stay_days = length_of_stay,
+#'   location_code = YF_Brazil$states$location_code[indstate],
+#'   location_population = YF_Brazil$states$location_population[indstate],
+#'   num_cases_time_window = YF_Brazil$states$num_cases_time_window[indstate],
+#'   first_date_cases = YF_Brazil$states$first_date_cases[indstate],
+#'   last_date_cases = YF_Brazil$states$last_date_cases[indstate],
+#'   num_travellers_to_other_locations = YF_Brazil$T_D[indstate,],
+#'   num_travellers_from_other_locations = YF_Brazil$T_O[indstate,],
+#'   avg_length_stay_days = YF_Brazil$length_of_stay,
 #'   distribution_incubation = rlnorm,
 #'   params_incubation = c(1.46, 0.35),
 #'   distribution_infectious = rnorm,
 #'   params_infectious = c(4.5, 1.5/1.96),
-#'   num_simulations = 100000,
-#'   number_travellers_to_other_countries = T_D[indstate,],
-#'   number_travellers_from_other_countries = T_O[indstate,],
-#'   pop_S = YF_states$population[indstate]
+#'   num_simulations = 100000
 #' )
 #' head(res)
 #' 
@@ -60,20 +60,19 @@
 #' 
 #' @export
 #' 
-estimate_risk_spread <- function(ef,
-                                 location_code,
+estimate_risk_spread <- function(location_code,
+                                 location_population,
+                                 num_cases_time_window,
                                  first_date_cases,
                                  last_date_cases,
-                                 num_infec_cases_in_time_window,
+                                 num_travellers_to_other_locations,
+                                 num_travellers_from_other_locations,
                                  avg_length_stay_days,
                                  distribution_incubation,
                                  params_incubation,
                                  distribution_infectious,
                                  params_infectious,
-                                 num_simulations = 1000,
-                                 number_travellers_to_other_countries,
-                                 number_travellers_from_other_countries,
-                                 pop_S) {
+                                 num_simulations = 1000) {
   
   if(num_simulations < 1000){
     message("It is recommended the number of simulations is at least 1000.")
@@ -83,19 +82,11 @@ estimate_risk_spread <- function(ef,
   # time_window_days is the number of days between the first and last disease case in infectious location
   time_window_days <- as.vector(as.Date(last_date_cases) - as.Date(first_date_cases))
 
-  # When make_epiflows() is fixed, delete this and the 3 last arguments of estimate_risk_spread()
-  if(!is.null(ef)){
-  # Get flow and location data from ef
-  # number_travellers_to_other_countries and number_travellers_from_other_countries
-  # refer to the number of travellers in the time window
-  number_travellers_to_other_countries <- get_flow_data(ef, location_code, direction = "from")
-  number_travellers_from_other_countries <- get_flow_data(ef, location_code, direction = "to")
-  pop_S <- get_location_data(ef, location_code)$population
-  }
-
+  # population
+  pop_S <- location_population
   
   # Number of countries
-  num_countries <- length(number_travellers_to_other_countries)
+  num_countries <- length(num_travellers_to_other_locations)
   
   # Construct a a vector with the average length of stay for each
   # of the countries in case length of avg_length_stay_days is different
@@ -104,19 +95,19 @@ estimate_risk_spread <- function(ef,
     if (length(avg_length_stay_days) == 1) {
       avg_length_stay_days <- rep(avg_length_stay_days, num_countries)
     } else {
-      stop("avg_length_stay_days must have length equal to 1 or to the number of countries")
+      stop("avg_length_stay_days must have length equal to 1 or to the number of locations")
     }
   }
   
   # Rename variables
-  C_SW <- num_infec_cases_in_time_window
+  C_SW <- num_cases_time_window
   # Cumulative number of YF cases in state S (origin) in time window W
   #C_hat_SW <- 10 * C_SW
   C_hat_SW <- C_SW
   
   W <- time_window_days
-  T_D <- number_travellers_to_other_countries
-  T_O<- number_travellers_from_other_countries
+  T_D <- num_travellers_to_other_locations
+  T_O<- num_travellers_from_other_locations
   L_O <- avg_length_stay_days
   
   
