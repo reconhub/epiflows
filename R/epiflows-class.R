@@ -29,6 +29,7 @@
 #' @param n an index or name indicating which column in \code{contacts}
 #'     contains the number of cases flowing between the "from" region and the
 #'     "to" region
+#' @param ... named character or integers 
 #'
 #' @return An \code{epicontacts} object in list format with three elements:
 #'
@@ -61,40 +62,66 @@
 #'
 #' @examples
 #' data(YF_Brazil)
-#' from <- as.data.frame.table(YF_Brazil$T_D)
-#' to   <- as.data.frame.table(YF_Brazil$T_O)[c(2,1,3)]
+#' from     <- as.data.frame.table(YF_Brazil$T_D)
+#' to       <- as.data.frame.table(YF_Brazil$T_O)[c(2,1,3)]
 #' contacts <- rbind(setNames(from, c("from", "to", "n")), 
 #'                   setNames(to, c("from", "to", "n")))
 #' linelist <- YF_Brazil$states
-#' others <- setdiff(contacts$to, YF_Brazil$states$location_code)
-#' linelist <- merge(linelist, data.frame(location_code = others),
+#' others   <- setdiff(contacts$to, YF_Brazil$states$location_code)
+#' linelist <- merge(linelist, 
+#'                   data.frame(location_code = others),
 #'                   by = "location_code", all = TRUE)
-#' epiflows(linelist, contacts, context = "Minas Gerais")
+#' ef <- epiflows(linelist, contacts, pop_size = "num_cases_time_window")
+#' ef
+#' # Access variable information
+#' ef$linelist[ef$vars$pop_size]
 #' @importClassesFrom epicontacts
 #' @importFrom epicontacts make_epicontacts
-epiflows <- function(linelist, contacts, id = 1L, xy = NULL, from = 1L, to = 2L, n = 3L, context = NULL){
+epiflows <- function(...) {
+  UseMethod("epiflows")
+}
+
+epiflows.data.frame <- function(linelist, contacts, id = 1L, 
+                                from = 1L, to = 2L, n = 3L, ...){
   out <- epicontacts::make_epicontacts(linelist = linelist, 
                                        contacts = contacts, 
                                        id       = id,
                                        from     = from, 
                                        to       = to,
                                        directed = TRUE)
-  names(out$contacts[n])  <- "n"
-  if (!is.null(xy)) {
-    names(out$linelist[xy]) <- c("x", "y")
-  }
-  if (!is.null(context)) {
-    if (!is.character(context)) {
-      stop("context must be a character")
+  # TODO: This variable needs to be validated before having the name changed.
+  names(out$contacts)[n] <- "n"
+  dots <- valid_dots(list(...))
+  for (i in names(dots)) {
+    # Numeric indices need to be re-matched to the new output
+    if (is.numeric(dots[[i]])) {
+      dots[[i]] <- new_column_positions(dots[[i]], 
+                                        old_names = names(linelist), 
+                                        new_names = names(out$linelist))
     }
-    if (length(context) != 1L) {
-      stop("context must be a single character string")
-    }
-    out$context <- context
-  } else {
-    out$context <- NA_character_
+    stop_if_invalid(out$linelist[[dots[[i]]]])
   }
+  out$vars    <- dots
   class(out)  <- c("epiflw", class(out))
+  out
+}
+
+new_column_positions <- function(i, old_names, new_names) {
+  match(old_names[i], old_names, nomatch = 0)
+}
+
+# This function will filter out any invalid options for dots
+valid_dots <- function(dots) {
+  # These names can be expanded
+  out <- dots[names(dots) %in% 
+              c("coords", 
+                "pop_size", 
+                "duration_stay")
+              ]
+  if (length(out) < length(dots)) {
+    diffnames <- paste(setdiff(names(dots), names(out)), collapse = ",")
+    warning(paste("Ignoring the following variables:", diffnames))
+  }
   out
 }
 
@@ -103,8 +130,8 @@ print.epiflw <- function(x, ...) {
   cat("\n  // class:", paste(class(x), collapse = ", "))
   cat("\n  //", format(nrow(x$linelist), big.mark = ","), "regions;", 
       format(nrow(x$contacts), big.mark = ","), "contacts; directed")
-  if (!is.na(x$context)){
-    cat("\n  // context:", x$context ,"\n\n")
+  if (length(x$vars > 0)) {
+    cat("\n  // optional variables:", paste(names(x$vars), collapse = ", "), "\n")
   }
   cat("\n  // regions\n\n")
   print(dplyr::tbl_df(x$linelist))
