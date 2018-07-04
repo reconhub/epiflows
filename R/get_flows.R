@@ -36,14 +36,12 @@ get_flows <- function(x, ...) {
 #' @param x An \code{epiflows} object.
 
 get_flows.epiflows <- function(x) {
-  from <- sample(letters, 10, replace = TRUE)
-  to <- sample(letters, 10, replace = TRUE)
-  flow <- sample(1:100, 10, replace = TRUE)
 
   data.frame(from = as.character(from) ,
              to = as.character(to),
              n = flow,
              stringsAsFactors = FALSE)  
+
 }
 
 
