@@ -36,12 +36,7 @@ get_flows <- function(x, ...) {
 #' @param x An \code{epiflows} object.
 
 get_flows.epiflows <- function(x) {
-
-  data.frame(from = as.character(from) ,
-             to = as.character(to),
-             n = flow,
-             stringsAsFactors = FALSE)  
-
+  x$contacts[, c("from", "to", "n"), dro = FALSE]
 }
 
 
