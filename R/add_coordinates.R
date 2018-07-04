@@ -7,8 +7,8 @@
 #' @param ef An \code{epiflows} object.
 #' @param loc_column Name of the column where location names are stored
 #' (default: "country").
-#' @param lon_lat_columns Names of the appended columns with longitudes
-#' and latitudes, respectively (default: "lon" and "lat").
+#' @param lon_lat_columns Either names of the appended columns with longitudes
+#' and latitudes, respectively (default: "lon" and "lat") or a data frame with longitude and latitude columns.
 #' @param overwrite If TRUE, retrieves all geocodes, even those already
 #' retrieved. If FALSE (default), overwrites only NAs.
 #' 
@@ -32,10 +32,18 @@ add_coordinates <- function(ef,
   if (!loc_column %in% names(ef$locationsdata)) {
     stop(sprintf("`%s` is not a valid column name", loc_column))
   }
-  if (!is.character(lon_lat_columns) || length(lon_lat_columns) != 2) {
+  if (!is.data.frame(lon_lat_columns) && !is.character(lon_lat_columns) || length(lon_lat_columns) != 2 ) {
     stop("`lon_lat_columns` should contain exactly two character strings")
   }
-  if (!overwrite && all(lon_lat_columns %in% names(ef$locationsdata))) {
+  
+  if(is.data.frame(lon_lat_columns)){
+    if(ncol(lon_lat_columns) != 2){
+      stop("The data frame `lon_lat_columns` should contain exactly two columns specifying the longitude and latitude coordinates")
+    }
+    ef$locationsdata <- cbind(ef$locationsdata, lon_lat_columns) ## This should match with the loc_column
+  }
+    else{
+      if (!overwrite && all(lon_lat_columns %in% names(ef$locationsdata))) {
     # If overwrite == FALSE and lon/lat columns already exist,
     # overwrite only rows with NA lon and lat
     which_rows <- apply(is.na(ef$locationsdata[, lon_lat_columns]), 1, all)
@@ -43,11 +51,13 @@ add_coordinates <- function(ef,
     ef$locationsdata[which_rows, lon_lat_columns] <- ggmap::geocode(
       as.character(ef$locationsdata[which_rows, loc_column])
     )
-  } else {
+  } 
+      else {
     # Otherwise, get all geocodes and write them to lon/lat columns
-    ef$locationsdata[, lon_lat_columns] <- ggmap::geocode(
-      as.character(ef$locationsdata[, loc_column])
+        ef$locationsdata[, lon_lat_columns] <- ggmap::geocode(
+          as.character(ef$locationsdata[, loc_column])
     )
-  }
+  } 
+      }
   ef
 }
