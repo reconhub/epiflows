@@ -1,11 +1,13 @@
 #' Plot a flow map
 #' 
-#' Returns an interactive map of population flows from the specified
-#' location of origin.
+#' Returns a graph (XX / YY or an interactive map) of population flows from the specified
+#' location of origin. 
 #' 
 #' @param x An \code{epiflows} object.
 #' @param origin Code of the location of origin.
 #' @param title Plot title.
+#' @param type The type of plot wanted to be drawn: map/visNetwork/grid. 
+#' (default: ??)
 #' @param loc_column Name of the column where location names are stored
 #' (default: "country").
 #' @param lon_lat_columns Names of the columns with longitudes and latitudes,
@@ -15,14 +17,28 @@
 #' @return A \code{leaflet} object
 #' @importFrom magrittr "%>%"
 #' @importFrom magrittr "%<>%"
-#' @author Paula Moraga, Pawel Piatkowski
+#' @author Paula Moraga, Pawel Piatkowski Salla Toikkanen
 #' 
-#' flows <- do.call(make_epiflows, Mex_travel_2009)
-#' flows <- add_coordinates(flows)
-#' plot(flows, "MEX")
-#' 
+
+#' flows <- Mex_travel_2009[[1]]
+#' to <- structure(flows[["MEX"]], names = rownames(flows))
+#' from <- unlist(flows["MEX", ])
+#' ef <- make_epiflows( to = to, from = from, code = "MEX", locationsdata = Mex_travel_2009[[2]])
+#' plot(ef, type = "map", origin = "MEX")
+#'  
+#'  
+#' from2 <-  structure(round(pmax(0, rnorm(5, 2500, 600))), names = LETTERS[1:5])
+#' to2 <- structure(round(pmax(0,rnorm(5, 5000, 400 ))), names = LETTERS[1:5])
+#' my_locationsdata <-  data.frame(code = LETTERS[1:5], country = letters[1:5], population = pmax(100, rnorm(5, 5000000, 64000)))
+#' testepi <-  make_epiflows(from = from2, to = to2, code = "A", locationsdata = locationsdata2)
+#' testef <- add_coordinates(testepi, lon_lat_columns = data.frame(lon = rnorm(5), lat = rnorm(5)))
+#' plot(testef, type = "foo", origin = "A") ## TBD
+
+
+
 #' @export
 plot.epiflows <- function(x,
+                          type = "foo",
                           origin,
                           title = sprintf("Flows from %s", origin_name),
                           loc_column = "country",
@@ -33,13 +49,19 @@ plot.epiflows <- function(x,
   if (!loc_column %in% location_cols) {
     stop("`%s` not found in x$locationsdata")
   }
+
   if (!all(lon_lat_columns %in% location_cols)) {
-    x %<>%
+    ## Tries to find the coordinates with add_coordinates(), should only do this if type == "map"
+    if(type=="map"){
+     x %<>%
       add_coordinates(
         loc_column = loc_column,
         lon_lat_columns = lon_lat_columns
       )
+    }
+    else(stop("lon_lat_columns not specified in epiflows object"))
   }
+ 
   if (any(is.na(x$locationsdata[, lon_lat_columns]))) {
     stop(
       "NA values present in location coordinates. ",
@@ -54,14 +76,21 @@ plot.epiflows <- function(x,
   location_df <- get_location_data(x, loc_codes)
   origin_data <- location_df[location_df$code == origin, ]
   origin_name <- origin_data[[loc_column]]
-  locs_with_flows <- merge(
+  print(locs_with_flows <- merge(
     location_df,
     flow_df,
     by = "code"
-  )
-  
-  listlines <- apply(
-    locs_with_flows,
+  ))
+if(type != "map"){
+  ## add here the other types of plots
+  require(ggplot2)
+  print(lon_lat_columns)
+  graph <-  ggplot() + geom_point(aes( x = locs_with_flows[, lon_lat_columns[1]], y =locs_with_flows[, lon_lat_columns[2]] )) 
+  cat("Work in progress")
+}
+  if(type == "map") {
+    listlines <- apply(
+      locs_with_flows,
     1,
     function(loc, origin_data) {
       connection <- geosphere::gcIntermediate(
@@ -76,8 +105,9 @@ plot.epiflows <- function(x,
     },
     origin_data = origin_data
   )
-  sl <- sp::SpatialLines(listlines)
-  sldf <- sp::SpatialLinesDataFrame(sl, data.frame(count = flow_data))
+  
+    sl <- sp::SpatialLines(listlines)
+    sldf <- sp::SpatialLinesDataFrame(sl, data.frame(count = flow_data))
   
   ## Plot
   pal <- leaflet::colorQuantile(palette = "YlGnBu", domain = sldf$count, n = 5)
@@ -91,7 +121,7 @@ plot.epiflows <- function(x,
     htmltools::HTML
   )
   
-  leaflet::leaflet(data = sldf) %>%
+  graph <- leaflet::leaflet(data = sldf) %>%
     leaflet::setView(
       lng = origin_data[,lon_lat_columns[1]],
       lat = origin_data[,lon_lat_columns[2]],
@@ -116,4 +146,8 @@ plot.epiflows <- function(x,
         paste0(cuts[-n], " &ndash; ", cuts[-1])
       }
     )
+} 
+
+  graph
+  
 }
