@@ -106,9 +106,15 @@ epiflows.data.frame <- function(locations, flows, id = 1L,
   out
 }
 
-epiflows.integer <- function(from, to, code, locations) {
-  
+epiflows.integer <- function(from, to, focus, locations, ...) {
+  # Check to make sure from and to are named
+  # Validate the locations list. 
+  # Check to make sure focus is in the names of from and to
+  # Create a data frame with from and to, repeating the focus as necessary
+  # Use the data frame to pass to epiflows.data.frame
 }
+
+epiflows.numeric <- epiflows.integer
 
 new_column_positions <- function(i, old_names, new_names) {
   match(old_names[i], old_names, nomatch = 0)
