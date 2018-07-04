@@ -17,7 +17,7 @@
 #' @return A \code{leaflet} object
 #' @importFrom magrittr "%>%"
 #' @importFrom magrittr "%<>%"
-#' @author Paula Moraga, Pawel Piatkowski Salla Toikkanen
+#' @author Paula Moraga, Pawel Piatkowski, Salla Toikkanen
 #' 
 
 #' flows <- Mex_travel_2009[[1]]
