@@ -78,7 +78,7 @@
 #' @importClassesFrom epicontacts
 #' @importFrom epicontacts make_epicontacts
 epiflows <- function(...) {
-  UseMethod("epiflows")
+  UseMethod("epiflows", ...)
 }
 
 epiflows.data.frame <- function(linelist, contacts, id = 1L, 
