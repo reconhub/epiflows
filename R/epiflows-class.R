@@ -77,14 +77,15 @@
 #' ef$linelist[ef$vars$pop_size]
 #' @importClassesFrom epicontacts
 #' @importFrom epicontacts make_epicontacts
+#' 
 epiflows <- function(...) {
-  UseMethod("epiflows", ...)
+  UseMethod("epiflows")
 }
 
-epiflows.data.frame <- function(linelist, contacts, id = 1L, 
+epiflows.data.frame <- function(locations, flows, id = 1L, 
                                 from = 1L, to = 2L, n = 3L, ...){
-  out <- epicontacts::make_epicontacts(linelist = linelist, 
-                                       contacts = contacts, 
+  out <- epicontacts::make_epicontacts(linelist = locations, 
+                                       contacts = flows, 
                                        id       = id,
                                        from     = from, 
                                        to       = to,
@@ -96,13 +97,13 @@ epiflows.data.frame <- function(linelist, contacts, id = 1L,
     # Numeric indices need to be re-matched to the new output
     if (is.numeric(dots[[i]])) {
       dots[[i]] <- new_column_positions(dots[[i]], 
-                                        old_names = names(linelist), 
+                                        old_names = names(locations), 
                                         new_names = names(out$linelist))
     }
     stop_if_invalid(out$linelist[[dots[[i]]]])
   }
   out$vars    <- dots
-  class(out)  <- c("epiflw", class(out))
+  class(out)  <- c("epiflows", class(out))
   out
 }
 
@@ -123,19 +124,4 @@ valid_dots <- function(dots) {
     warning(paste("Ignoring the following variables:", diffnames))
   }
   out
-}
-
-print.epiflw <- function(x, ...) {
-  cat("\n/// Epidemiological Flows //\n")
-  cat("\n  // class:", paste(class(x), collapse = ", "))
-  cat("\n  //", format(nrow(x$linelist), big.mark = ","), "regions;", 
-      format(nrow(x$contacts), big.mark = ","), "contacts; directed")
-  if (length(x$vars > 0)) {
-    cat("\n  // optional variables:", paste(names(x$vars), collapse = ", "), "\n")
-  }
-  cat("\n  // regions\n\n")
-  print(dplyr::tbl_df(x$linelist))
-  cat("\n  // contacts\n\n")
-  print(dplyr::tbl_df(x$contacts))
-  cat("\n")
 }

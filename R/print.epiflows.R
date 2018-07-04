@@ -13,15 +13,16 @@
 #'
 #' @export
 print.epiflows <- function(x, ...) {
-  fields <- names(x)
-  if (!"locationsdata" %in% fields) {
-    stop("Not a valid `epiflows` object")
+  cat("\n/// Epidemiological Flows //\n")
+  cat("\n  // class:", paste(class(x), collapse = ", "))
+  cat("\n  //", format(nrow(x$linelist), big.mark = ","), "locations;", 
+      format(nrow(x$contacts), big.mark = ","), "flows; directed")
+  if (length(x$vars > 0)) {
+    cat("\n  // optional variables:", paste(names(x$vars), collapse = ", "), "\n")
   }
-  locations <- sort(x$locationsdata$code)
-  cat(sprintf("\nAn `epiflows` object for %s\n", x$origin))
-  cat("Locations:\n  ")
-  cat(paste(locations, collapse = ", "))
-  cat("\nMetadata slots:\n  ")
-  cat(paste(names(x$locationsdata), collapse = ", "))
-  cat("\n\n")
+  cat("\n  // locations\n\n")
+  print(dplyr::tbl_df(x$linelist))
+  cat("\n  // flows\n\n")
+  print(dplyr::tbl_df(x$contacts))
+  cat("\n")
 }
