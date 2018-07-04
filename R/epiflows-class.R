@@ -60,22 +60,16 @@
 #'     \url{http://foodborne.unl.edu/public/role/epidemiologist/lineLists.html}
 #'
 #' @examples
-#' if (require(outbreaks)) {
-#' ## make epicontacts object from simulated Ebola data
-#' x <- make_epicontacts(ebola_sim$linelist, ebola_sim$contacts)
-#'
-#' ## test reordering of columns
-#' linelist <- ebola_sim$linelist[,rev(seq_len(ncol(ebola_sim$linelist)))]
-#' contacts <- ebola_sim$contacts[,rev(seq_len(ncol(ebola_sim$contacts)))]
-#' head(linelist)
-#' head(contacts)
-#'
-#' ## make object
-#' x <- make_epicontacts(linelist, contacts, id = "case_id",
-#'                        to = "case_id", from = "infector")
-#' head(x$linelist)
-#' head(x$contacts)
-#' }
+#' data(YF_Brazil)
+#' from <- as.data.frame.table(YF_Brazil$T_D)
+#' to   <- as.data.frame.table(YF_Brazil$T_O)[c(2,1,3)]
+#' contacts <- rbind(setNames(from, c("from", "to", "n")), 
+#'                   setNames(to, c("from", "to", "n")))
+#' linelist <- YF_Brazil$states
+#' others <- setdiff(contacts$to, YF_Brazil$states$location_code)
+#' linelist <- merge(linelist, data.frame(location_code = others),
+#'                   by = "location_code", all = TRUE)
+#' epiflows(linelist, contacts, context = "Minas Gerais")
 #' @importClassesFrom epicontacts
 #' @importFrom epicontacts make_epicontacts
 epiflows <- function(linelist, contacts, id = 1L, xy = NULL, from = 1L, to = 2L, n = 3L, context = NULL){
