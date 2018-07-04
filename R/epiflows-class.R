@@ -75,7 +75,6 @@
 #' ef
 #' # Access variable information
 #' ef$linelist[ef$vars$pop_size]
-#' @importClassesFrom epicontacts
 #' @importFrom epicontacts make_epicontacts
 #' 
 epiflows <- function(...) {
@@ -105,6 +104,10 @@ epiflows.data.frame <- function(locations, flows, id = 1L,
   out$vars    <- dots
   class(out)  <- c("epiflows", class(out))
   out
+}
+
+epiflows.integer <- function(from, to, code, locations) {
+  
 }
 
 new_column_positions <- function(i, old_names, new_names) {

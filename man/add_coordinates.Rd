@@ -13,8 +13,8 @@ add_coordinates(ef, loc_column = "country", lon_lat_columns = c("lon",
 \item{loc_column}{Name of the column where location names are stored
 (default: "country").}
 
-\item{lon_lat_columns}{Names of the appended columns with longitudes
-and latitudes, respectively (default: "lon" and "lat").}
+\item{lon_lat_columns}{Either names of the appended columns with longitudes
+and latitudes, respectively (default: "lon" and "lat") or a data frame with longitude and latitude columns.}
 
 \item{overwrite}{If TRUE, retrieves all geocodes, even those already
 retrieved. If FALSE (default), overwrites only NAs.}

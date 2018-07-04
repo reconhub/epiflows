@@ -4,12 +4,15 @@
 \alias{plot.epiflows}
 \title{Plot a flow map}
 \usage{
-\method{plot}{epiflows}(x, origin, title = sprintf("Flows from \%s",
-  origin_name), loc_column = "country", lon_lat_columns = c("lon", "lat"),
-  ...)
+\method{plot}{epiflows}(x, type = "foo", origin,
+  title = sprintf("Flows from \%s", origin_name), loc_column = "country",
+  lon_lat_columns = c("lon", "lat"), ...)
 }
 \arguments{
 \item{x}{An \code{epiflows} object.}
+
+\item{type}{The type of plot wanted to be drawn: map/visNetwork/grid. 
+(default: ??)}
 
 \item{origin}{Code of the location of origin.}
 
@@ -27,13 +30,23 @@ respectively (default: "lon" and "lat").}
 A \code{leaflet} object
 }
 \description{
-Returns an interactive map of population flows from the specified
+Returns a graph (XX / YY or an interactive map) of population flows from the specified
 location of origin.
 }
 \author{
-Paula Moraga, Pawel Piatkowski
+Paula Moraga, Pawel Piatkowski, Salla Toikkanen
 
-flows <- do.call(make_epiflows, Mex_travel_2009)
-flows <- add_coordinates(flows)
-plot(flows, "MEX")
+flows <- Mex_travel_2009[[1]]
+to <- structure(flows[["MEX"]], names = rownames(flows))
+from <- unlist(flows["MEX", ])
+ef <- make_epiflows( to = to, from = from, code = "MEX", locationsdata = Mex_travel_2009[[2]])
+plot(ef, type = "map", origin = "MEX")
+ 
+ 
+from2 <-  structure(round(pmax(0, rnorm(5, 2500, 600))), names = LETTERS[1:5])
+to2 <- structure(round(pmax(0,rnorm(5, 5000, 400 ))), names = LETTERS[1:5])
+my_locationsdata <-  data.frame(code = LETTERS[1:5], country = letters[1:5], population = pmax(100, rnorm(5, 5000000, 64000)))
+testepi <-  make_epiflows(from = from2, to = to2, code = "A", locationsdata = locationsdata2)
+testef <- add_coordinates(testepi, lon_lat_columns = data.frame(lon = rnorm(5), lat = rnorm(5)))
+plot(testef, type = "foo", origin = "A") ## TBD
 }
