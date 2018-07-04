@@ -14,7 +14,7 @@
 #' 
 #' @return An updated \code{epiflows} object.
 #' 
-#' @author Pawel Piatkowski
+#' @author Pawel Piatkowski 
 #' 
 #' @examples
 #' flows <- do.call(make_epiflows, Mex_travel_2009)
