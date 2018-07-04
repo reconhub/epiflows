@@ -36,7 +36,7 @@ get_flows <- function(x, ...) {
 #' @param x An \code{epiflows} object.
 
 get_flows.epiflows <- function(x) {
-  x$contacts[, c("from", "to", "n"), dro = FALSE]
+  x$contacts[, c("from", "to", "n"), drop = FALSE]
 }
 
 
