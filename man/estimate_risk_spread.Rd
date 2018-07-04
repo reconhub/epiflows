@@ -2,80 +2,93 @@
 % Please edit documentation in R/estimate_risk_spread.R
 \name{estimate_risk_spread}
 \alias{estimate_risk_spread}
-\title{Travel-related disease cases spreaded to other locations from an infectious location}
+\title{Travel-related disease cases spreaded to other locations from an infectious
+location}
 \usage{
-estimate_risk_spread(ef, ef_time = "time_window", location_code,
-  time_window_days, num_infec_cases_in_time_window, avg_length_stay_days,
-  distribution_incubation, params_incubation, distribution_infectious,
-  params_infectious, num_simulations = 1000)
+estimate_risk_spread(location_code, location_population, num_cases_time_window,
+  first_date_cases, last_date_cases, num_travellers_to_other_locations,
+  num_travellers_from_other_locations, avg_length_stay_days, r_incubation,
+  r_infectious, n_sim = 1000)
 }
 \arguments{
-\item{ef}{an \code{epiflows} object. It contains the number of travellers
-to and from other locations}
+\item{location_code}{a character string denoting the infectious location code}
 
-\item{ef_time}{character string denoting the time window of the population flows in the epiflows object.
-Options are "time_window", "annual", "quarterly"}
+\item{location_population}{population of the infectious location}
 
-\item{location_code}{a character string denoting the location code}
+\item{num_cases_time_window}{cumulative number of cases in infectious
+location in time window}
 
-\item{time_window_days}{number of days between the first and last
-disease case in infectious location}
+\item{first_date_cases}{string with the date of the first disease case in
+infectious location ("YYYY-MM-DD")}
 
-\item{num_infec_cases_in_time_window}{cumulative number of cases
-in infectious location in time window}
+\item{last_date_cases}{string with the date of the last disease case in
+infectious location ("YYYY-MM-DD")}
+
+\item{num_travellers_to_other_locations}{number of travellers from the
+infectious location visiting other locations (T_D)}
+
+\item{num_travellers_from_other_locations}{number of travellers from other
+locations visiting the infectious location (T_O)}
 
 \item{avg_length_stay_days}{average length of stay in days of travellers from
-other locations visiting the infectious location. This can be a common number
-for all locations or a vector with different numbers for each location}
+other locations visiting the infectious location. This can be a common
+number for all locations or a vector with different numbers for each
+location}
 
-\item{distribution_incubation}{random generation distribution of the incubation period}
+\item{r_incubation}{a function with a single argument \code{n}
+generating 'n' random incubation periods}
 
-\item{params_incubation}{vector with the parameters of the incubation distribution}
+\item{r_infectious}{a function with a single argument \code{n}
+generating 'n' random durations of infectious period}
 
-\item{distribution_infectious}{random generation distribution of the infectious period}
-
-\item{params_infectious}{vector with the parameters of the infectious distribution}
-
-\item{num_simulations}{number of simulations from the incubation and infectious distributions}
+\item{n_sim}{number of simulations from the incubation and
+infectious distributions}
 }
 \value{
-data.frame with the mean and 95% confidence interval of the number
-of cases spread to each country
+a \code{data.frame} with the mean and lower and upper limits of a 95%
+  confidence interval of the number of cases spread to each location
 }
 \description{
 Calculates the mean and 95% confidence interval of the estimated number of
 disease cases that could potentially seed a disease outbreak in the locations
-they are travelling to, comprising exportations (infected residents of the infectious
-location travelling abroad during the incubation or infectious period), and
-importations (international tourists infected by the disease during
-their stay in the infectious location and returning to their home location).
-The mean and 95% confidence intervals are obtained by numerically sampling
-num_simulations times from the incubation and infectious period distributions.
-}
-\details{
-parameters \code{distribution_incubation} and \code{distribution_infectious} denote the random generation distributions of the
-incubation and infectious periods distributions, respectively.
-Thes can be specified with the name of an R function or with a function defined by the user with parameters
-\code{num_simulations}, \code{parameter1}, \code{parameter2}, etc.
-Examples: \code{rnorm(n, mean, sd)}, \code{rlnorm(n, meanlog, sdlog)}, \code{rgamma(n, shape, rate)}, \code{rweibull(n, shape, scale)}, \code{rexp(n, rate)}
+they are travelling to, comprising exportations (infected residents of the
+infectious location travelling abroad during the incubation or infectious
+period), and importations (international tourists infected by the disease
+during their stay in the infectious location and returning to their home
+location). The mean and 95% confidence intervals are obtained by numerically
+sampling \code{num_simulations} times from the incubation and infectious
+period distributions.
 }
 \examples{
-ef <- do.call(make_epiflows, Mex_travel_2009)
-num_countries <- nrow(ef$locationsdata)
-avg_length_stay_days <- rpois(num_countries, 30)
-res <- estimate_risk_spread(
-  ef = ef,
-  ef_time = "time_window",
-  location_code = "MEX",
-  time_window_days = 365,
-  num_infec_cases_in_time_window = 1000,
-  avg_length_stay_days = avg_length_stay_days,
-  distribution_incubation = rlnorm,
-  params_incubation = c(4.6, sqrt(2.7)),
-  distribution_infectious = rnorm,
-  params_infectious = c(4.5, sqrt(0.6)),
-  num_simulations = 1000
-)
+
+## load data
+data(YF_Brazil)
+indstate <- 1 # "Espirito Santo" (indstate = 1), "Minas Gerais" (indstate = 2), "Southeast Brazil" (indstate = 5)
+
+
+## functions generating incubation and infectious periods
+incubation <- function(n) {
+  rlnorm(n, 1.46, 0.35)
+}
+
+infectious <- function(n) {
+  rnorm(n, 4.5, 1.5/1.96)
+}
+
+
+res <- estimate_risk_spread(location_code =
+  YF_Brazil$states$location_code[indstate], location_population =
+  YF_Brazil$states$location_population[indstate], num_cases_time_window =
+  YF_Brazil$states$num_cases_time_window[indstate], first_date_cases =
+  YF_Brazil$states$first_date_cases[indstate], last_date_cases =
+  YF_Brazil$states$last_date_cases[indstate],
+  num_travellers_to_other_locations = YF_Brazil$T_D[indstate,],
+  num_travellers_from_other_locations = YF_Brazil$T_O[indstate,],
+  avg_length_stay_days = YF_Brazil$length_of_stay,
+  r_incubation = incubation,
+  r_infectious = infectious,
+  n_sim = 100000 )
+
 head(res)
 
 }
