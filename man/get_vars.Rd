@@ -20,7 +20,8 @@ A data frame with one
 }
 \description{
 This accessor extracts variables from the \code{locations} data frame in an
-\code{epiflow} object. \code{get_vars`` is a generic with a method defined for}epiflows` objects.
+\code{epiflow} object. \code{get_vars} is a generic with a method defined for
+\code{epiflows} objects.
 }
 \details{
 The

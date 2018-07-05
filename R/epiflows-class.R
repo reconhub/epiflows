@@ -141,6 +141,11 @@ epiflows.data.frame <- function(flows, locations = NULL,
 #' ef <- epiflows(from, to, focus = "MEX", locations = Mex_travel_2009[[2]])
 #' ef
 epiflows.integer <- function(from, to, focus, locations, ...) {
+  
+  #
+  # TODO: change from -> inflow
+  #       change to   -> outflow
+  #
   if (is.null(names(from)) || is.null(names(to))) {
   # Check to make sure from and to are named
     msg <- paste("The vectors `from` and `to` must be named to",
