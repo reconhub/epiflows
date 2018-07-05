@@ -4,10 +4,13 @@
 \alias{grid_epiflows}
 \title{Visualise epidemic flows using a grid}
 \usage{
-grid_epiflows(x, ...)
+grid_epiflows(x, color_by = c("from", "to", "none"), ...)
 }
 \arguments{
 \item{x}{An \code{epiflows} object.}
+
+\item{color_by}{A character string indicating if flows should be colored by
+origin (\code{from}) or destination (\code{to}).}
 }
 \description{
 This grid plot shows flows between locations by positioning origins and

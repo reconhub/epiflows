@@ -28,6 +28,8 @@ grid_epiflows <- function(x, color_by = c("from", "to", "none"), ...) {
     input, ggplot2::aes_string(y = "from", x = "to")) +
     ggplot2::geom_point(
       ggplot2::aes_string(size = "n", color = color_by), ...) +
-    ggplot2::scale_color_discrete(guide = FALSE)
+    ggplot2::scale_color_discrete(guide = FALSE) +
+    ggplot2::scale_size("Flow") +
+    ggplot2::labs(y = "Origin", x = "Destination")
 }
 
