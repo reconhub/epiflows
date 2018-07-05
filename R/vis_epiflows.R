@@ -15,6 +15,7 @@
 #' @param ... Further arguments to be passed on to
 #'   [epicontacts::vis_epicontacts()]
 #'
+#' @importFrom epicontacts vis_epicontacts
 
 vis_epiflows <- function(x, ...) {
 

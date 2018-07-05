@@ -116,7 +116,8 @@ epiflows.data.frame <- function(locations, flows, id = 1L,
 }
 
 #' @param focus a character vector specifying the focal location for integer 
-#'   input.
+#'   input. This is necessary for integer input to make clear what "to" and 
+#'   "from" are relative to.
 #'
 #' @rdname epiflows
 #' @export
@@ -126,7 +127,7 @@ epiflows.data.frame <- function(locations, flows, id = 1L,
 #' flows <- Mex_travel_2009[[1]]
 #' to    <- setNames(flows[["MEX"]], rownames(flows))
 #' from  <- unlist(flows["MEX", , drop = TRUE])
-#' ef <- epiflows(to = to, from = from, focus = "MEX", locations = Mex_travel_2009[[2]])
+#' ef <- epiflows(from, to, focus = "MEX", locations = Mex_travel_2009[[2]])
 #' ef
 epiflows.integer <- function(from, to, focus, locations, ...) {
   if (is.null(names(from)) || is.null(names(to))) {

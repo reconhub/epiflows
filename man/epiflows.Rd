@@ -46,7 +46,8 @@ contained in the flow. This can be an integer or character. Default is the
 third column.}
 
 \item{focus}{a character vector specifying the focal location for integer 
-input.}
+input. This is necessary for integer input to make clear what "to" and 
+"from" are relative to.}
 }
 \value{
 An \code{epiflows} object in list format with four elements:
@@ -110,7 +111,7 @@ data(Mex_travel_2009)
 flows <- Mex_travel_2009[[1]]
 to    <- setNames(flows[["MEX"]], rownames(flows))
 from  <- unlist(flows["MEX", , drop = TRUE])
-ef <- epiflows(to = to, from = from, focus = "MEX", locations = Mex_travel_2009[[2]])
+ef <- epiflows(from, to, focus = "MEX", locations = Mex_travel_2009[[2]])
 ef
 }
 \author{
