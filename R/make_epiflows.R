@@ -33,21 +33,7 @@ make_epiflows <- function(to,
   )
 }
 
-## Terminates the workflow and throws an error
-## when x is NULL, NA, or an empty object (e.g., character(0)).
-stop_if_invalid <- function(x) {
-  object_name <- as.character(substitute(x))
 
-  if (is.null(x)) {
-    stop(object_name, " is NULL")
-  }
-  if (length(x) == 0) {
-    stop(object_name, " is empty")
-  }
-  if (all(is.na(x))) {
-    stop(object_name, " is NA")
-  }
-}
 
 ## If locationsdata is valid, returns it as a data frame.
 ## If not, stops the workflow.

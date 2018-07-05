@@ -37,9 +37,13 @@
 #' use in [estimate_risk_spread()] or [map_epiflows()]. 
 #' 
 #' \subsection{Developer note: object structure}{
-#'   Because flows of cases from one location to another can be thought of as a 
+#'   Because a flow of cases from one location to another can be thought of as a 
 #'   contact with a wider scope, the `epiflows` object inherits from the `epicontacts` object, constructed
-#'   via [epicontacts::make_epicontacts()]. This means that 
+#'   via [epicontacts::make_epicontacts()]. This means that all the methods for
+#'   subsetting an object of class `epicontacts` also applies to `epiflows`,
+#'   including the use of the function [epicontacts::thin()]. One caveat is that,
+#'   internally, the names of the elements within the object do not match the
+#'   terminology used in *epiflows*. 
 #' }
 #' 
 #' @importFrom epicontacts make_epicontacts
@@ -151,23 +155,12 @@ epiflows.integer <- function(from, to, focus, locations, ...) {
   epiflows.data.frame(locations, flows, ...)
 }
 
+#' @rdname epiflows
+#' @export
 epiflows.numeric <- epiflows.integer
+
 
 new_column_positions <- function(i, old_names, new_names) {
   match(old_names[i], old_names, nomatch = 0)
 }
 
-# This function will filter out any invalid options for dots
-valid_dots <- function(dots) {
-  # These names can be expanded
-  out <- dots[names(dots) %in% 
-              c("coords", 
-                "pop_size", 
-                "duration_stay")
-              ]
-  if (length(out) < length(dots)) {
-    diffnames <- paste(setdiff(names(dots), names(out)), collapse = ",")
-    warning(paste("Ignoring the following variables:", diffnames))
-  }
-  out
-}

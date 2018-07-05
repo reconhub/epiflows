@@ -4,6 +4,7 @@
 \alias{epiflows}
 \alias{epiflows.data.frame}
 \alias{epiflows.integer}
+\alias{epiflows.numeric}
 \title{Create an epiflows object}
 \usage{
 epiflows(...)
@@ -12,6 +13,8 @@ epiflows(...)
   to = 2L, n = 3L, ...)
 
 \method{epiflows}{integer}(from, to, focus, locations, ...)
+
+\method{epiflows}{numeric}(from, to, focus, locations, ...)
 }
 \arguments{
 \item{...}{Any number of}
@@ -79,9 +82,13 @@ such as coordinates and duration of stay can be included in the linelist for
 use in \code{\link[=estimate_risk_spread]{estimate_risk_spread()}} or \code{\link[=map_epiflows]{map_epiflows()}}.
 
 \subsection{Developer note: object structure}{
-Because flows of cases from one location to another can be thought of as a
+Because a flow of cases from one location to another can be thought of as a
 contact with a wider scope, the \code{epiflows} object inherits from the \code{epicontacts} object, constructed
-via \code{\link[epicontacts:make_epicontacts]{epicontacts::make_epicontacts()}}. This means that
+via \code{\link[epicontacts:make_epicontacts]{epicontacts::make_epicontacts()}}. This means that all the methods for
+subsetting an object of class \code{epicontacts} also applies to \code{epiflows},
+including the use of the function \code{\link[epicontacts:thin]{epicontacts::thin()}}. One caveat is that,
+internally, the names of the elements within the object do not match the
+terminology used in \emph{epiflows}.
 }
 }
 \examples{
