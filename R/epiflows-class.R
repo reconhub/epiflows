@@ -1,4 +1,4 @@
-#' Read linelist and contact data
+#' Create an epiflows object
 #'
 #' This function reads data stored as data.frame containing linelist (case
 #' information, where each row corresponds to a unique patient), and contacts
@@ -6,60 +6,71 @@
 #' for matching to be achieved.
 #'
 #' @export
+#' @md
 #'
-#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
+#' @author Zhian Kamvar, Thibaut Jombart
 #'
-#' @param linelist a \link{data.frame} with at least one column providing unique
-#'     patient identifiers
+#' @return An `epiflows` object in list format with four elements:
 #'
-#' @param contacts a \link{data.frame} that needs at least two columns
-#'     indicating patients between which cases take place; these need not be
-#'     referenced in the linelist
+#'  - **locations** (accessible via [get_locations()]): a data frame of 
+#'    locations with first column 'id' containing character vector of unique 
+#'    identifiers.
 #'
-#' @param id an index or name indicating which column in \code{linelist}
-#'     contains unique identifiers; default is first column in \code{linelist}
-#'     data frame
-#'
-#' @param from an index or name indicating which column in \code{contacts}
-#'     contains the first region
-#'
-#' @param to an index or name indicating which column in \code{contacts}
-#'     contains the second region
-#'
-#' @param n an index or name indicating which column in \code{contacts}
-#'     contains the number of cases flowing between the "from" region and the
-#'     "to" region
-#' @param ... named character or integers 
-#'
-#' @return An \code{epicontacts} object in list format with three elements:
-#'
-#' \itemize{
-#' \item \code{linelist}: data.frame of cases with first column 'id'
-#' containing character vector of unique identifiers
-#'
-#' \item \code{contacts}: data.frame of contacts with first two columns named
-#' 'from' and 'to' indicating unique pairs of contact between individuals
-#'
-#' \item \code{directed}: indicator as to whether or not the contacts are to be
-#' considered directed or not
-#' }
+#'  - **flows** (accessible via [get_flows()]): data.frame of flows with first 
+#'    two columns named 'from' and 'to' indicating directed flows between two 
+#'    locations, and a third column named 'n', specifying the number of cases in
+#'    each flow. 
+#'  - **vars** (accessible via [get_vars()]). This contains a named list of 
+#'    available variables that can be used in further plotting and/or modelling.
+#'    Available variables are:
+#'    
+#'     - coords
+#'     - pop_size
+#'     - duration_of_stay
 #'
 #' @details
 #'
-#' An \code{epicontacts} object can be created from two components:
-#' \itemize{
-#' \item a linelist provided as a \code{data.frame} where columns are
-#' different variables describing cases, and where each row is a different case.
-#' and a contact list.
-#'
-#' \item a contact list provided as a \code{data.frame} where each row contains
-#' unique pairs of contacts with unique features of contact in columns. The line
-#' list and contact list should share an identification scheme for individuals.
+#' The `epiflows` object can be constructed using simply a list of locations with
+#' optional metadata (similar to a linelist) and a list of flows that describes
+#' the number of cases flowing from one location to another. Optional metadata
+#' such as coordinates and duration of stay can be included in the linelist for
+#' use in [estimate_risk_spread()] or [map_epiflows()]. 
+#' 
+#' \subsection{Developer note: object structure}{
+#'   Because flows of cases from one location to another can be thought of as a 
+#'   contact with a wider scope, the `epiflows` object inherits from the `epicontacts` object, constructed
+#'   via [epicontacts::make_epicontacts()]. This means that 
 #' }
+#' 
+#' @importFrom epicontacts make_epicontacts
+#' 
+epiflows <- function(...) {
+  UseMethod("epiflows")
+}
+
+#' @param locations a data frame where each row represents a location. This can
+#'   have any number of columns specifying useful metadata about the location,
+#'   but it must contain at least one column specifying the location ID used in
+#'   the `flows` data frame (as specified by the `id` argument, below).
+#' @param flows a data frame where each row represents a flow from one location
+#'   to the next. This must have at least three columns: 
+#'   - Where the flow started (as specified in `from`, below) 
+#'   - Where the flow ended (as specified in `to`, below) 
+#'   - How many cases were involved (as specified in `n`, below)
+#' @param id The column to use for the identifier in the `locations` data frame.
+#'   This defaults to the first column.
+#' @param from the column in the `flows` data frame indicating where the flow
+#'   started. This can be an integer or character. Default is the first column.
+#' @param to the column in the `flows` data frame indicating where the flow
+#'   ended. This can be an integer or a character. Default is the second column.
+#' @param n the column in the `flows` data frame indicating how many cases were
+#'   contained in the flow. This can be an integer or character. Default is the
+#'   third column.
+#' @param ... Any number of
 #'
-#' @references
-#'     \url{http://foodborne.unl.edu/public/role/epidemiologist/lineLists.html}
-#'
+#' @md
+#' @rdname epiflows
+#' @export
 #' @examples
 #' data(YF_Brazil)
 #' from     <- as.data.frame.table(YF_Brazil$T_D)
@@ -74,13 +85,7 @@
 #' ef <- epiflows(linelist, contacts, pop_size = "num_cases_time_window")
 #' ef
 #' # Access variable information
-#' ef$linelist[ef$vars$pop_size]
-#' @importFrom epicontacts make_epicontacts
-#' 
-epiflows <- function(...) {
-  UseMethod("epiflows")
-}
-
+#' get_vars(ef, "pop_size")
 epiflows.data.frame <- function(locations, flows, id = 1L, 
                                 from = 1L, to = 2L, n = 3L, ...){
   out <- epicontacts::make_epicontacts(linelist = locations, 
@@ -106,6 +111,19 @@ epiflows.data.frame <- function(locations, flows, id = 1L,
   out
 }
 
+#' @param focus a character vector specifying the focal location for integer 
+#'   input.
+#'
+#' @rdname epiflows
+#' @export
+#'
+#' @examples
+#' data(Mex_travel_2009)
+#' flows <- Mex_travel_2009[[1]]
+#' to    <- setNames(flows[["MEX"]], rownames(flows))
+#' from  <- unlist(flows["MEX", , drop = TRUE])
+#' ef <- epiflows(to = to, from = from, focus = "MEX", locations = Mex_travel_2009[[2]])
+#' ef
 epiflows.integer <- function(from, to, focus, locations, ...) {
   if (is.null(names(from)) || is.null(names(to))) {
   # Check to make sure from and to are named

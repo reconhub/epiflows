@@ -2,46 +2,67 @@
 % Please edit documentation in R/epiflows-class.R
 \name{epiflows}
 \alias{epiflows}
-\title{Read linelist and contact data}
+\alias{epiflows.data.frame}
+\alias{epiflows.integer}
+\title{Create an epiflows object}
 \usage{
 epiflows(...)
+
+\method{epiflows}{data.frame}(locations, flows, id = 1L, from = 1L,
+  to = 2L, n = 3L, ...)
+
+\method{epiflows}{integer}(from, to, focus, locations, ...)
 }
 \arguments{
-\item{...}{named character or integers}
+\item{...}{Any number of}
 
-\item{linelist}{a \link{data.frame} with at least one column providing unique
-patient identifiers}
+\item{locations}{a data frame where each row represents a location. This can
+have any number of columns specifying useful metadata about the location,
+but it must contain at least one column specifying the location ID used in
+the \code{flows} data frame (as specified by the \code{id} argument, below).}
 
-\item{contacts}{a \link{data.frame} that needs at least two columns
-indicating patients between which cases take place; these need not be
-referenced in the linelist}
+\item{flows}{a data frame where each row represents a flow from one location
+to the next. This must have at least three columns:
+\itemize{
+\item Where the flow started (as specified in \code{from}, below)
+\item Where the flow ended (as specified in \code{to}, below)
+\item How many cases were involved (as specified in \code{n}, below)
+}}
 
-\item{id}{an index or name indicating which column in \code{linelist}
-contains unique identifiers; default is first column in \code{linelist}
-data frame}
+\item{id}{The column to use for the identifier in the \code{locations} data frame.
+This defaults to the first column.}
 
-\item{from}{an index or name indicating which column in \code{contacts}
-contains the first region}
+\item{from}{the column in the \code{flows} data frame indicating where the flow
+started. This can be an integer or character. Default is the first column.}
 
-\item{to}{an index or name indicating which column in \code{contacts}
-contains the second region}
+\item{to}{the column in the \code{flows} data frame indicating where the flow
+ended. This can be an integer or a character. Default is the second column.}
 
-\item{n}{an index or name indicating which column in \code{contacts}
-contains the number of cases flowing between the "from" region and the
-"to" region}
+\item{n}{the column in the \code{flows} data frame indicating how many cases were
+contained in the flow. This can be an integer or character. Default is the
+third column.}
+
+\item{focus}{a character vector specifying the focal location for integer 
+input.}
 }
 \value{
-An \code{epicontacts} object in list format with three elements:
-
+An \code{epiflows} object in list format with four elements:
 \itemize{
-\item \code{linelist}: data.frame of cases with first column 'id'
-containing character vector of unique identifiers
-
-\item \code{contacts}: data.frame of contacts with first two columns named
-'from' and 'to' indicating unique pairs of contact between individuals
-
-\item \code{directed}: indicator as to whether or not the contacts are to be
-considered directed or not
+\item \strong{locations} (accessible via \code{\link[=get_locations]{get_locations()}}): a data frame of
+locations with first column 'id' containing character vector of unique
+identifiers.
+\item \strong{flows} (accessible via \code{\link[=get_flows]{get_flows()}}): data.frame of flows with first
+two columns named 'from' and 'to' indicating directed flows between two
+locations, and a third column named 'n', specifying the number of cases in
+each flow.
+\item \strong{vars} (accessible via \code{\link[=get_vars]{get_vars()}}). This contains a named list of
+available variables that can be used in further plotting and/or modelling.
+Available variables are:
+\itemize{
+\item coords
+\item pop_size
+\item duration_of_stay
+}
 }
 }
 \description{
@@ -51,15 +72,16 @@ between patients. Common identifiers should be used in the two data sources
 for matching to be achieved.
 }
 \details{
-An \code{epicontacts} object can be created from two components:
-\itemize{
-\item a linelist provided as a \code{data.frame} where columns are
-different variables describing cases, and where each row is a different case.
-and a contact list.
+The \code{epiflows} object can be constructed using simply a list of locations with
+optional metadata (similar to a linelist) and a list of flows that describes
+the number of cases flowing from one location to another. Optional metadata
+such as coordinates and duration of stay can be included in the linelist for
+use in \code{\link[=estimate_risk_spread]{estimate_risk_spread()}} or \code{\link[=map_epiflows]{map_epiflows()}}.
 
-\item a contact list provided as a \code{data.frame} where each row contains
-unique pairs of contacts with unique features of contact in columns. The line
-list and contact list should share an identification scheme for individuals.
+\subsection{Developer note: object structure}{
+Because flows of cases from one location to another can be thought of as a
+contact with a wider scope, the \code{epiflows} object inherits from the \code{epicontacts} object, constructed
+via \code{\link[epicontacts:make_epicontacts]{epicontacts::make_epicontacts()}}. This means that
 }
 }
 \examples{
@@ -76,11 +98,14 @@ linelist <- merge(linelist,
 ef <- epiflows(linelist, contacts, pop_size = "num_cases_time_window")
 ef
 # Access variable information
-ef$linelist[ef$vars$pop_size]
-}
-\references{
-\url{http://foodborne.unl.edu/public/role/epidemiologist/lineLists.html}
+get_vars(ef, "pop_size")
+data(Mex_travel_2009)
+flows <- Mex_travel_2009[[1]]
+to    <- setNames(flows[["MEX"]], rownames(flows))
+from  <- unlist(flows["MEX", , drop = TRUE])
+ef <- epiflows(to = to, from = from, focus = "MEX", locations = Mex_travel_2009[[2]])
+ef
 }
 \author{
-Thibaut Jombart (\email{thibautjombart@gmail.com})
+Zhian Kamvar, Thibaut Jombart
 }
