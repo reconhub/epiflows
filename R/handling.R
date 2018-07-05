@@ -16,20 +16,21 @@
 #' 
 #' @export
 `[.epiflows` <- function(ef, i, ...) {
-  if (!is.character(i)) {
-    stop("Please specify a character vector of location codes")
-  }
-  matching_codes <- i %in% get_codes(ef)
-  if (!all(matching_codes)) {
-    stop("Code not found: ", i[!matching_codes])
-  }
-  locationsdata <- get_location_data(ef, i)
-  to <- get_flow_data(ef, direction = "to")[i]
-  from <- get_flow_data(ef, direction = "from")[i]
-  make_epiflows(
-    to = to,
-    from = from,
-    code = ef$origin,
-    locationsdata = locationsdata
-  )
+  NextMethod()
+  # if (!is.character(i)) {
+  #   stop("Please specify a character vector of location codes")
+  # }
+  # matching_codes <- i %in% get_codes(ef)
+  # if (!all(matching_codes)) {
+  #   stop("Code not found: ", i[!matching_codes])
+  # }
+  # locationsdata <- get_location_data(ef, i)
+  # to <- get_flow_data(ef, direction = "to")[i]
+  # from <- get_flow_data(ef, direction = "from")[i]
+  # make_epiflows(
+  #   to = to,
+  #   from = from,
+  #   code = ef$origin,
+  #   locationsdata = locationsdata
+  # )
 }
