@@ -22,9 +22,12 @@
 
 
 random_flows <- function(n, pool = letters) {
-  from <- sample(pool, n, replace = TRUE)
-  to <- sample(pool, n, replace = TRUE)
-  n <- sample(1:100, n, replace = TRUE)
+  if (missing(n)) {
+    stop("n is missing with no default")
+  }
+  from <- sample(pool, size = n, replace = TRUE)
+  to <- sample(pool, size = n, replace = TRUE)
+  n <- sample(1:100, size = n, replace = TRUE)
   data.frame(from = as.character(from),
              to = as.character(to),
              n = n,
