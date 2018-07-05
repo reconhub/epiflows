@@ -9,11 +9,7 @@
 #' @noRd
 valid_dots <- function(dots) {
   # These names can be expanded
-  out <- dots[names(dots) %in% 
-                c("coords", 
-                  "pop_size", 
-                  "duration_stay")
-              ]
+  out <- dots[names(dots) %in% getOption("epiflows.vars")]
   if (length(out) < length(dots)) {
     diffnames <- paste(setdiff(names(dots), names(out)), collapse = ",")
     warning(paste("Ignoring the following variables:", diffnames))
