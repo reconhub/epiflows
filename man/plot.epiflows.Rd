@@ -5,8 +5,8 @@
 \title{Plot a flow map}
 \usage{
 \method{plot}{epiflows}(x, type = "foo", origin,
-  title = sprintf("Flows from \%s", origin_name),
-  loc_column = "country", lon_lat_columns = c("lon", "lat"), ...)
+  title = sprintf("Flows from \%s", origin_name), loc_column = "country",
+  lon_lat_columns = c("lon", "lat"), ...)
 }
 \arguments{
 \item{x}{An \code{epiflows} object.}

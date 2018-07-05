@@ -2,18 +2,13 @@
 % Please edit documentation in R/random_flows.R
 \name{random_flows}
 \alias{random_flows}
-\alias{random_flows.epiflows}
-\title{Access flow data}
+\title{Generate random flows inputs}
 \usage{
-random_flows(x, ...)
-
-\method{random_flows}{epiflows}(x, n = nrow(x$contacts), ...)
-}
-\arguments{
-\item{x}{An \code{epiflows} object.}
+random_flows(n, pool = letters)
 }
 \value{
-A \code{data.frame} with 3 columns:
+A \code{data.frame} with 3 columns, which can serve as input to the
+  constructor:
 
 \itemize{
 
@@ -21,15 +16,14 @@ A \code{data.frame} with 3 columns:
 
  \item \code{to}: destination of the flow
 
- \item \code{flow}: magnitude of the flow - can be a number of passengers per
+ \item \code{n}: magnitude of the flow - can be a number of passengers per
  unit of time, a rate, a probability of migration
 
 }
 }
 \description{
-This accessor extract random flow data from an \code{epiflows}
-object. \code{random_flows} is a generic with a method defined for
-\code{epiflows} objects.
+This internal function generates random flows on a scale of 1 to 100 from a
+pool of locations.
 }
 \author{
 Thibaut Jombart

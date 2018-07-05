@@ -4,19 +4,25 @@
 \alias{vis_epiflows}
 \title{Visualise epidemic flows using visNetwork}
 \usage{
-vis_epiflows(x, ...)
+vis_epiflows(x, arrows = TRUE, max_width = 10, ...)
 }
 \arguments{
 \item{x}{An \code{epiflows} object.}
 
-\item{...}{Further arguments to be passed on to
-\code{\link[epicontacts:vis_epicontacts]{epicontacts::vis_epicontacts()}}}
+\item{arrows}{A logical indicating if arrows should be used to show
+directionality of the flows.}
+
+\item{max_width}{A single number indicating the maximum width of an edge
+(corresponding to the largest flow).}
+
+\item{...}{Further arguments passed to \code{\link[epicontacts:vis_epicontacts]{epicontacts::vis_epicontacts()}}}
 }
 \description{
 This function shows flows between locations using a dynamic network
 visualisation implemented in the package \pkg{visNetwork}, calling the
 function \code{\link[epicontacts:vis_epicontacts]{epicontacts::vis_epicontacts()}} of the \pkg{epicontacts}
-package.
+package. The thickness of arrows/edges is proportional to the corresponding
+flows.
 }
 \author{
 Thibaut Jombart

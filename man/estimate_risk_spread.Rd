@@ -5,10 +5,10 @@
 \title{Travel-related disease cases spreaded to other locations from an infectious
 location}
 \usage{
-estimate_risk_spread(location_code, location_population,
-  num_cases_time_window, first_date_cases, last_date_cases,
-  num_travellers_to_other_locations, num_travellers_from_other_locations,
-  avg_length_stay_days, r_incubation, r_infectious, n_sim = 1000)
+estimate_risk_spread(location_code, location_population, num_cases_time_window,
+  first_date_cases, last_date_cases, num_travellers_to_other_locations,
+  num_travellers_from_other_locations, avg_length_stay_days, r_incubation,
+  r_infectious, n_sim = 1000)
 }
 \arguments{
 \item{location_code}{a character string denoting the infectious location code}

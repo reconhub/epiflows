@@ -9,8 +9,8 @@
 \usage{
 epiflows(...)
 
-\method{epiflows}{data.frame}(locations, flows, id = 1L, from = 1L,
-  to = 2L, n = 3L, ...)
+\method{epiflows}{data.frame}(flows, locations = NULL, from = 1L, to = 2L,
+  n = 3L, id = 1L, ...)
 
 \method{epiflows}{integer}(from, to, focus, locations, ...)
 
@@ -18,11 +18,6 @@ epiflows(...)
 }
 \arguments{
 \item{...}{Any number of}
-
-\item{locations}{a data frame where each row represents a location. This can
-have any number of columns specifying useful metadata about the location,
-but it must contain at least one column specifying the location ID used in
-the \code{flows} data frame (as specified by the \code{id} argument, below).}
 
 \item{flows}{a data frame where each row represents a flow from one location
 to the next. This must have at least three columns:
@@ -32,21 +27,23 @@ to the next. This must have at least three columns:
 \item How many cases were involved (as specified in \code{n}, below)
 }}
 
-\item{id}{The column to use for the identifier in the \code{locations} data frame.
-This defaults to the first column.}
+\item{locations}{a data frame where each row represents a location. This can
+have any number of columns specifying useful metadata about the location,
+but it must contain at least one column specifying the location ID used in
+the \code{flows} data frame (as specified by the \code{id} argument, below).}
 
 \item{from}{the column in the \code{flows} data frame indicating where the flow
 started. This can be an integer or character. Default is the first column.}
-
-\item{to}{the column in the \code{flows} data frame indicating where the flow
-ended. This can be an integer or a character. Default is the second column.}
 
 \item{n}{the column in the \code{flows} data frame indicating how many cases were
 contained in the flow. This can be an integer or character. Default is the
 third column.}
 
-\item{focus}{a character vector specifying the focal location for integer 
-input. This is necessary for integer input to make clear what "to" and 
+\item{id}{The column to use for the identifier in the \code{locations} data frame.
+This defaults to the first column.}
+
+\item{focus}{a character vector specifying the focal location for integer
+input. This is necessary for integer input to make clear what "to" and
 "from" are relative to.}
 }
 \value{
@@ -58,7 +55,7 @@ identifiers.
 \item \strong{flows} (accessible via \code{\link[=get_flows]{get_flows()}}): data.frame of flows with first
 two columns named 'from' and 'to' indicating directed flows between two
 locations, and a third column named 'n', specifying the number of cases in
-each flow.
+each
 \item \strong{vars} (accessible via \code{\link[=get_vars]{get_vars()}}). This contains a named list of
 available variables that can be used in further plotting and/or modelling.
 Available variables are:
@@ -82,25 +79,24 @@ the number of cases flowing from one location to another. Optional metadata
 such as coordinates and duration of stay can be included in the linelist for
 use in \code{\link[=estimate_risk_spread]{estimate_risk_spread()}} or \code{\link[=map_epiflows]{map_epiflows()}}.
 
-\subsection{Developer note: object structure}{
-Because a flow of cases from one location to another can be thought of as a
-contact with a wider scope, the \code{epiflows} object inherits from the \code{epicontacts} object, constructed
+\subsection{Developer note: object structure}{ Because a flow of cases from
+one location to another can be thought of as a contact with a wider scope,
+the \code{epiflows} object inherits from the \code{epicontacts} object, constructed
 via \code{\link[epicontacts:make_epicontacts]{epicontacts::make_epicontacts()}}. This means that all the methods for
 subsetting an object of class \code{epicontacts} also applies to \code{epiflows},
-including the use of the function \code{\link[epicontacts:thin]{epicontacts::thin()}}. One caveat is that,
-internally, the names of the elements within the object do not match the
-terminology used in \emph{epiflows}.
-}
+including the use of the function \code{\link[epicontacts:thin]{epicontacts::thin()}}. One caveat is
+that, internally, the names of the elements within the object do not match
+the terminology used in \emph{epiflows}.  }
 }
 \examples{
 data(YF_Brazil)
 from     <- as.data.frame.table(YF_Brazil$T_D)
 to       <- as.data.frame.table(YF_Brazil$T_O)[c(2,1,3)]
-contacts <- rbind(setNames(from, c("from", "to", "n")), 
+contacts <- rbind(setNames(from, c("from", "to", "n")),
                   setNames(to, c("from", "to", "n")))
 linelist <- YF_Brazil$states
 others   <- setdiff(contacts$to, YF_Brazil$states$location_code)
-linelist <- merge(linelist, 
+linelist <- merge(linelist,
                   data.frame(location_code = others),
                   by = "location_code", all = TRUE)
 ef <- epiflows(linelist, contacts, pop_size = "num_cases_time_window")
@@ -115,5 +111,5 @@ ef <- epiflows(from, to, focus = "MEX", locations = Mex_travel_2009[[2]])
 ef
 }
 \author{
-Zhian Kamvar, Thibaut Jombart
+Zhian Kamvar
 }
