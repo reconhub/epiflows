@@ -5,21 +5,29 @@
 #' plotting \code{epiflows} with \code{type = "grid"}.
 #'
 #' @export
+#' @md
 #'
 #' @author Thibaut Jombart
 #'
-#' @param x An \code{epiflows} object.
+#' @param x An `epiflows` object.
 #'
-## #' @param all_locations A logical indicating if all locations, even though
-## #'   without inflows or outflows, should be used; defaults to \code{TRUE}.
-## #'
+#' @param color_by A character string indicating if flows should be colored by
+#'   origin (`from`) or destination (`to`).
+#'
 
-grid_epiflows <- function(x, ...) {
+grid_epiflows <- function(x, color_by = c("from", "to", "none"), ...) {
+  color_by <- match.arg(color_by)
+  if (color_by == "none") {
+    color_by <- NULL
+  }
 
   ## get_flows returns a 3 column data.frame: from, to, flows (
   input <- get_flows(x)
 
-  ggplot2::ggplot(input, ggplot2::aes_string(y = "from", x = "to")) +
-    ggplot2::geom_point(ggplot2::aes_string(size = "n"), ...)
+  ggplot2::ggplot(
+    input, ggplot2::aes_string(y = "from", x = "to")) +
+    ggplot2::geom_point(
+      ggplot2::aes_string(size = "n", color = color_by), ...) +
+    ggplot2::scale_color_discrete(guide = FALSE)
 }
 
