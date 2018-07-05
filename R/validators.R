@@ -10,6 +10,9 @@
 valid_dots <- function(dots) {
   # These names can be expanded
   out <- dots[names(dots) %in% getOption("epiflows.vars")]
+  #
+  # TODO: Throw error if there are any unnamed arguments
+  #
   if (length(out) < length(dots)) {
     diffnames <- paste(setdiff(names(dots), names(out)), collapse = ",")
     warning(paste("Ignoring the following variables:", diffnames))
