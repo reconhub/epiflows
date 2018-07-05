@@ -10,12 +10,12 @@ vis_epiflows(x, ...)
 \item{x}{An \code{epiflows} object.}
 
 \item{...}{Further arguments to be passed on to
-\code[epicontacts]{vis_epicontacts}}
+\code{\link[epicontacts:vis_epicontacts]{epicontacts::vis_epicontacts()}}}
 }
 \description{
 This function shows flows between locations using a dynamic network
-visualisation implemented in the package \code{visNetwork}, calling the
-function \code[epicontacts]{vis_epicontacts} of the \code{epicontacts}
+visualisation implemented in the package \pkg{visNetwork}, calling the
+function \code{\link[epicontacts:vis_epicontacts]{epicontacts::vis_epicontacts()}} of the \pkg{epicontacts}
 package.
 }
 \author{
