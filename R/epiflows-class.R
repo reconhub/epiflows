@@ -56,25 +56,31 @@ epiflows <- function(...) {
 #'   have any number of columns specifying useful metadata about the location,
 #'   but it must contain at least one column specifying the location ID used in
 #'   the `flows` data frame (as specified by the `id` argument, below).
+#'
 #' @param flows a data frame where each row represents a flow from one location
 #'   to the next. This must have at least three columns:
 #'   - Where the flow started (as specified in `from`, below)
 #'   - Where the flow ended (as specified in `to`, below)
 #'   - How many cases were involved (as specified in `n`, below)
+#'
 #' @param id The column to use for the identifier in the `locations` data frame.
 #'   This defaults to the first column.
+#'
 #' @param from the column in the `flows` data frame indicating where the flow
 #'   started. This can be an integer or character. Default is the first column.
-#' @param to the column in the `flows` data frame indicating where the flow
-#'   ended. This can be an integer or a character. Default is the second column.
+#'
 #' @param n the column in the `flows` data frame indicating how many cases were
 #'   contained in the flow. This can be an integer or character. Default is the
 #'   third column.
+#'
 #' @param ... Any number of
 #'
 #' @md
+#'
 #' @rdname epiflows
+#'
 #' @export
+#'
 #' @examples
 #' data(YF_Brazil)
 #' from     <- as.data.frame.table(YF_Brazil$T_D)
@@ -90,8 +96,13 @@ epiflows <- function(...) {
 #' ef
 #' # Access variable information
 #' get_vars(ef, "pop_size")
-epiflows.data.frame <- function(locations, flows, id = 1L,
-                                from = 1L, to = 2L, n = 3L, ...){
+epiflows.data.frame <- function(flows, locations = NULL,
+                                from = 1L, to = 2L, n = 3L,
+                                id = 1L, ...){
+  if (is.null(locations)) {
+    ids <- unique(unlist(flows[c(from, to)]))
+    locations <- data.frame(id = ids)
+  }
   out <- epicontacts::make_epicontacts(linelist = locations,
                                        contacts = flows,
                                        id       = id,
