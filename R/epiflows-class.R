@@ -127,7 +127,8 @@ epiflows.integer <- function(from, to, focus, locations, ...) {
   # Create a data frame with from and to, repeating the focus as necessary
   flows <- data.frame(from = c(rep(focus, length(to)), names(from)),
                       to   = c(names(to), rep(focus, length(from))),
-                      n    = c(to, from))
+                      n    = c(to, from),
+                      stringsAsFactors = FALSE)
   # Use the data frame to pass to epiflows.data.frame
   epiflows.data.frame(locations, flows, ...)
 }
