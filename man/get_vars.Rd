@@ -7,21 +7,23 @@
 \usage{
 get_vars(x, ...)
 
-\method{get_vars}{epiflows}(x, y = NULL)
+\method{get_vars}{epiflows}(x, what = NULL)
 }
 \arguments{
 \item{x}{An \code{epiflows} object.}
 
-\item{y}{a valid character string specifying the variable desired. If
+\item{what}{a valid character string specifying the variable desired. If
 \code{NULL} (default), the names of the available vars will be returned.}
 }
 \value{
 A data frame with one
 }
 \description{
-This accessor extract location data from an \code{epiflows}
-object. \code{get_vars} is a generic with a method defined for
-\code{epiflows} objects.
+This accessor extracts variables from the \code{locations} data frame in an
+\code{epiflow} object. \code{get_vars`` is a generic with a method defined for}epiflows` objects.
+}
+\details{
+The
 }
 \author{
 Thibaut Jombart, Zhian Kamvar
