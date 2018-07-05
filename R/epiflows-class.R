@@ -107,11 +107,29 @@ epiflows.data.frame <- function(locations, flows, id = 1L,
 }
 
 epiflows.integer <- function(from, to, focus, locations, ...) {
+  if (is.null(names(from)) || is.null(names(to))) {
   # Check to make sure from and to are named
-  # Validate the locations list. 
+    msg <- paste("The vectors `from` and `to` must be named to",
+                 "create an epiflows object.")
+    stop(msg)
+  }
+  if (length(focus) != 1L || !is.character(focus)) {
+    stop("The argument `focus` must be a single character string.")
+  }
   # Check to make sure focus is in the names of from and to
+  if (!focus %in% names(from) && !focus %in% names(to)) {
+    stop("`focus` must be present in both the `from` and `to` vectors.")
+  }
+  # TODO: Validate the locations list.
+  # 
+  # PUT SOME CODE IN ME! (╯°□°）╯︵ ┻━┻
+  # 
   # Create a data frame with from and to, repeating the focus as necessary
+  flows <- data.frame(from = c(rep(focus, length(to)), names(from)),
+                      to   = c(names(to), rep(focus, length(from))),
+                      n    = c(to, from))
   # Use the data frame to pass to epiflows.data.frame
+  epiflows.data.frame(locations, flows, ...)
 }
 
 epiflows.numeric <- epiflows.integer
