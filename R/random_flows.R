@@ -1,43 +1,34 @@
-#' Access flow data
+#' Generate random flows inputs
 #'
-#' This accessor extract random flow data from an \code{epiflows}
-#' object. \code{random_flows} is a generic with a method defined for
-#' \code{epiflows} objects.
+#' This internal function generates random flows on a scale of 1 to 100 from a
+#' pool of locations.
 #'
-#'
-#' @rdname random_flows
-#' 
-#' @export
 #'
 #' @author Thibaut Jombart
 #'
-#' @return A \code{data.frame} with 3 columns:
+#' @return A \code{data.frame} with 3 columns, which can serve as input to the
+#'   constructor:
 #'
 #' \itemize{
 #'
 #'  \item \code{from}: origin of the flow
 #'
 #'  \item \code{to}: destination of the flow
-#' 
-#'  \item \code{flow}: magnitude of the flow - can be a number of passengers per
+#'
+#'  \item \code{n}: magnitude of the flow - can be a number of passengers per
 #'  unit of time, a rate, a probability of migration
-#' 
+#'
 #' }
 
-random_flows <- function(x, ...) {
-  UseMethod("random_flows", x)
-}
 
-
-#' @rdname random_flows
-#' 
-#' @export
-#' 
-#' @param x An \code{epiflows} object.
-
-random_flows.epiflows <- function(x, n = nrow(x$contacts), ...) {
-  if (n < 1) n <- round(nrow(x$contacts), n)
-  x$contacts[sample(nrow(x$contacts), n, ...), c("from", "to", "n"), drop = FALSE]
+random_flows <- function(n, pool = letters) {
+  from <- sample(pool, n, replace = TRUE)
+  to <- sample(pool, n, replace = TRUE)
+  n <- sample(1:100, n, replace = TRUE)
+  data.frame(from = as.character(from),
+             to = as.character(to),
+             n = n,
+             stringsAsFactors = FALSE)
 }
 
 

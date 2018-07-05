@@ -8,22 +8,23 @@
 #' @export
 #' @md
 #'
-#' @author Zhian Kamvar, Thibaut Jombart
+#' @author Zhian Kamvar
 #'
 #' @return An `epiflows` object in list format with four elements:
 #'
-#'  - **locations** (accessible via [get_locations()]): a data frame of 
-#'    locations with first column 'id' containing character vector of unique 
+#'  - **locations** (accessible via [get_locations()]): a data frame of
+#'    locations with first column 'id' containing character vector of unique
 #'    identifiers.
 #'
-#'  - **flows** (accessible via [get_flows()]): data.frame of flows with first 
-#'    two columns named 'from' and 'to' indicating directed flows between two 
+#'  - **flows** (accessible via [get_flows()]): data.frame of flows with first
+#'    two columns named 'from' and 'to' indicating directed flows between two
 #'    locations, and a third column named 'n', specifying the number of cases in
-#'    each flow. 
-#'  - **vars** (accessible via [get_vars()]). This contains a named list of 
+#'    each
+#'
+#'  - **vars** (accessible via [get_vars()]). This contains a named list of
 #'    available variables that can be used in further plotting and/or modelling.
 #'    Available variables are:
-#'    
+#'
 #'     - coords
 #'     - pop_size
 #'     - duration_of_stay
@@ -34,20 +35,19 @@
 #' optional metadata (similar to a linelist) and a list of flows that describes
 #' the number of cases flowing from one location to another. Optional metadata
 #' such as coordinates and duration of stay can be included in the linelist for
-#' use in [estimate_risk_spread()] or [map_epiflows()]. 
-#' 
-#' \subsection{Developer note: object structure}{
-#'   Because a flow of cases from one location to another can be thought of as a 
-#'   contact with a wider scope, the `epiflows` object inherits from the `epicontacts` object, constructed
+#' use in [estimate_risk_spread()] or [map_epiflows()].
+#'
+#' \subsection{Developer note: object structure}{ Because a flow of cases from
+#'   one location to another can be thought of as a contact with a wider scope,
+#'   the `epiflows` object inherits from the `epicontacts` object, constructed
 #'   via [epicontacts::make_epicontacts()]. This means that all the methods for
 #'   subsetting an object of class `epicontacts` also applies to `epiflows`,
-#'   including the use of the function [epicontacts::thin()]. One caveat is that,
-#'   internally, the names of the elements within the object do not match the
-#'   terminology used in *epiflows*. 
-#' }
-#' 
+#'   including the use of the function [epicontacts::thin()]. One caveat is
+#'   that, internally, the names of the elements within the object do not match
+#'   the terminology used in *epiflows*.  }
+#'
 #' @importFrom epicontacts make_epicontacts
-#' 
+#'
 epiflows <- function(...) {
   UseMethod("epiflows")
 }
@@ -57,9 +57,9 @@ epiflows <- function(...) {
 #'   but it must contain at least one column specifying the location ID used in
 #'   the `flows` data frame (as specified by the `id` argument, below).
 #' @param flows a data frame where each row represents a flow from one location
-#'   to the next. This must have at least three columns: 
-#'   - Where the flow started (as specified in `from`, below) 
-#'   - Where the flow ended (as specified in `to`, below) 
+#'   to the next. This must have at least three columns:
+#'   - Where the flow started (as specified in `from`, below)
+#'   - Where the flow ended (as specified in `to`, below)
 #'   - How many cases were involved (as specified in `n`, below)
 #' @param id The column to use for the identifier in the `locations` data frame.
 #'   This defaults to the first column.
@@ -79,23 +79,23 @@ epiflows <- function(...) {
 #' data(YF_Brazil)
 #' from     <- as.data.frame.table(YF_Brazil$T_D)
 #' to       <- as.data.frame.table(YF_Brazil$T_O)[c(2,1,3)]
-#' contacts <- rbind(setNames(from, c("from", "to", "n")), 
+#' contacts <- rbind(setNames(from, c("from", "to", "n")),
 #'                   setNames(to, c("from", "to", "n")))
 #' linelist <- YF_Brazil$states
 #' others   <- setdiff(contacts$to, YF_Brazil$states$location_code)
-#' linelist <- merge(linelist, 
+#' linelist <- merge(linelist,
 #'                   data.frame(location_code = others),
 #'                   by = "location_code", all = TRUE)
 #' ef <- epiflows(linelist, contacts, pop_size = "num_cases_time_window")
 #' ef
 #' # Access variable information
 #' get_vars(ef, "pop_size")
-epiflows.data.frame <- function(locations, flows, id = 1L, 
+epiflows.data.frame <- function(locations, flows, id = 1L,
                                 from = 1L, to = 2L, n = 3L, ...){
-  out <- epicontacts::make_epicontacts(linelist = locations, 
-                                       contacts = flows, 
+  out <- epicontacts::make_epicontacts(linelist = locations,
+                                       contacts = flows,
                                        id       = id,
-                                       from     = from, 
+                                       from     = from,
                                        to       = to,
                                        directed = TRUE)
   # TODO: This variable needs to be validated before having the name changed.
@@ -104,8 +104,8 @@ epiflows.data.frame <- function(locations, flows, id = 1L,
   for (i in names(dots)) {
     # Numeric indices need to be re-matched to the new output
     if (is.numeric(dots[[i]])) {
-      dots[[i]] <- new_column_positions(dots[[i]], 
-                                        old_names = names(locations), 
+      dots[[i]] <- new_column_positions(dots[[i]],
+                                        old_names = names(locations),
                                         new_names = names(out$linelist))
     }
     stop_if_invalid(out$linelist[[dots[[i]]]])
@@ -115,8 +115,8 @@ epiflows.data.frame <- function(locations, flows, id = 1L,
   out
 }
 
-#' @param focus a character vector specifying the focal location for integer 
-#'   input. This is necessary for integer input to make clear what "to" and 
+#' @param focus a character vector specifying the focal location for integer
+#'   input. This is necessary for integer input to make clear what "to" and
 #'   "from" are relative to.
 #'
 #' @rdname epiflows
@@ -144,9 +144,9 @@ epiflows.integer <- function(from, to, focus, locations, ...) {
     stop("`focus` must be present in both the `from` and `to` vectors.")
   }
   # TODO: Validate the locations list.
-  # 
+  #
   # PUT SOME CODE IN ME! (╯°□°）╯︵ ┻━┻
-  # 
+  #
   # Create a data frame with from and to, repeating the focus as necessary
   flows <- data.frame(from = c(rep(focus, length(to)), names(from)),
                       to   = c(names(to), rep(focus, length(from))),
