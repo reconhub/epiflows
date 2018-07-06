@@ -52,16 +52,16 @@ epiflows <- function(...) {
   UseMethod("epiflows")
 }
 
-#' @param locations a data frame where each row represents a location. This can
-#'   have any number of columns specifying useful metadata about the location,
-#'   but it must contain at least one column specifying the location ID used in
-#'   the `flows` data frame (as specified by the `id` argument, below).
-#'
 #' @param flows a data frame where each row represents a flow from one location
 #'   to the next. This must have at least three columns:
 #'   - Where the flow started (as specified in `from`, below)
 #'   - Where the flow ended (as specified in `to`, below)
 #'   - How many cases were involved (as specified in `n`, below)
+#'
+#' @param locations a data frame where each row represents a location. This can
+#'   have any number of columns specifying useful metadata about the location,
+#'   but it must contain at least one column specifying the location ID used in
+#'   the `flows` data frame (as specified by the `id` argument, below).
 #'
 #' @param id The column to use for the identifier in the `locations` data frame.
 #'   This defaults to the first column.

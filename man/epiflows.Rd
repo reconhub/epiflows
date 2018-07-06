@@ -9,8 +9,8 @@
 \usage{
 epiflows(...)
 
-\method{epiflows}{data.frame}(flows, locations = NULL, from = 1L, to = 2L,
-  n = 3L, id = 1L, ...)
+\method{epiflows}{data.frame}(flows, locations = NULL, from = 1L,
+  to = 2L, n = 3L, id = 1L, ...)
 
 \method{epiflows}{integer}(from, to, focus, locations, ...)
 
