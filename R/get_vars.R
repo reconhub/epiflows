@@ -13,7 +13,7 @@
 #'
 #' @author Thibaut Jombart, Zhian Kamvar
 #'
-#' @return A data frame with one
+#' @return A data frame with the variables requested
 
 get_vars <- function(x, ...) {
   UseMethod("get_vars", x)
@@ -39,9 +39,30 @@ get_vars.epiflows <- function(x, what = NULL) {
                    "\nThe variables present are:\n%s")
       msg <- sprintf(msg, what, available_vars)
       stop(msg)
+    } else {
+      return(x$linelist[what])
     }
   }
   x$linelist[x$vars[[what]]]
 }
 
 
+#' @rdname get_vars
+#'
+#' @export
+get_coords <- function(x) {
+  UseMethod("get_coords", x)
+}
+
+
+#' @export
+#' @rdname get_vars
+#'
+get_coords.epiflows <- function(x) {
+  res <- try(get_vars(x, "coords"), silent = TRUE)
+  if (inherits(res, "try-error")) {
+    xprint <- deparse(substitute(x))
+    stop(sprintf("coordinates are not set in %s", xprint))
+  }
+  res
+}
