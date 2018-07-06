@@ -20,17 +20,18 @@
 #' @md
 #'
 #' @examples
+#' data(Mex_travel_2009)
 #' flows <- Mex_travel_2009[[1]]
 #' to <- structure(flows[["MEX"]], names = rownames(flows))
 #' from <- unlist(flows["MEX", ])
-#' ef <- make_epiflows( to = to, from = from, code = "MEX", locationsdata = Mex_travel_2009[[2]])
+#' ef <- epiflows(from, to, "MEX", Mex_travel_2009[[2]])
 #' plot(ef, type = "map", origin = "MEX")
 #'
 #'
 #' from2 <-  structure(round(pmax(0, rnorm(5, 2500, 600))), names = LETTERS[1:5])
 #' to2 <- structure(round(pmax(0,rnorm(5, 5000, 400 ))), names = LETTERS[1:5])
 #' my_locationsdata <-  data.frame(code = LETTERS[1:5], country = letters[1:5], population = pmax(100, rnorm(5, 5000000, 64000)))
-#' testepi <-  make_epiflows(from = from2, to = to2, code = "A", locationsdata = locationsdata2)
+#' testepi <-  epiflows(to2, from2, "A", my_locationsdata)
 #' testef <- add_coordinates(testepi, lon_lat_columns = data.frame(lon = rnorm(5), lat = rnorm(5)))
 #' plot(testef, type = "foo", origin = "A") ## TBD
 
@@ -92,22 +93,22 @@ map_epiflows <- function(x, ...) {
     htmltools::HTML
   )
 
-  graph <- leaflet::leaflet(data = sldf) %>%
-    leaflet::setView(
+  graph <- leaflet::leaflet(data = sldf)
+  graph <- leaflet::setView(graph,
       lng = origin_data[,lon_lat_columns[1]],
       lat = origin_data[,lon_lat_columns[2]],
       zoom = 2
-    ) %>%
-    leaflet::addTiles(
+    )
+  graph <- leaflet::addTiles(graph, 
       urlTemplate = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    ) %>%
-    leaflet::addPolylines(
+    )
+  graph <- leaflet::addPolylines(graph,
       data = sldf,
       color =  ~pal(count),
       highlightOptions = leaflet::highlightOptions(color = "black", weight = 2),
       label = labels
-    ) %>%
-    leaflet::addLegend(
+    )
+  graph <- leaflet::addLegend(graph,
       "bottomright",
       pal = pal,
       values = ~count,
