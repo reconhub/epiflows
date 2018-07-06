@@ -9,15 +9,16 @@
 \usage{
 epiflows(...)
 
-\method{epiflows}{data.frame}(flows, locations = NULL, from = 1L, to = 2L,
-  n = 3L, id = 1L, ...)
+\method{epiflows}{data.frame}(flows, locations = NULL, from = 1L,
+  to = 2L, n = 3L, id = 1L, ...)
 
-\method{epiflows}{integer}(from, to, focus, locations, ...)
+\method{epiflows}{integer}(inflow, outflow, focus, locations, ...)
 
-\method{epiflows}{numeric}(from, to, focus, locations, ...)
+\method{epiflows}{numeric}(inflow, outflow, focus, locations, ...)
 }
 \arguments{
-\item{...}{Any number of}
+\item{...}{Any number of varaibles that can be used for mapping or modelling.
+See \code{\link[=get_vars]{get_vars()}} for details.}
 
 \item{flows}{a data frame where each row represents a flow from one location
 to the next. This must have at least three columns:
@@ -43,8 +44,8 @@ third column.}
 This defaults to the first column.}
 
 \item{focus}{a character vector specifying the focal location for integer
-input. This is necessary for integer input to make clear what "to" and
-"from" are relative to.}
+input. This is necessary for integer input to make clear what "outflow" and
+"inflow" are relative to.}
 }
 \value{
 An \code{epiflows} object in list format with four elements:
@@ -79,37 +80,40 @@ the number of cases flowing from one location to another. Optional metadata
 such as coordinates and duration of stay can be included in the linelist for
 use in \code{\link[=estimate_risk_spread]{estimate_risk_spread()}} or \code{\link[=map_epiflows]{map_epiflows()}}.
 
-\subsection{Developer note: object structure}{ Because a flow of cases from
-one location to another can be thought of as a contact with a wider scope,
-the \code{epiflows} object inherits from the \code{epicontacts} object, constructed
-via \code{\link[epicontacts:make_epicontacts]{epicontacts::make_epicontacts()}}. This means that all the methods for
-subsetting an object of class \code{epicontacts} also applies to \code{epiflows},
-including the use of the function \code{\link[epicontacts:thin]{epicontacts::thin()}}. One caveat is
-that, internally, the names of the elements within the object do not match
-the terminology used in \emph{epiflows}.  }
+\subsection{Developer note: object structure}{
+
+Because a flow of cases from one location to another can be thought of as a
+contact with a wider scope, the \code{epiflows} object inherits from the
+\code{epicontacts} object, constructed via \code{\link[epicontacts:make_epicontacts]{epicontacts::make_epicontacts()}}.
+This means that all the methods for subsetting an object of class
+\code{epicontacts} also applies to \code{epiflows}, including the use of the function
+\code{\link[epicontacts:thin]{epicontacts::thin()}}. One caveat is that, internally, the names of the
+elements within the object do not match the terminology used in \emph{epiflows}.
+
+}
 }
 \examples{
 data(YF_Brazil)
-from     <- as.data.frame.table(YF_Brazil$T_D)
-to       <- as.data.frame.table(YF_Brazil$T_O)[c(2,1,3)]
-contacts <- rbind(setNames(from, c("from", "to", "n")),
-                  setNames(to, c("from", "to", "n")))
-linelist <- YF_Brazil$states
-others   <- setdiff(contacts$to, YF_Brazil$states$location_code)
-linelist <- merge(linelist,
-                  data.frame(location_code = others),
-                  by = "location_code", all = TRUE)
-ef <- epiflows(linelist, contacts, pop_size = "num_cases_time_window")
+from  <- as.data.frame.table(YF_Brazil$T_D)
+to    <- as.data.frame.table(YF_Brazil$T_O)[c(2, 1, 3)]
+flows <- rbind(setNames(from, c("from", "to", "n")),
+               setNames(to, c("from", "to", "n")))
+locations <- YF_Brazil$states
+others    <- setdiff(contacts$to, YF_Brazil$states$location_code)
+locations <- merge(locations,
+                   data.frame(location_code = others),
+                   by = "location_code", all = TRUE)
+ef <- epiflows(flows, locations, pop_size = "num_cases_time_window")
 ef
 # Access variable information
 get_vars(ef, "pop_size")
 data(Mex_travel_2009)
-flows <- Mex_travel_2009[[1]]
-to    <- setNames(flows[["MEX"]], rownames(flows))
-from  <- unlist(flows["MEX", , drop = TRUE])
-ef <- epiflows(from, to, focus = "MEX", locations = Mex_travel_2009[[2]])
+flows   <- Mex_travel_2009[[1]]
+outflow <- setNames(flows[["MEX"]], rownames(flows))
+inflow  <- unlist(flows["MEX", , drop = TRUE])
+ef <- epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
 ef
 }
 \author{
-Zhian Kamvar
+Zhian Kamvar, Thibaut Jombart
 }

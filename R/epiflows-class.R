@@ -8,7 +8,7 @@
 #' @export
 #' @md
 #'
-#' @author Zhian Kamvar
+#' @author Zhian Kamvar, Thibaut Jombart
 #'
 #' @return An `epiflows` object in list format with four elements:
 #'
@@ -37,14 +37,17 @@
 #' such as coordinates and duration of stay can be included in the linelist for
 #' use in [estimate_risk_spread()] or [map_epiflows()].
 #'
-#' \subsection{Developer note: object structure}{ Because a flow of cases from
-#'   one location to another can be thought of as a contact with a wider scope,
-#'   the `epiflows` object inherits from the `epicontacts` object, constructed
-#'   via [epicontacts::make_epicontacts()]. This means that all the methods for
-#'   subsetting an object of class `epicontacts` also applies to `epiflows`,
-#'   including the use of the function [epicontacts::thin()]. One caveat is
-#'   that, internally, the names of the elements within the object do not match
-#'   the terminology used in *epiflows*.  }
+#' \subsection{Developer note: object structure}{ 
+#'   
+#'   Because a flow of cases from one location to another can be thought of as a
+#'   contact with a wider scope, the `epiflows` object inherits from the
+#'   `epicontacts` object, constructed via [epicontacts::make_epicontacts()].
+#'   This means that all the methods for subsetting an object of class
+#'   `epicontacts` also applies to `epiflows`, including the use of the function
+#'   [epicontacts::thin()]. One caveat is that, internally, the names of the
+#'   elements within the object do not match the terminology used in *epiflows*.
+#'   
+#' }
 #'
 #' @importFrom epicontacts make_epicontacts
 #'
@@ -52,16 +55,16 @@ epiflows <- function(...) {
   UseMethod("epiflows")
 }
 
-#' @param locations a data frame where each row represents a location. This can
-#'   have any number of columns specifying useful metadata about the location,
-#'   but it must contain at least one column specifying the location ID used in
-#'   the `flows` data frame (as specified by the `id` argument, below).
-#'
 #' @param flows a data frame where each row represents a flow from one location
 #'   to the next. This must have at least three columns:
 #'   - Where the flow started (as specified in `from`, below)
 #'   - Where the flow ended (as specified in `to`, below)
 #'   - How many cases were involved (as specified in `n`, below)
+#'
+#' @param locations a data frame where each row represents a location. This can
+#'   have any number of columns specifying useful metadata about the location,
+#'   but it must contain at least one column specifying the location ID used in
+#'   the `flows` data frame (as specified by the `id` argument, below).
 #'
 #' @param id The column to use for the identifier in the `locations` data frame.
 #'   This defaults to the first column.
@@ -73,7 +76,8 @@ epiflows <- function(...) {
 #'   contained in the flow. This can be an integer or character. Default is the
 #'   third column.
 #'
-#' @param ... Any number of
+#' @param ... Any number of varaibles that can be used for mapping or modelling.
+#'   See [get_vars()] for details.
 #'
 #' @md
 #'
@@ -83,16 +87,16 @@ epiflows <- function(...) {
 #'
 #' @examples
 #' data(YF_Brazil)
-#' from     <- as.data.frame.table(YF_Brazil$T_D)
-#' to       <- as.data.frame.table(YF_Brazil$T_O)[c(2,1,3)]
-#' contacts <- rbind(setNames(from, c("from", "to", "n")),
-#'                   setNames(to, c("from", "to", "n")))
-#' linelist <- YF_Brazil$states
-#' others   <- setdiff(contacts$to, YF_Brazil$states$location_code)
-#' linelist <- merge(linelist,
-#'                   data.frame(location_code = others),
-#'                   by = "location_code", all = TRUE)
-#' ef <- epiflows(linelist, contacts, pop_size = "num_cases_time_window")
+#' from  <- as.data.frame.table(YF_Brazil$T_D)
+#' to    <- as.data.frame.table(YF_Brazil$T_O)[c(2, 1, 3)]
+#' flows <- rbind(setNames(from, c("from", "to", "n")),
+#'                setNames(to, c("from", "to", "n")))
+#' locations <- YF_Brazil$states
+#' others    <- setdiff(contacts$to, YF_Brazil$states$location_code)
+#' locations <- merge(locations,
+#'                    data.frame(location_code = others),
+#'                    by = "location_code", all = TRUE)
+#' ef <- epiflows(flows, locations, pop_size = "num_cases_time_window")
 #' ef
 #' # Access variable information
 #' get_vars(ef, "pop_size")
@@ -100,8 +104,8 @@ epiflows.data.frame <- function(flows, locations = NULL,
                                 from = 1L, to = 2L, n = 3L,
                                 id = 1L, ...){
   if (is.null(locations)) {
-    ids <- unique(unlist(flows[c(from, to)]))
-    locations <- data.frame(id = ids)
+    ids       <- unique(unlist(flows[c(from, to)]))
+    locations <- data.frame(id = ids, stringsAsFactors = FALSE)
   }
   out <- epicontacts::make_epicontacts(linelist = locations,
                                        contacts = flows,
@@ -109,11 +113,21 @@ epiflows.data.frame <- function(flows, locations = NULL,
                                        from     = from,
                                        to       = to,
                                        directed = TRUE)
-  # TODO: This variable needs to be validated before having the name changed.
-  names(out$contacts)[n] <- "n"
+  if (names(flows)[n] != "n") {
+    newn <- new_column_positions(n, names(flows), names(out$contacts))
+    oldn <- "n" %in% names(out$contacts)
+    if (oldn) {
+      msg <- paste("A varaible named `n` exists in the flows data frame.",
+                   "This will be renamed to n.1")
+      names(out$contacts)[names(out$contacts) == "n"] <- "n.1" 
+    }
+    names(out$contacts)[newn] <- "n"
+  }
   dots <- valid_dots(list(...))
+  # The vars need to be checked to make sure they are:
+  #  - aligned with the re-arranged data
+  #  - actually valid when matched against the linelist
   for (i in names(dots)) {
-    # Numeric indices need to be re-matched to the new output
     if (is.numeric(dots[[i]])) {
       dots[[i]] <- new_column_positions(dots[[i]],
                                         old_names = names(locations),
@@ -127,46 +141,41 @@ epiflows.data.frame <- function(flows, locations = NULL,
 }
 
 #' @param focus a character vector specifying the focal location for integer
-#'   input. This is necessary for integer input to make clear what "to" and
-#'   "from" are relative to.
+#'   input. This is necessary for integer input to make clear what "outflow" and
+#'   "inflow" are relative to.
 #'
 #' @rdname epiflows
 #' @export
 #'
 #' @examples
 #' data(Mex_travel_2009)
-#' flows <- Mex_travel_2009[[1]]
-#' to    <- setNames(flows[["MEX"]], rownames(flows))
-#' from  <- unlist(flows["MEX", , drop = TRUE])
-#' ef <- epiflows(from, to, focus = "MEX", locations = Mex_travel_2009[[2]])
+#' flows   <- Mex_travel_2009[[1]]
+#' outflow <- setNames(flows[["MEX"]], rownames(flows))
+#' inflow  <- unlist(flows["MEX", , drop = TRUE])
+#' ef <- epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
 #' ef
-epiflows.integer <- function(from, to, focus, locations, ...) {
-  
-  #
-  # TODO: change from -> inflow
-  #       change to   -> outflow
-  #
-  if (is.null(names(from)) || is.null(names(to))) {
-  # Check to make sure from and to are named
-    msg <- paste("The vectors `from` and `to` must be named to",
+epiflows.integer <- function(inflow, outflow, focus, locations, ...) {
+  if (is.null(names(inflow)) || is.null(names(outflow))) {
+  # Check to make sure inflow and outflow are named
+    msg <- paste("The vectors `inflow` and `outflow` must be named to",
                  "create an epiflows object.")
     stop(msg)
   }
   if (length(focus) != 1L || !is.character(focus)) {
     stop("The argument `focus` must be a single character string.")
   }
-  # Check to make sure focus is in the names of from and to
-  if (!focus %in% names(from) && !focus %in% names(to)) {
-    stop("`focus` must be present in both the `from` and `to` vectors.")
+  # Check to make sure focus is in the names of inflow and to
+  if (!focus %in% names(inflow) && !focus %in% names(outflow)) {
+    stop("`focus` must be present in both the `inflow` and `to` vectors.")
   }
   # TODO: Validate the locations list.
   #
   # PUT SOME CODE IN ME! (╯°□°）╯︵ ┻━┻
   #
-  # Create a data frame with from and to, repeating the focus as necessary
-  flows <- data.frame(from = c(rep(focus, length(to)), names(from)),
-                      to   = c(names(to), rep(focus, length(from))),
-                      n    = c(to, from),
+  # Create a data frame with inflow and outflow, repeating the focus as necessary
+  flows <- data.frame(inflow  = c(rep(focus, length(outflow)), names(inflow)),
+                      outflow = c(names(outflow), rep(focus, length(inflow))),
+                      n       = c(outflow, inflow),
                       stringsAsFactors = FALSE)
   # Use the data frame to pass to epiflows.data.frame
   epiflows.data.frame(locations, flows, ...)
@@ -177,7 +186,29 @@ epiflows.integer <- function(from, to, focus, locations, ...) {
 epiflows.numeric <- epiflows.integer
 
 
+#' Reposition the columns displaced by make_epicontacts
+#'
+#' epicontacts will reposition columns in the linelist and contacts list so that
+#' important features appear first. Because of this, user-specified numeric 
+#' columns will need to change. 
+#' 
+#' This also helps me because I don't have to remember which order the arguments
+#' of match need. 
+#' 
+#' @param i an vector of integers specifying column names.
+#' @param old_names Names of the original data frame
+#' @param new_names Names in the modified data frame
+#'
+#' @return a vector of integers
+#' @noRd
+#' @keywords internal
+#' 
+#' let <- letters[10:1]
+#' bc1 <- 2:3
+#' bc2 <- new_column_positions(bc1, letters, let)
+#' letters[bc1]
+#' letters[bc2]
 new_column_positions <- function(i, old_names, new_names) {
-  match(old_names[i], old_names, nomatch = 0)
+  match(old_names[i], new_names, nomatch = 0)
 }
 
