@@ -17,7 +17,7 @@ print.epiflows <- function(x, ...) {
   cat("\n  // class:", paste(class(x), collapse = ", "))
   cat("\n  //", format(nrow(x$linelist), big.mark = ","), "locations;", 
       format(nrow(x$contacts), big.mark = ","), "flows; directed")
-  if (length(x$vars > 0)) {
+  if (length(x$vars) > 0) {
     cat("\n  // optional variables:", paste(names(x$vars), collapse = ", "), "\n")
   }
   cat("\n  // locations\n\n")
