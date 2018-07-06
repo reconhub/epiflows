@@ -133,7 +133,9 @@ epiflows.data.frame <- function(flows, locations = NULL,
                                         old_names = names(locations),
                                         new_names = names(out$linelist))
     }
-    stop_if_invalid(out$linelist[[dots[[i]]]])
+    for (j in dots[[i]]) {
+      stop_if_invalid(out$linelist[[j]])
+    }
   }
   out$vars    <- dots
   class(out)  <- c("epiflows", class(out))
@@ -178,7 +180,7 @@ epiflows.integer <- function(inflow, outflow, focus, locations, ...) {
                       n       = c(outflow, inflow),
                       stringsAsFactors = FALSE)
   # Use the data frame to pass to epiflows.data.frame
-  epiflows.data.frame(locations, flows, ...)
+  epiflows.data.frame(flows, locations, ...)
 }
 
 #' @rdname epiflows

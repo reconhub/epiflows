@@ -32,7 +32,7 @@ get_vars.epiflows <- function(x, what = NULL) {
   if (is.null(what)) {
     return(x$vars)
   } 
-  if (!what %in% x$vars) {
+  if (!what %in% names(x$vars)) {
     if (!what %in% names(x$linelist)) {
       available_vars <- paste(names(x$linelist)[-1], collapse = " ")
       msg <- paste("%s does not appear to be in the locations data.\n",
