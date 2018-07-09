@@ -37,8 +37,8 @@
 #' such as coordinates and duration of stay can be included in the linelist for
 #' use in [estimate_risk_spread()] or [map_epiflows()].
 #'
-#' \subsection{Developer note: object structure}{ 
-#'   
+#' \subsection{Developer note: object structure}{
+#'
 #'   Because a flow of cases from one location to another can be thought of as a
 #'   contact with a wider scope, the `epiflows` object inherits from the
 #'   `epicontacts` object, constructed via [epicontacts::make_epicontacts()].
@@ -46,7 +46,7 @@
 #'   `epicontacts` also applies to `epiflows`, including the use of the function
 #'   [epicontacts::thin()]. One caveat is that, internally, the names of the
 #'   elements within the object do not match the terminology used in *epiflows*.
-#'   
+#'
 #' }
 #'
 #' @importFrom epicontacts make_epicontacts
@@ -119,11 +119,12 @@ epiflows.data.frame <- function(flows, locations = NULL,
     if (oldn) {
       msg <- paste("A varaible named `n` exists in the flows data frame.",
                    "This will be renamed to n.1")
-      names(out$contacts)[names(out$contacts) == "n"] <- "n.1" 
+      names(out$contacts)[names(out$contacts) == "n"] <- "n.1"
     }
     names(out$contacts)[newn] <- "n"
   }
-  dots <- valid_dots(list(...))
+  dots         <- valid_dots(list(...))
+  out$contacts <- valid_flows(out$contacts)
   # The vars need to be checked to make sure they are:
   #  - aligned with the re-arranged data
   #  - actually valid when matched against the linelist
@@ -191,12 +192,12 @@ epiflows.numeric <- epiflows.integer
 #' Reposition the columns displaced by make_epicontacts
 #'
 #' epicontacts will reposition columns in the linelist and contacts list so that
-#' important features appear first. Because of this, user-specified numeric 
-#' columns will need to change. 
-#' 
+#' important features appear first. Because of this, user-specified numeric
+#' columns will need to change.
+#'
 #' This also helps me because I don't have to remember which order the arguments
-#' of match need. 
-#' 
+#' of match need.
+#'
 #' @param i an vector of integers specifying column names.
 #' @param old_names Names of the original data frame
 #' @param new_names Names in the modified data frame
@@ -204,7 +205,7 @@ epiflows.numeric <- epiflows.integer
 #' @return a vector of integers
 #' @noRd
 #' @keywords internal
-#' 
+#'
 #' let <- letters[10:1]
 #' bc1 <- 2:3
 #' bc2 <- new_column_positions(bc1, letters, let)
@@ -213,4 +214,3 @@ epiflows.numeric <- epiflows.integer
 new_column_positions <- function(i, old_names, new_names) {
   match(old_names[i], new_names, nomatch = 0)
 }
-
