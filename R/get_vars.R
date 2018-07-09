@@ -4,7 +4,7 @@
 #' `epiflow` object. `get_vars` is a generic with a method defined for
 #' `epiflows` objects.
 #' 
-#' The 
+#' The function `get_coords()` is equivalent to `get_vars(x, "coords", id = TRUE)`
 #'
 #' @rdname get_vars
 #' @md
@@ -24,11 +24,14 @@ get_vars <- function(x, ...) {
 #' 
 #' @export
 #' 
-#' @param x An \code{epiflows} object.
+#' @param x An `epiflows` object.
 #' @param what a valid character string specifying the variable desired. If
-#'   \code{NULL} (default), the names of the available vars will be returned. 
+#'   `NULL` (default), the names of the available vars will be returned.
+#' @param id a logical. If `TRUE` (default), the `id` column of the locations
+#'   will be the first column of the data frame. if `FALSE`, the variable will
+#'   be returned without identifiers. 
 
-get_vars.epiflows <- function(x, what = NULL) {
+get_vars.epiflows <- function(x, what = NULL, id = TRUE) {
   if (is.null(what)) {
     return(x$vars)
   } 
@@ -40,10 +43,15 @@ get_vars.epiflows <- function(x, what = NULL) {
       msg <- sprintf(msg, what, available_vars)
       stop(msg)
     } else {
+      what <- if (id) c("id", what) else what
       return(x$linelist[what])
     }
   }
-  x$linelist[x$vars[[what]]]
+  if (id) {
+    return(x$linelist[c("id", x$vars[[what]])])
+  } else {
+    return(x$linelist[x$vars[[what]]])
+  }
 }
 
 
@@ -59,7 +67,7 @@ get_coords <- function(x) {
 #' @rdname get_vars
 #'
 get_coords.epiflows <- function(x) {
-  res <- try(get_vars(x, "coords"), silent = TRUE)
+  res <- try(get_vars(x, "coords", id = TRUE), silent = TRUE)
   if (inherits(res, "try-error")) {
     xprint <- deparse(substitute(x))
     stop(sprintf("coordinates are not set in %s", xprint))

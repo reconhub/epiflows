@@ -9,17 +9,21 @@
 \usage{
 get_vars(x, ...)
 
-\method{get_vars}{epiflows}(x, what = NULL)
+\method{get_vars}{epiflows}(x, what = NULL, id = TRUE)
 
 get_coords(x)
 
 \method{get_coords}{epiflows}(x)
 }
 \arguments{
-\item{x}{An \code{epiflows} object.}
+\item{x}{An `epiflows` object.}
 
 \item{what}{a valid character string specifying the variable desired. If
-\code{NULL} (default), the names of the available vars will be returned.}
+`NULL` (default), the names of the available vars will be returned.}
+
+\item{id}{a logical. If `TRUE` (default), the `id` column of the locations
+will be the first column of the data frame. if `FALSE`, the variable will
+be returned without identifiers.}
 }
 \value{
 A data frame with the variables requested
@@ -30,7 +34,7 @@ This accessor extracts variables from the \code{locations} data frame in an
 \code{epiflows} objects.
 }
 \details{
-The
+The function \code{get_coords()} is equivalent to \code{get_vars(x, "coords", id = TRUE)}
 }
 \author{
 Thibaut Jombart, Zhian Kamvar
