@@ -77,7 +77,7 @@ add_coordinates <- function(ef, coords = c("lon", "lat"), loc_column = "id",
     if (!overwrite && all(coords %in% names(get_locations(ef)))) {
       # If overwrite == FALSE and lon/lat columns already exist,
       # overwrite only rows with NA lon and lat
-      which_rows <- complete.cases(get_coords(ef))
+      which_rows <- !complete.cases(get_coords(ef))
       ef$linelist[which_rows, coords] <- ggmap::geocode(the_locations[which_rows])
     } else {
       # Otherwise, get all geocodes and write them to lon/lat columns
