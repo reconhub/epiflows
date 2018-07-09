@@ -74,7 +74,7 @@ add_coordinates <- function(ef, coords = c("lon", "lat"), loc_column = "id",
       stop(sprintf("`%s` is not a valid column name", loc_column))
     }
     the_locations <- as.character(get_vars(ef, loc_column)[[1]])
-    if (!overwrite && all(coords %in% names(get_locations(ef)))) {
+    if (overwrite && all(coords %in% names(get_locations(ef)))) {
       # If overwrite == FALSE and lon/lat columns already exist,
       # overwrite only rows with NA lon and lat
       which_rows <- !complete.cases(get_coords(ef))
