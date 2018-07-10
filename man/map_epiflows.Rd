@@ -4,7 +4,8 @@
 \alias{map_epiflows}
 \title{Map flows of people between locations}
 \usage{
-map_epiflows(x, title = "", center = NULL, sort = TRUE, ...)
+map_epiflows(x, title = "", center = NULL, sort = TRUE,
+  pal = "viridis", ...)
 }
 \arguments{
 \item{x}{An \code{epiflows} object.}
@@ -16,6 +17,10 @@ map_epiflows(x, title = "", center = NULL, sort = TRUE, ...)
 \item{sort}{a logical. When \code{TRUE} (default), the flows will be sorted
 in order of number of cases on the map so that the largest flows appear on
 top.}
+
+\item{pal}{a color palette to pass on to \code{\link[leaflet:colorQuantile]{leaflet::colorQuantile()}}. This
+can be the name of a viridis or RColorBrewer palette, a vector of hex colors,
+or a color-generating functon.}
 
 \item{...}{Additional parameters (not used).}
 }

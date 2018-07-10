@@ -14,6 +14,10 @@
 #' @param sort a logical. When `TRUE` (default), the flows will be sorted
 #'   in order of number of cases on the map so that the largest flows appear on
 #'   top.
+#' 
+#' @param pal a color palette to pass on to [leaflet::colorQuantile()]. This
+#'   can be the name of a viridis or RColorBrewer palette, a vector of hex colors,
+#'   or a color-generating functon.
 #'
 #' @param ... Additional parameters (not used).
 #'
@@ -55,8 +59,8 @@
 #' inflow  <- unlist(flows["MEX", , drop = TRUE])
 #' ef      <- epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
 #' ef      <- add_coordinates(ef, loc[-1])
-#' map_epiflows(ef, center = "MEX")
-map_epiflows <- function(x, title = "", center = NULL, sort = TRUE, ...) {
+#' map_epiflows(ef, center = "MEX", title = "Flows to and from Mexico")
+map_epiflows <- function(x, title = "", center = NULL, sort = TRUE, pal = "YlOrBr", ...) {
 
   # First thing to do is to calculate the great circle arc for the flows with
   # the make_lines internal function.
@@ -70,7 +74,7 @@ map_epiflows <- function(x, title = "", center = NULL, sort = TRUE, ...) {
   sldf <- make_SpatialLinesDataFrame(the_flows, the_coordinates)
 
   # Leaflet plot construction ---------------------------------------
-  pal    <- leaflet::colorQuantile(palette = "Greys",
+  pal    <- leaflet::colorQuantile(palette = pal,
                                    domain = sldf$n,
                                    n = 5
                                   )
@@ -105,7 +109,8 @@ map_epiflows <- function(x, title = "", center = NULL, sort = TRUE, ...) {
                                  color            = ~pal(n),
                                  data             = sldf,
                                  highlightOptions = lhighlight,
-                                 label            = labels
+                                 label            = labels,
+                                 weight           = ~log(n + 1)
                                 )
   graph <- leaflet::addLegend(graph,
                               "bottomright",
