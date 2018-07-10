@@ -18,6 +18,10 @@
 #' @param pal a color palette to pass on to [leaflet::colorQuantile()]. This
 #'   can be the name of a viridis or RColorBrewer palette, a vector of hex colors,
 #'   or a color-generating functon.
+#' 
+#' @param adjust_width a logical specifying if the width of the flows should
+#'   be adjusted to reflect the number of flows between locations. Defaults to
+#'   `TRUE`.
 #'
 #' @param ... Additional parameters (not used).
 #'
@@ -60,7 +64,8 @@
 #' ef      <- epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
 #' ef      <- add_coordinates(ef, loc[-1])
 #' map_epiflows(ef, center = "MEX", title = "Flows to and from Mexico")
-map_epiflows <- function(x, title = "", center = NULL, sort = TRUE, pal = "YlOrBr", ...) {
+map_epiflows <- function(x, title = "", center = NULL, sort = TRUE, 
+                         pal = "YlOrBr", adjust_width = TRUE, ...) {
 
   # First thing to do is to calculate the great circle arc for the flows with
   # the make_lines internal function.
@@ -103,14 +108,14 @@ map_epiflows <- function(x, title = "", center = NULL, sort = TRUE, pal = "YlOrB
   }
   urltemplate <- "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
   graph <- leaflet::addTiles(graph, urlTemplate = urltemplate)
-
+  the_weight <- if (adjust_width) ~log(n + 1) else 5
   lhighlight <- leaflet::highlightOptions(color = "black", weight = 2)
   graph <- leaflet::addPolylines(graph,
                                  color            = ~pal(n),
                                  data             = sldf,
                                  highlightOptions = lhighlight,
                                  label            = labels,
-                                 weight           = ~log(n + 1)
+                                 weight           = the_weight
                                 )
   graph <- leaflet::addLegend(graph,
                               "bottomright",

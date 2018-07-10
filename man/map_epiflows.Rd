@@ -5,7 +5,7 @@
 \title{Map flows of people between locations}
 \usage{
 map_epiflows(x, title = "", center = NULL, sort = TRUE,
-  pal = "viridis", ...)
+  pal = "YlOrBr", adjust_width = TRUE, ...)
 }
 \arguments{
 \item{x}{An \code{epiflows} object.}
@@ -21,6 +21,10 @@ top.}
 \item{pal}{a color palette to pass on to \code{\link[leaflet:colorQuantile]{leaflet::colorQuantile()}}. This
 can be the name of a viridis or RColorBrewer palette, a vector of hex colors,
 or a color-generating functon.}
+
+\item{adjust_width}{a logical specifying if the width of the flows should
+be adjusted to reflect the number of flows between locations. Defaults to
+\code{TRUE}.}
 
 \item{...}{Additional parameters (not used).}
 }
@@ -63,7 +67,7 @@ outflow <- setNames(flows[["MEX"]], rownames(flows))
 inflow  <- unlist(flows["MEX", , drop = TRUE])
 ef      <- epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
 ef      <- add_coordinates(ef, loc[-1])
-map_epiflows(ef, center = "MEX")
+map_epiflows(ef, center = "MEX", title = "Flows to and from Mexico")
 }
 \author{
 Paula Moraga, Pawel Piatkowski, Salla Toikkanen, Zhian Kamvar
