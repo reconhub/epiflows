@@ -4,13 +4,13 @@
 \alias{add_coordinates}
 \title{Add location coordinates}
 \usage{
-add_coordinates(ef, coords = c("lon", "lat"), loc_column = "id",
+add_coordinates(ef, coordinates = c("lon", "lat"), loc_column = "id",
   overwrite = FALSE)
 }
 \arguments{
 \item{ef}{An \code{epiflows} object.}
 
-\item{coords}{Either names of the appended columns with longitudes
+\item{coordinates}{Either names of the appended columns with longitudes
 and latitudes, respectively (default: "lon" and "lat") or a data frame with longitude and latitude columns.}
 
 \item{loc_column}{Name of the column where location names are stored
@@ -37,11 +37,11 @@ inflow  <- unlist(flows["MEX", , drop = TRUE])
 ef <- epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
 
 # generating random coordinates for demonstration
-dummy_coords <- data.frame(lon = runif(41, min = -95, max = 95),
+dummy_coordinates <- data.frame(lon = runif(41, min = -95, max = 95),
                            lat = runif(41, min = -95, max = 95))
 print(ef)
-print(flows <- add_coordinates(ef, coords = dummy_coords))
-get_coords(flows)
+print(flows <- add_coordinates(ef, coordinates = dummy_coordinates))
+get_coordinates(flows)
 
 \dontrun{
   # You can use google maps' geocode functionality if you have a decent 

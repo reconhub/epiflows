@@ -4,7 +4,7 @@
 #' `epiflow` object. `get_vars` is a generic with a method defined for
 #' `epiflows` objects.
 #'
-#' The function `get_coords()` is equivalent to `get_vars(x, "coords", id = TRUE)`
+#' The function `get_coordinates()` is equivalent to `get_vars(x, "coordinates", id = TRUE)`
 #'
 #' @rdname get_vars
 #' @md
@@ -58,8 +58,8 @@ get_vars.epiflows <- function(x, what = NULL, id = TRUE) {
 #' @rdname get_vars
 #'
 #' @export
-get_coords <- function(x, ...) {
-  UseMethod("get_coords", x)
+get_coordinates <- function(x, ...) {
+  UseMethod("get_coordinates", x)
 }
 
 
@@ -69,8 +69,8 @@ get_coords <- function(x, ...) {
 #'   coordinates. You cannot specify multiple locations with this parameter.
 #'   Defaults to `NULL`, indicating all locations.
 #'
-get_coords.epiflows <- function(x, location = NULL) {
-  res <- try(get_vars(x, "coords", id = TRUE), silent = TRUE)
+get_coordinates.epiflows <- function(x, location = NULL) {
+  res <- try(get_vars(x, "coordinates", id = TRUE), silent = TRUE)
   if (inherits(res, "try-error")) {
     xprint <- deparse(substitute(x))
     stop(sprintf("coordinates are not set in %s", xprint))

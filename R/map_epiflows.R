@@ -64,10 +64,10 @@ map_epiflows <- function(x, title = "", center = NULL, sort = TRUE, ...) {
   if (sort) {
     the_flows <- the_flows[order(the_flows$n), ]
   }
-  the_coords  <- get_coords(ef)
+  the_coordinates  <- get_coordinates(ef)
   
   # SpatialLinesDataFrame class construction ------------------------
-  sldf <- make_SpatialLinesDataFrame(the_flows, the_coords)
+  sldf <- make_SpatialLinesDataFrame(the_flows, the_coordinates)
 
   # Leaflet plot construction ---------------------------------------
   pal    <- leaflet::colorQuantile(palette = "Greys",
@@ -85,7 +85,7 @@ map_epiflows <- function(x, title = "", center = NULL, sort = TRUE, ...) {
   graph  <- leaflet::leaflet(data = sldf)
   if (!is.null(center)) {
     if (is.character(center) && length(center) == 1) {
-      center <- get_coords(ef, center)
+      center <- get_coordinates(ef, center)
     } else if (is.numeric(center) && length(center) == 2) {
       center <- center
     } else {

@@ -73,7 +73,7 @@ each
 available variables that can be used in further plotting and/or modelling.
 Available variables are:
 \itemize{
-\item coords
+\item coordinates
 \item pop_size
 \item duration_of_stay
 }
@@ -111,7 +111,7 @@ to    <- as.data.frame.table(YF_Brazil$T_O)[c(2, 1, 3)]
 flows <- rbind(setNames(from, c("from", "to", "n")),
                setNames(to, c("from", "to", "n")))
 locations <- YF_Brazil$states
-others    <- setdiff(contacts$to, YF_Brazil$states$location_code)
+others    <- setdiff(flows$to, YF_Brazil$states$location_code)
 locations <- merge(locations,
                    data.frame(location_code = others),
                    by = "location_code", all = TRUE)

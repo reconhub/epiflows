@@ -3,17 +3,17 @@
 \name{get_vars}
 \alias{get_vars}
 \alias{get_vars.epiflows}
-\alias{get_coords}
-\alias{get_coords.epiflows}
+\alias{get_coordinates}
+\alias{get_coordinates.epiflows}
 \title{Access flow data}
 \usage{
 get_vars(x, ...)
 
 \method{get_vars}{epiflows}(x, what = NULL, id = TRUE)
 
-get_coords(x, ...)
+get_coordinates(x, ...)
 
-\method{get_coords}{epiflows}(x, location = NULL)
+\method{get_coordinates}{epiflows}(x, location = NULL)
 }
 \arguments{
 \item{x}{An `epiflows` object.}
@@ -38,7 +38,7 @@ This accessor extracts variables from the \code{locations} data frame in an
 \code{epiflows} objects.
 }
 \details{
-The function \code{get_coords()} is equivalent to \code{get_vars(x, "coords", id = TRUE)}
+The function \code{get_coordinates()} is equivalent to \code{get_vars(x, "coordinates", id = TRUE)}
 }
 \author{
 Thibaut Jombart, Zhian Kamvar

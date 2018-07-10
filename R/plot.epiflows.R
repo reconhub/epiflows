@@ -20,7 +20,7 @@
 plot.epiflows <- function(x, type = c("map", "network", "grid"), ...) {
   type <- match.arg(type)
 
-  if (type == "map" && is.null(get_coords(x))) {
+  if (type == "map" && is.null(get_coordinates(x))) {
     type <- "network"
     msg <- paste("type 'map' requested but 'x' has no spatial coordinates",
                  "using 'network' instead", sep = "\n")
