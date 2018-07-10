@@ -4,17 +4,17 @@
 \alias{add_coordinates}
 \title{Add location coordinates}
 \usage{
-add_coordinates(ef, loc_column = "country", lon_lat_columns = c("lon",
-  "lat"), overwrite = FALSE)
+add_coordinates(ef, coordinates = c("lon", "lat"), loc_column = "id",
+  overwrite = FALSE)
 }
 \arguments{
 \item{ef}{An \code{epiflows} object.}
 
+\item{coordinates}{Either names of the appended columns with longitudes
+and latitudes, respectively (default: "lon" and "lat") or a data frame with longitude and latitude columns.}
+
 \item{loc_column}{Name of the column where location names are stored
 (default: "country").}
-
-\item{lon_lat_columns}{Either names of the appended columns with longitudes
-and latitudes, respectively (default: "lon" and "lat") or a data frame with longitude and latitude columns.}
 
 \item{overwrite}{If TRUE, retrieves all geocodes, even those already
 retrieved. If FALSE (default), overwrites only NAs.}
@@ -24,15 +24,32 @@ An updated \code{epiflows} object.
 }
 \description{
 Adds longitude/latitude values to location data within an epiflows object.
-Coordinates are added to object's locationsdata slot as `lon` and `lat`
+Coordinates are added to object's locations slot as `lon` and `lat`
 columns.
 }
 \examples{
-flows <- do.call(make_epiflows, Mex_travel_2009)
-flows <- add_coordinates(flows)
-flows$locationsdata
+
+# Setting up the data
+data(Mex_travel_2009)
+flows   <- Mex_travel_2009[[1]]
+outflow <- setNames(flows[["MEX"]], rownames(flows))
+inflow  <- unlist(flows["MEX", , drop = TRUE])
+ef <- epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
+
+# generating random coordinates for demonstration
+dummy_coordinates <- data.frame(lon = runif(41, min = -95, max = 95),
+                           lat = runif(41, min = -95, max = 95))
+print(ef)
+print(flows <- add_coordinates(ef, coordinates = dummy_coordinates))
+get_coordinates(flows)
+
+\dontrun{
+  # You can use google maps' geocode functionality if you have a decent 
+  # internet connection
+  flows <- add_coordinates(ef, loc_column = "country")
+}
 
 }
 \author{
-Pawel Piatkowski
+Pawel Piatkowski, Zhian Kamvar
 }

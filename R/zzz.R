@@ -1,5 +1,5 @@
 .onLoad <- function(...) {
-  epiflows.vars <- c("coords", 
+  epiflows.vars <- c("coordinates", 
                      "pop_size", 
                      "duration_stay",
                      "first_date",

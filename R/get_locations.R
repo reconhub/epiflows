@@ -7,6 +7,9 @@
 #'
 #' @rdname get_locations
 #'
+#' @param x An \code{epiflows} object.
+#' @param ... unused
+#' 
 #' @export
 #'
 #' @author Thibaut Jombart, Zhian Kamvar
@@ -23,9 +26,8 @@ get_locations <- function(x, ...) {
 #' 
 #' @export
 #' 
-#' @param x An \code{epiflows} object.
 
-get_locations.epiflows <- function(x) {
+get_locations.epiflows <- function(x, ...) {
   x$linelist
 }
 

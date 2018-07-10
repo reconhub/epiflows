@@ -14,13 +14,17 @@
 #'   see [grid_epiflows] for more details
 #'
 #'
+#' @param x an epiflows object.
+#' @param type The type of plot to produce (defaults to map).
+#' @param ... arguments passed on to a given type
+#'
 #' @export
 #' @md
 
 plot.epiflows <- function(x, type = c("map", "network", "grid"), ...) {
   type <- match.arg(type)
 
-  if (type == "map" && is.null(get_coords(x))) {
+  if (type == "map" && is.null(get_coordinates(x))) {
     type <- "network"
     msg <- paste("type 'map' requested but 'x' has no spatial coordinates",
                  "using 'network' instead", sep = "\n")

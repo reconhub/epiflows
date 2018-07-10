@@ -9,6 +9,8 @@
 #' 
 #' @export
 #'
+#' @param ... unused
+#' 
 #' @author Thibaut Jombart
 #'
 #' @return A \code{data.frame} with 3 columns:
@@ -35,7 +37,7 @@ get_flows <- function(x, ...) {
 #' 
 #' @param x An \code{epiflows} object.
 
-get_flows.epiflows <- function(x) {
+get_flows.epiflows <- function(x, ...) {
   x$contacts[, c("from", "to", "n"), drop = FALSE]
 }
 

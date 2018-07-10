@@ -3,20 +3,36 @@
 \name{get_vars}
 \alias{get_vars}
 \alias{get_vars.epiflows}
+\alias{get_coordinates}
+\alias{get_coordinates.epiflows}
 \title{Access flow data}
 \usage{
 get_vars(x, ...)
 
-\method{get_vars}{epiflows}(x, what = NULL)
+\method{get_vars}{epiflows}(x, what = NULL, id = TRUE, ...)
+
+get_coordinates(x, ...)
+
+\method{get_coordinates}{epiflows}(x, location = NULL, ...)
 }
 \arguments{
 \item{x}{An \code{epiflows} object.}
 
+\item{...}{not currently used.}
+
 \item{what}{a valid character string specifying the variable desired. If
-\code{NULL} (default), the names of the available vars will be returned.}
+`NULL` (default), the names of the available vars will be returned.}
+
+\item{id}{a logical. If `TRUE` (default), the `id` column of the locations
+will be the first column of the data frame. if `FALSE`, the variable will
+be returned without identifiers.}
+
+\item{location}{a character specifying a single location to return as a vector of
+coordinates. You cannot specify multiple locations with this parameter.
+Defaults to `NULL`, indicating all locations.}
 }
 \value{
-A data frame with one
+A data frame with the variables requested
 }
 \description{
 This accessor extracts variables from the \code{locations} data frame in an
@@ -24,7 +40,7 @@ This accessor extracts variables from the \code{locations} data frame in an
 \code{epiflows} objects.
 }
 \details{
-The
+The function \code{get_coordinates()} is equivalent to \code{get_vars(x, "coordinates", id = TRUE)}
 }
 \author{
 Thibaut Jombart, Zhian Kamvar

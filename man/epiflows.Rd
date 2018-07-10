@@ -12,9 +12,11 @@ epiflows(...)
 \method{epiflows}{data.frame}(flows, locations = NULL, from = 1L,
   to = 2L, n = 3L, id = 1L, ...)
 
-\method{epiflows}{integer}(inflow, outflow, focus, locations, ...)
+\method{epiflows}{integer}(inflow, outflow, focus, locations, id = 1L,
+  ...)
 
-\method{epiflows}{numeric}(inflow, outflow, focus, locations, ...)
+\method{epiflows}{numeric}(inflow, outflow, focus, locations, id = 1L,
+  ...)
 }
 \arguments{
 \item{...}{Any number of varaibles that can be used for mapping or modelling.
@@ -36,12 +38,21 @@ the \code{flows} data frame (as specified by the \code{id} argument, below).}
 \item{from}{the column in the \code{flows} data frame indicating where the flow
 started. This can be an integer or character. Default is the first column.}
 
+\item{to}{the column in the \code{flows} data frame indicating where the flow
+terminated. This can be an integer or character. Default is the second column.}
+
 \item{n}{the column in the \code{flows} data frame indicating how many cases were
 contained in the flow. This can be an integer or character. Default is the
 third column.}
 
 \item{id}{The column to use for the identifier in the \code{locations} data frame.
 This defaults to the first column.}
+
+\item{inflow}{a **named** integer or numeric vector specifying the number of
+cases flowing into a location specified by `focus`.}
+
+\item{outflow}{a **named** integer or numeric vector specifying the number of
+cases flowing from a location specified by `focus`.}
 
 \item{focus}{a character vector specifying the focal location for integer
 input. This is necessary for integer input to make clear what "outflow" and
@@ -61,7 +72,7 @@ each
 available variables that can be used in further plotting and/or modelling.
 Available variables are:
 \itemize{
-\item coords
+\item coordinates
 \item pop_size
 \item duration_of_stay
 }
@@ -99,7 +110,7 @@ to    <- as.data.frame.table(YF_Brazil$T_O)[c(2, 1, 3)]
 flows <- rbind(setNames(from, c("from", "to", "n")),
                setNames(to, c("from", "to", "n")))
 locations <- YF_Brazil$states
-others    <- setdiff(contacts$to, YF_Brazil$states$location_code)
+others    <- setdiff(flows$to, YF_Brazil$states$location_code)
 locations <- merge(locations,
                    data.frame(location_code = others),
                    by = "location_code", all = TRUE)

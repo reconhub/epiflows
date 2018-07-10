@@ -25,7 +25,7 @@
 #'    available variables that can be used in further plotting and/or modelling.
 #'    Available variables are:
 #'
-#'     - coords
+#'     - coordinates
 #'     - pop_size
 #'     - duration_of_stay
 #'
@@ -37,8 +37,8 @@
 #' such as coordinates and duration of stay can be included in the linelist for
 #' use in [estimate_risk_spread()] or [map_epiflows()].
 #'
-#' \subsection{Developer note: object structure}{ 
-#'   
+#' \subsection{Developer note: object structure}{
+#'
 #'   Because a flow of cases from one location to another can be thought of as a
 #'   contact with a wider scope, the `epiflows` object inherits from the
 #'   `epicontacts` object, constructed via [epicontacts::make_epicontacts()].
@@ -46,7 +46,7 @@
 #'   `epicontacts` also applies to `epiflows`, including the use of the function
 #'   [epicontacts::thin()]. One caveat is that, internally, the names of the
 #'   elements within the object do not match the terminology used in *epiflows*.
-#'   
+#'
 #' }
 #'
 #' @importFrom epicontacts make_epicontacts
@@ -71,6 +71,9 @@ epiflows <- function(...) {
 #'
 #' @param from the column in the `flows` data frame indicating where the flow
 #'   started. This can be an integer or character. Default is the first column.
+#'   
+#' @param to the column in the `flows` data frame indicating where the flow 
+#'   terminated. This can be an integer or character. Default is the second column. 
 #'
 #' @param n the column in the `flows` data frame indicating how many cases were
 #'   contained in the flow. This can be an integer or character. Default is the
@@ -92,7 +95,7 @@ epiflows <- function(...) {
 #' flows <- rbind(setNames(from, c("from", "to", "n")),
 #'                setNames(to, c("from", "to", "n")))
 #' locations <- YF_Brazil$states
-#' others    <- setdiff(contacts$to, YF_Brazil$states$location_code)
+#' others    <- setdiff(flows$to, YF_Brazil$states$location_code)
 #' locations <- merge(locations,
 #'                    data.frame(location_code = others),
 #'                    by = "location_code", all = TRUE)
@@ -119,11 +122,12 @@ epiflows.data.frame <- function(flows, locations = NULL,
     if (oldn) {
       msg <- paste("A varaible named `n` exists in the flows data frame.",
                    "This will be renamed to n.1")
-      names(out$contacts)[names(out$contacts) == "n"] <- "n.1" 
+      names(out$contacts)[names(out$contacts) == "n"] <- "n.1"
     }
     names(out$contacts)[newn] <- "n"
   }
-  dots <- valid_dots(list(...))
+  dots         <- valid_dots(list(...))
+  out$contacts <- valid_flows(out$contacts)
   # The vars need to be checked to make sure they are:
   #  - aligned with the re-arranged data
   #  - actually valid when matched against the linelist
@@ -142,6 +146,10 @@ epiflows.data.frame <- function(flows, locations = NULL,
   out
 }
 
+#' @param inflow a **named** integer or numeric vector specifying the number of
+#' cases flowing into a location specified by `focus`.
+#' @param outflow a **named** integer or numeric vector specifying the number of
+#' cases flowing from a location specified by `focus`.
 #' @param focus a character vector specifying the focal location for integer
 #'   input. This is necessary for integer input to make clear what "outflow" and
 #'   "inflow" are relative to.
@@ -156,7 +164,7 @@ epiflows.data.frame <- function(flows, locations = NULL,
 #' inflow  <- unlist(flows["MEX", , drop = TRUE])
 #' ef <- epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
 #' ef
-epiflows.integer <- function(inflow, outflow, focus, locations, ...) {
+epiflows.integer <- function(inflow, outflow, focus, locations, id = 1L, ...) {
   if (is.null(names(inflow)) || is.null(names(outflow))) {
   # Check to make sure inflow and outflow are named
     msg <- paste("The vectors `inflow` and `outflow` must be named to",
@@ -191,12 +199,12 @@ epiflows.numeric <- epiflows.integer
 #' Reposition the columns displaced by make_epicontacts
 #'
 #' epicontacts will reposition columns in the linelist and contacts list so that
-#' important features appear first. Because of this, user-specified numeric 
-#' columns will need to change. 
-#' 
+#' important features appear first. Because of this, user-specified numeric
+#' columns will need to change.
+#'
 #' This also helps me because I don't have to remember which order the arguments
-#' of match need. 
-#' 
+#' of match need.
+#'
 #' @param i an vector of integers specifying column names.
 #' @param old_names Names of the original data frame
 #' @param new_names Names in the modified data frame
@@ -204,7 +212,7 @@ epiflows.numeric <- epiflows.integer
 #' @return a vector of integers
 #' @noRd
 #' @keywords internal
-#' 
+#'
 #' let <- letters[10:1]
 #' bc1 <- 2:3
 #' bc2 <- new_column_positions(bc1, letters, let)
@@ -213,4 +221,3 @@ epiflows.numeric <- epiflows.integer
 new_column_positions <- function(i, old_names, new_names) {
   match(old_names[i], new_names, nomatch = 0)
 }
-

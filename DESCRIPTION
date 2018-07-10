@@ -17,10 +17,11 @@ Imports:
     leaflet,
     ggmap,
     geosphere,
+    ggplot2,
+    dplyr,
     sp,
     htmlwidgets,
     stats,
-    magrittr,
     htmltools
 Suggests:
     testthat,
@@ -29,5 +30,5 @@ Suggests:
     outbreaks
 RoxygenNote: 6.0.1.9000
 URL: https://github.com/reconhub/epiflows
-BugReports: https://github.com/reconhub/epimaps/issues
+BugReports: https://github.com/reconhub/epiflows/issues
 VignetteBuilder: knitr

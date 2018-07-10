@@ -1,153 +1,135 @@
-#' Plot a flow map
+#' Map flows of people between locations
 #'
-#' Returns a graph (XX / YY or an interactive map) of population flows from the specified
-#' location of origin.
+#' The function `map_epiflows` uses `leaflet` to generate an interactive map
+#' displaying flows of people travelling between locations stored in a
+#' `epiflows` object. Note that the object needs to possess geographic
+#' coordinates.
 #'
-#' @param x An \code{epiflows} object.
-#' @param origin Code of the location of origin.
+#' @param x An `epiflows` object.
+#'
 #' @param title Plot title.
-#' @param type The type of plot wanted to be drawn: map/visNetwork/grid.
-#' (default: ??)
-#' @param loc_column Name of the column where location names are stored
-#' (default: "country").
-#' @param lon_lat_columns Names of the columns with longitudes and latitudes,
-#' respectively (default: "lon" and "lat").
+#' 
+#' @param center An optional set of coordinates or character string specifying ID to use as the center of the map
+#' 
+#' @param sort a logical. When `TRUE` (default), the flows will be sorted
+#'   in order of number of cases on the map so that the largest flows appear on
+#'   top.
+#' 
+#' @param pal a color palette to pass on to [leaflet::colorQuantile()]. This
+#'   can be the name of a viridis or RColorBrewer palette, a vector of hex colors,
+#'   or a color-generating functon.
+#' 
+#' @param adjust_width a logical specifying if the width of the flows should
+#'   be adjusted to reflect the number of flows between locations. Defaults to
+#'   `TRUE`.
+#'
 #' @param ... Additional parameters (not used).
 #'
-#' @return A \code{leaflet} object
-#' @importFrom magrittr "%>%"
-#' @importFrom magrittr "%<>%"
-#' @author Paula Moraga, Pawel Piatkowski, Salla Toikkanen
+#' @return A `leaflet` object
 #'
-
-#' flows <- Mex_travel_2009[[1]]
-#' to <- structure(flows[["MEX"]], names = rownames(flows))
-#' from <- unlist(flows["MEX", ])
-#' ef <- make_epiflows( to = to, from = from, code = "MEX", locationsdata = Mex_travel_2009[[2]])
-#' plot(ef, type = "map", origin = "MEX")
+#' @author Paula Moraga, Pawel Piatkowski, Salla Toikkanen, Zhian Kamvar
 #'
-#'
-#' from2 <-  structure(round(pmax(0, rnorm(5, 2500, 600))), names = LETTERS[1:5])
-#' to2 <- structure(round(pmax(0,rnorm(5, 5000, 400 ))), names = LETTERS[1:5])
-#' my_locationsdata <-  data.frame(code = LETTERS[1:5], country = letters[1:5], population = pmax(100, rnorm(5, 5000000, 64000)))
-#' testepi <-  make_epiflows(from = from2, to = to2, code = "A", locationsdata = locationsdata2)
-#' testef <- add_coordinates(testepi, lon_lat_columns = data.frame(lon = rnorm(5), lat = rnorm(5)))
-#' plot(testef, type = "foo", origin = "A") ## TBD
-
-
-
 #' @export
-map_epiflows <- function(x,
-                          type = "foo",
-                          origin,
-                          title = sprintf("Flows from %s", origin_name),
-                          loc_column = "country",
-                          lon_lat_columns = c("lon", "lat"),
-                          ...) {
-  # Add coordinates if needed
-  location_cols <- names(x$locationsdata)
-  if (!loc_column %in% location_cols) {
-    stop("`%s` not found in x$locationsdata")
-  }
+#'
+#' @md
+#'
+#' @examples
+#' data(Mex_travel_2009)
+#' loc <- data.frame(stringsAsFactors=FALSE,
+#'   id = c("ARG", "BEL", "BHS", "BLZ", "BOL", "BRA", "BRB", "CAN", "CHE",
+#'          "CHL", "CHN", "COL", "CRI", "CUB", "DEU", "DOM", "ECU", "ESP",
+#'          "FIN", "FRA", "GBR", "GTM", "HKG", "HND", "ITA", "JAM", "JPN",
+#'          "LUX", "MEX", "MMR", "NIC", "NLD", "PAN", "PER", "PRT", "PRY",
+#'          "SLV", "SWE", "TTO", "USA", "VEN"),
+#'   lon = c(-63.616672, 4.469936, -77.39628, -88.49765, -63.588653,
+#'           -51.92528, -59.543198, -106.346771, 8.227512, -71.542969,
+#'           104.195397, -74.297333, -83.753428, -77.781167, 10.451526,
+#'           -70.162651, -78.183406, -3.74922, 25.7481511, 2.213749, -3.435973,
+#'           -90.230759, 114.109497, -86.241905, 12.56738, -77.297508, 138.252924,
+#'           6.129583, -102.552784, 95.955974, -85.207229, 5.291266,
+#'           -80.782127, -75.015152, -8.224454, -58.443832, -88.89653, 18.643501,
+#'           -61.222503, -95.712891, -66.58973),
+#'   lat = c(-38.416097, 50.503887, 25.03428, 17.189877, -16.290154,
+#'           -14.235004, 13.193887, 56.130366, 46.818188, -35.675147,
+#'           35.86166, 4.570868, 9.748917, 21.521757, 51.165691, 18.735693,
+#'           -1.831239, 40.463667, 61.92411, 46.227638, 55.378051, 15.783471,
+#'           22.396428, 15.199999, 41.87194, 18.109581, 36.204824, 49.815273,
+#'           23.634501, 21.916221, 12.865416, 52.132633, 8.537981, -9.189967,
+#'           39.399872, -23.442503, 13.794185, 60.128161, 10.691803, 37.09024,
+#'           6.42375)
+#'   )
+#' flows   <- Mex_travel_2009[[1]]
+#' outflow <- setNames(flows[["MEX"]], rownames(flows))
+#' inflow  <- unlist(flows["MEX", , drop = TRUE])
+#' ef      <- epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
+#' ef      <- add_coordinates(ef, loc[-1])
+#' map_epiflows(ef, center = "MEX", title = "Flows to and from Mexico")
+map_epiflows <- function(x, title = "", center = NULL, sort = TRUE, 
+                         pal = "YlOrBr", adjust_width = TRUE, ...) {
 
-  if (!all(lon_lat_columns %in% location_cols)) {
-    ## Tries to find the coordinates with add_coordinates(), should only do this if type == "map"
-    if(type=="map"){
-     x %<>%
-      add_coordinates(
-        loc_column = loc_column,
-        lon_lat_columns = lon_lat_columns
-      )
+  # First thing to do is to calculate the great circle arc for the flows with
+  # the make_lines internal function.
+  the_flows <- get_flows(x)
+  if (sort) {
+    the_flows <- the_flows[order(the_flows$n), ]
+  }
+  the_coordinates  <- get_coordinates(x)
+  
+  # SpatialLinesDataFrame class construction ------------------------
+  sldf <- make_SpatialLinesDataFrame(the_flows, the_coordinates)
+
+  # Leaflet plot construction ---------------------------------------
+  pal    <- leaflet::colorQuantile(palette = pal,
+                                   domain = sldf$n,
+                                   n = 5
+                                  )
+  labels <- sprintf("%s to %s: %s",
+                    the_flows$from,
+                    the_flows$to,
+                    format(the_flows$n,
+                           big.mark = ","
+                         )
+                   )
+  labels <- lapply(labels, htmltools::HTML)
+  graph  <- leaflet::leaflet(data = sldf)
+  if (!is.null(center)) {
+    if (is.character(center) && length(center) == 1) {
+      center <- get_coordinates(x, center)
+    } else if (is.numeric(center) && length(center) == 2) {
+      center <- center
+    } else {
+      stop("center must be a single character string to use for ID lookup or a set of coordinates")
     }
-    else(stop("lon_lat_columns not specified in epiflows object"))
+    graph <- leaflet::setView(graph,
+                              lng = center[[1]],
+                              lat = center[[2]],
+                              zoom = 2
+                             )
   }
-
-  if (any(is.na(x$locationsdata[, lon_lat_columns]))) {
-    stop(
-      "NA values present in location coordinates. ",
-      "Please rerun `add_coordinates()` before plotting"
-    )
-  }
-
-  ## Data
-  flow_data <- get_flow_data(x, direction = "from")
-  loc_codes <- names(flow_data)
-  flow_df <- data.frame(code = loc_codes, count = flow_data)
-  location_df <- get_location_data(x, loc_codes)
-  origin_data <- location_df[location_df$code == origin, ]
-  origin_name <- origin_data[[loc_column]]
-  print(locs_with_flows <- merge(
-    location_df,
-    flow_df,
-    by = "code"
-  ))
-if(type != "map"){
-  ## add here the other types of plots
-  require(ggplot2)
-  print(lon_lat_columns)
-  graph <-  ggplot() + geom_point(aes( x = locs_with_flows[, lon_lat_columns[1]], y =locs_with_flows[, lon_lat_columns[2]] ))
-  cat("Work in progress")
-}
-  if(type == "map") {
-    listlines <- apply(
-      locs_with_flows,
-    1,
-    function(loc, origin_data) {
-      connection <- geosphere::gcIntermediate(
-        as.numeric(origin_data[lon_lat_columns]),
-        as.numeric(loc[lon_lat_columns]),
-        n = 100,
-        addStartEnd = TRUE,
-        sp = TRUE,
-        breakAtDateLine = TRUE
-      )
-      sp::Lines(connection@lines[[1]]@Lines, ID = loc["code"])
-    },
-    origin_data = origin_data
-  )
-
-    sl <- sp::SpatialLines(listlines)
-    sldf <- sp::SpatialLinesDataFrame(sl, data.frame(count = flow_data))
-
-  ## Plot
-  pal <- leaflet::colorQuantile(palette = "YlGnBu", domain = sldf$count, n = 5)
-  labels <- lapply(
-    sprintf(
-      "%s to %s: %s",
-      origin_name,
-      locs_with_flows[, loc_column],
-      locs_with_flows[, "count"]
-    ),
-    htmltools::HTML
-  )
-
-  graph <- leaflet::leaflet(data = sldf) %>%
-    leaflet::setView(
-      lng = origin_data[,lon_lat_columns[1]],
-      lat = origin_data[,lon_lat_columns[2]],
-      zoom = 2
-    ) %>%
-    leaflet::addTiles(
-      urlTemplate = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    ) %>%
-    leaflet::addPolylines(
-      data = sldf,
-      color =  ~pal(count),
-      highlightOptions = leaflet::highlightOptions(color = "black", weight = 2),
-      label = labels
-    ) %>%
-    leaflet::addLegend(
-      "bottomright",
-      pal = pal,
-      values = ~count,
-      title = title,
-      labFormat = function(type, cuts, p) {
-        n = length(cuts)
-        paste0(cuts[-n], " &ndash; ", cuts[-1])
-      }
-    )
-}
+  urltemplate <- "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+  graph <- leaflet::addTiles(graph, urlTemplate = urltemplate)
+  the_weight <- if (adjust_width) ~log(n + 1) else 5
+  lhighlight <- leaflet::highlightOptions(color = "black", weight = 2)
+  graph <- leaflet::addPolylines(graph,
+                                 color            = ~pal(n),
+                                 data             = sldf,
+                                 highlightOptions = lhighlight,
+                                 label            = labels,
+                                 weight           = the_weight
+                                )
+  graph <- leaflet::addLegend(graph,
+                              "bottomright",
+                              pal    = pal,
+                              values = ~n,
+                              title  = title,
+                              labFormat = function(type, cuts, p) {
+                                n = length(cuts)
+                                cuts = format(cuts, big.mark = ",")
+                                sprintf("%s &ndash; %s", cuts[-n], cuts[-1])
+                              }
+                              )
 
   graph
+
 
 }
