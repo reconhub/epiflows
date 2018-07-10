@@ -17,6 +17,8 @@ Imports:
     leaflet,
     ggmap,
     geosphere,
+    ggplot2,
+    dplyr,
     sp,
     htmlwidgets,
     stats,

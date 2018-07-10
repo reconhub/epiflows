@@ -6,6 +6,13 @@
 \usage{
 \method{plot}{epiflows}(x, type = c("map", "network", "grid"), ...)
 }
+\arguments{
+\item{x}{an epiflows object.}
+
+\item{type}{The type of plot to produce (defaults to map).}
+
+\item{...}{arguments passed on to a given type}
+}
 \description{
 The \code{plot} method for \code{epiflows} objects offers types of
 graphics (argument \code{type}):

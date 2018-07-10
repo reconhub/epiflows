@@ -9,14 +9,16 @@
 \usage{
 get_vars(x, ...)
 
-\method{get_vars}{epiflows}(x, what = NULL, id = TRUE)
+\method{get_vars}{epiflows}(x, what = NULL, id = TRUE, ...)
 
 get_coordinates(x, ...)
 
-\method{get_coordinates}{epiflows}(x, location = NULL)
+\method{get_coordinates}{epiflows}(x, location = NULL, ...)
 }
 \arguments{
-\item{x}{An `epiflows` object.}
+\item{x}{An \code{epiflows} object.}
+
+\item{...}{not currently used.}
 
 \item{what}{a valid character string specifying the variable desired. If
 `NULL` (default), the names of the available vars will be returned.}

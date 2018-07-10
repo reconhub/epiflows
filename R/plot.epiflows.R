@@ -14,6 +14,10 @@
 #'   see [grid_epiflows] for more details
 #'
 #'
+#' @param x an epiflows object.
+#' @param type The type of plot to produce (defaults to map).
+#' @param ... arguments passed on to a given type
+#'
 #' @export
 #' @md
 

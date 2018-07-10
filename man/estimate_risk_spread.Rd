@@ -63,7 +63,9 @@ period distributions.
 
 ## load data
 data(YF_Brazil)
-indstate <- 1 # "Espirito Santo" (indstate = 1), "Minas Gerais" (indstate = 2), "Southeast Brazil" (indstate = 5)
+indstate <- 1 # "Espirito Santo" (indstate = 1), 
+              # "Minas Gerais" (indstate = 2), 
+              # "Southeast Brazil" (indstate = 5)
 
 
 ## functions generating incubation and infectious periods

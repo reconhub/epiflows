@@ -7,10 +7,12 @@
 \usage{
 get_flows(x, ...)
 
-\method{get_flows}{epiflows}(x)
+\method{get_flows}{epiflows}(x, ...)
 }
 \arguments{
 \item{x}{An \code{epiflows} object.}
+
+\item{...}{unused}
 }
 \value{
 A \code{data.frame} with 3 columns:

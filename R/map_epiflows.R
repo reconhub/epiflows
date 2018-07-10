@@ -69,11 +69,11 @@ map_epiflows <- function(x, title = "", center = NULL, sort = TRUE,
 
   # First thing to do is to calculate the great circle arc for the flows with
   # the make_lines internal function.
-  the_flows <- get_flows(ef)
+  the_flows <- get_flows(x)
   if (sort) {
     the_flows <- the_flows[order(the_flows$n), ]
   }
-  the_coordinates  <- get_coordinates(ef)
+  the_coordinates  <- get_coordinates(x)
   
   # SpatialLinesDataFrame class construction ------------------------
   sldf <- make_SpatialLinesDataFrame(the_flows, the_coordinates)
@@ -94,7 +94,7 @@ map_epiflows <- function(x, title = "", center = NULL, sort = TRUE,
   graph  <- leaflet::leaflet(data = sldf)
   if (!is.null(center)) {
     if (is.character(center) && length(center) == 1) {
-      center <- get_coordinates(ef, center)
+      center <- get_coordinates(x, center)
     } else if (is.numeric(center) && length(center) == 2) {
       center <- center
     } else {

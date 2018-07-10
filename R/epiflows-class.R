@@ -71,6 +71,9 @@ epiflows <- function(...) {
 #'
 #' @param from the column in the `flows` data frame indicating where the flow
 #'   started. This can be an integer or character. Default is the first column.
+#'   
+#' @param to the column in the `flows` data frame indicating where the flow 
+#'   terminated. This can be an integer or character. Default is the second column. 
 #'
 #' @param n the column in the `flows` data frame indicating how many cases were
 #'   contained in the flow. This can be an integer or character. Default is the
@@ -150,9 +153,6 @@ epiflows.data.frame <- function(flows, locations = NULL,
 #' @param focus a character vector specifying the focal location for integer
 #'   input. This is necessary for integer input to make clear what "outflow" and
 #'   "inflow" are relative to.
-#' @param locations a data frame containing metadata about the locations which
-#' may include coordinates, population sizes, or other information useful for
-#' mapping or modelling.
 #'
 #' @rdname epiflows
 #' @export

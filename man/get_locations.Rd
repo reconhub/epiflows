@@ -7,10 +7,12 @@
 \usage{
 get_locations(x, ...)
 
-\method{get_locations}{epiflows}(x)
+\method{get_locations}{epiflows}(x, ...)
 }
 \arguments{
 \item{x}{An \code{epiflows} object.}
+
+\item{...}{unused}
 }
 \value{
 A \code{data.frame} with at least 1 column called \code{id},

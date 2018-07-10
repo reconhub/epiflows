@@ -19,6 +19,8 @@
 #'  unit of time, a rate, a probability of migration
 #'
 #' }
+#' @noRd
+#' @keywords internal
 
 
 random_flows <- function(n, pool = letters) {

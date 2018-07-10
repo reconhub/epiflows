@@ -13,6 +13,8 @@
 #'
 #' @param color_by A character string indicating if flows should be colored by
 #'   origin (`from`) or destination (`to`).
+#' 
+#' @param ... arguments passed on to [ggplot2::geom_point()]
 #'
 
 grid_epiflows <- function(x, color_by = c("from", "to", "none"), ...) {

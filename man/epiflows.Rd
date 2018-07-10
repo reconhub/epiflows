@@ -38,6 +38,9 @@ the \code{flows} data frame (as specified by the \code{id} argument, below).}
 \item{from}{the column in the \code{flows} data frame indicating where the flow
 started. This can be an integer or character. Default is the first column.}
 
+\item{to}{the column in the \code{flows} data frame indicating where the flow
+terminated. This can be an integer or character. Default is the second column.}
+
 \item{n}{the column in the \code{flows} data frame indicating how many cases were
 contained in the flow. This can be an integer or character. Default is the
 third column.}
@@ -54,10 +57,6 @@ cases flowing from a location specified by `focus`.}
 \item{focus}{a character vector specifying the focal location for integer
 input. This is necessary for integer input to make clear what "outflow" and
 "inflow" are relative to.}
-
-\item{locations}{a data frame containing metadata about the locations which
-may include coordinates, population sizes, or other information useful for
-mapping or modelling.}
 }
 \value{
 An \code{epiflows} object in list format with four elements:

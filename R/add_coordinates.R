@@ -39,6 +39,8 @@
 #' }
 #' 
 #' @export
+#' @importFrom stats complete.cases
+#' @importFrom stats setNames
 add_coordinates <- function(ef, coordinates = c("lon", "lat"), loc_column = "id",
                             overwrite = FALSE) {
   if (!inherits(ef, "epiflows")) {

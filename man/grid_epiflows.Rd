@@ -11,6 +11,8 @@ grid_epiflows(x, color_by = c("from", "to", "none"), ...)
 
 \item{color_by}{A character string indicating if flows should be colored by
 origin (\code{from}) or destination (\code{to}).}
+
+\item{...}{arguments passed on to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}}
 }
 \description{
 This grid plot shows flows between locations by positioning origins and

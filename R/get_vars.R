@@ -8,6 +8,8 @@
 #'
 #' @rdname get_vars
 #' @md
+#' @param x An `epiflows` object.
+#' @param ... not currently used.
 #'
 #' @export
 #'
@@ -24,14 +26,13 @@ get_vars <- function(x, ...) {
 #'
 #' @export
 #'
-#' @param x An `epiflows` object.
 #' @param what a valid character string specifying the variable desired. If
 #'   `NULL` (default), the names of the available vars will be returned.
 #' @param id a logical. If `TRUE` (default), the `id` column of the locations
 #'   will be the first column of the data frame. if `FALSE`, the variable will
 #'   be returned without identifiers.
 
-get_vars.epiflows <- function(x, what = NULL, id = TRUE) {
+get_vars.epiflows <- function(x, what = NULL, id = TRUE, ...) {
   if (is.null(what)) {
     return(x$vars)
   }
@@ -69,7 +70,7 @@ get_coordinates <- function(x, ...) {
 #'   coordinates. You cannot specify multiple locations with this parameter.
 #'   Defaults to `NULL`, indicating all locations.
 #'
-get_coordinates.epiflows <- function(x, location = NULL) {
+get_coordinates.epiflows <- function(x, location = NULL, ...) {
   res <- try(get_vars(x, "coordinates", id = TRUE), silent = TRUE)
   if (inherits(res, "try-error")) {
     xprint <- deparse(substitute(x))
