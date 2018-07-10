@@ -143,9 +143,16 @@ epiflows.data.frame <- function(flows, locations = NULL,
   out
 }
 
+#' @param inflow a **named** integer or numeric vector specifying the number of
+#' cases flowing into a location specified by `focus`.
+#' @param outflow a **named** integer or numeric vector specifying the number of
+#' cases flowing from a location specified by `focus`.
 #' @param focus a character vector specifying the focal location for integer
 #'   input. This is necessary for integer input to make clear what "outflow" and
 #'   "inflow" are relative to.
+#' @param locations a data frame containing metadata about the locations which
+#' may include coordinates, population sizes, or other information useful for
+#' mapping or modelling.
 #'
 #' @rdname epiflows
 #' @export
@@ -157,7 +164,7 @@ epiflows.data.frame <- function(flows, locations = NULL,
 #' inflow  <- unlist(flows["MEX", , drop = TRUE])
 #' ef <- epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
 #' ef
-epiflows.integer <- function(inflow, outflow, focus, locations, ...) {
+epiflows.integer <- function(inflow, outflow, focus, locations, id = 1L, ...) {
   if (is.null(names(inflow)) || is.null(names(outflow))) {
   # Check to make sure inflow and outflow are named
     msg <- paste("The vectors `inflow` and `outflow` must be named to",

@@ -12,9 +12,11 @@ epiflows(...)
 \method{epiflows}{data.frame}(flows, locations = NULL, from = 1L,
   to = 2L, n = 3L, id = 1L, ...)
 
-\method{epiflows}{integer}(inflow, outflow, focus, locations, ...)
+\method{epiflows}{integer}(inflow, outflow, focus, locations, id = 1L,
+  ...)
 
-\method{epiflows}{numeric}(inflow, outflow, focus, locations, ...)
+\method{epiflows}{numeric}(inflow, outflow, focus, locations, id = 1L,
+  ...)
 }
 \arguments{
 \item{...}{Any number of varaibles that can be used for mapping or modelling.
@@ -43,9 +45,19 @@ third column.}
 \item{id}{The column to use for the identifier in the \code{locations} data frame.
 This defaults to the first column.}
 
+\item{inflow}{a **named** integer or numeric vector specifying the number of
+cases flowing into a location specified by `focus`.}
+
+\item{outflow}{a **named** integer or numeric vector specifying the number of
+cases flowing from a location specified by `focus`.}
+
 \item{focus}{a character vector specifying the focal location for integer
 input. This is necessary for integer input to make clear what "outflow" and
 "inflow" are relative to.}
+
+\item{locations}{a data frame containing metadata about the locations which
+may include coordinates, population sizes, or other information useful for
+mapping or modelling.}
 }
 \value{
 An \code{epiflows} object in list format with four elements:
