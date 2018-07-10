@@ -83,12 +83,20 @@ map_epiflows <- function(x, title = "", center = NULL, sort = TRUE, ...) {
                    )
   labels <- lapply(labels, htmltools::HTML)
   graph  <- leaflet::leaflet(data = sldf)
-  # MX_coords <- get_coords(ef, "MEX")
-  # graph <- leaflet::setView(graph,
-  #                           lng = MX_coords[[1]],
-  #                           lat = MX_coords[[2]],
-  #                           zoom = 2
-  #                          )
+  if (!is.null(center)) {
+    if (is.character(center) && length(center) == 1) {
+      center <- get_coords(ef, center)
+    } else if (is.numeric(center) && length(center) == 2) {
+      center <- center
+    } else {
+      stop("center must be a single character string to use for ID lookup or a set of coordinates")
+    }
+    graph <- leaflet::setView(graph,
+                              lng = center[[1]],
+                              lat = center[[2]],
+                              zoom = 2
+                             )
+  }
   urltemplate <- "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
   graph <- leaflet::addTiles(graph, urlTemplate = urltemplate)
 
