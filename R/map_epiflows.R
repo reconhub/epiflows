@@ -64,21 +64,12 @@ map_epiflows <- function(x, title = "", center = NULL, sort = TRUE, ...) {
   if (sort) {
     the_flows <- the_flows[order(the_flows$n), ]
   }
-  res <- apply(X      = the_flows,
-               MARGIN = 1L,
-               FUN    = make_lines,
-               coords = get_coords(ef)
-              )
-  # res here may be named due to the apply function. This causes leaflet to bork
-  # when attempting to display the lines on the map. To avoid this, we are
-  # simply unnaming the elemements before passing them to SpatialLines
-  SL <- sp::SpatialLines(unname(res))
+  the_coords  <- get_coords(ef)
+  
+  # SpatialLinesDataFrame class construction ------------------------
+  sldf <- make_SpatialLinesDataFrame(the_flows, the_coords)
 
-  # Now we can create the SpatialLinesDataFrame class that leaflet will use
-  # to perform the plotting.
-  rownames(the_flows) <- names(SL)
-  sldf                <- sp::SpatialLinesDataFrame(SL, the_flows)
-
+  # Leaflet plot construction ---------------------------------------
   pal    <- leaflet::colorQuantile(palette = "Greys",
                                    domain = sldf$n,
                                    n = 5
@@ -125,18 +116,26 @@ map_epiflows <- function(x, title = "", center = NULL, sort = TRUE, ...) {
 
 }
 
-make_lines <- function(df, coords) {
-  from <- df[["from"]]
-  to   <- df[["to"]]
-  cds  <- coords[match(c(from, to), coords$id), 2:3]
-  connection <- geosphere::gcIntermediate(
-    as.numeric(cds[1L, ]),
-    as.numeric(cds[2L, ]),
-    n = 100,
-    sp = TRUE,
-    addStartEnd = TRUE,
-    breakAtDateLine = TRUE
+coord_lookup <- function(df, coords, what = "from") {
+  lookup <- df[[what]]
+  coords[match(lookup, coords$id), ]
+}
+
+make_SpatialLinesDataFrame <- function(the_flows, the_coords) {
+  # First step: create two complementary data frames using the lookup table
+  from_coords <- coord_lookup(the_flows, the_coords, what = "from")
+  to_coords   <- coord_lookup(the_flows, the_coords, what = "to")
+  # Second step: calculate intermediate points along the earth.
+  SL <- geosphere::gcIntermediate(from_coords[-1L],
+                                  to_coords[-1L],
+                                  n = 100L,
+                                  breakAtDateLine = TRUE,
+                                  addStartEnd = TRUE,
+                                  sp = TRUE
   )
-  ID <- paste(from, to, sep = ":")
-  sp::Lines(connection@lines[[1]]@Lines, ID = ID)
+  # Third step: rename the lines because they get named generic numbers
+  row.names(SL)        <- paste(from_coords$id, to_coords$id, sep = ":")
+  row.names(the_flows) <- row.names(SL)
+  # Fourth step: create the data frame object containing the counts.
+  sp::SpatialLinesDataFrame(SL, the_flows)
 }
