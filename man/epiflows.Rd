@@ -105,16 +105,16 @@ elements within the object do not match the terminology used in \emph{epiflows}.
 }
 \examples{
 data(YF_Brazil)
-from  <- as.data.frame.table(YF_Brazil$T_D)
-to    <- as.data.frame.table(YF_Brazil$T_O)[c(2, 1, 3)]
+from  <- as.data.frame.table(YF_Brazil$T_D, stringsAsFactors = FALSE)
+to    <- as.data.frame.table(YF_Brazil$T_O, stringsAsFactors = FALSE)[c(2, 1, 3)]
 flows <- rbind(setNames(from, c("from", "to", "n")),
                setNames(to, c("from", "to", "n")))
 locations <- YF_Brazil$states
 others    <- setdiff(flows$to, YF_Brazil$states$location_code)
 locations <- merge(locations,
-                   data.frame(location_code = others),
+                   data.frame(location_code = others, stringsAsFactors = FALSE),
                    by = "location_code", all = TRUE)
-ef <- epiflows(flows, locations, pop_size = "num_cases_time_window")
+ef <- epiflows(flows, locations, pop_size = "location_population")
 ef
 # Access variable information
 get_vars(ef, "pop_size")
