@@ -32,6 +32,7 @@ grid_epiflows <- function(x, color_by = c("from", "to", "none"), ...) {
       ggplot2::aes_string(size = "n", color = color_by), ...) +
     ggplot2::scale_color_discrete(guide = FALSE) +
     ggplot2::scale_size("Flow") +
-    ggplot2::labs(y = "Origin", x = "Destination")
+    ggplot2::labs(y = "Origin", x = "Destination") +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5))
 }
 

@@ -27,10 +27,17 @@ vis_epiflows <- function(x, arrows = TRUE, max_width = 10, ...) {
 
   edge_width <- get_flows(x)$n
   edge_width  <- max_width * edge_width / max(edge_width)
-  if (!arrows) {
-    x$directed <- FALSE
-  }
+  
+  # The user can change whether or not the graph is directed
+  x$directed <- arrows
+  
   out <- epicontacts::vis_epicontacts(x, edge_width = edge_width, ...)
-  out
+  # Label the edges
+  out$x$edges$title <- sprintf("<p>%s to %s: <b>%s</b></p>",
+                               out$x$edges$from,
+                               out$x$edges$to,
+                               format(out$x$edges$n, big.mark = ","))
+  out$x$edges$smooth <- TRUE
+  visNetwork::visIgraphLayout(out, layout = "layout_in_circle")
 }
 

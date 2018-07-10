@@ -31,12 +31,12 @@ plot.epiflows <- function(x, type = c("map", "network", "grid"), ...) {
     message(msg)
   }
   if (type == "map") {
-    map_epiflows(x, ...)
+    return(map_epiflows(x, ...))
   }
   if (type == "network") {
-    vis_epiflows(x, ...)
+    return(vis_epiflows(x, ...))
   }
   if (type == "grid") {
-    grid_epiflows(x, ...)
+    return(grid_epiflows(x, ...))
   }
 }
