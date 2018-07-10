@@ -5,19 +5,19 @@
 #' `epiflows` object. Note that the object needs to possess geographic
 #' coordinates.
 #'
-#' @param x An \code{epiflows} object.
+#' @param x An `epiflows` object.
 #'
 #' @param title Plot title.
 #' 
-#' @param center An optional set of coordinates to use as the center of the map
+#' @param center An optional set of coordinates or character string specifying ID to use as the center of the map
 #' 
-#' @param sort a logical. When \code{TRUE} (default), the flows will be sorted
+#' @param sort a logical. When `TRUE` (default), the flows will be sorted
 #'   in order of number of cases on the map so that the largest flows appear on
 #'   top.
 #'
 #' @param ... Additional parameters (not used).
 #'
-#' @return A \code{leaflet} object
+#' @return A `leaflet` object
 #'
 #' @author Paula Moraga, Pawel Piatkowski, Salla Toikkanen, Zhian Kamvar
 #'
@@ -55,7 +55,7 @@
 #' inflow  <- unlist(flows["MEX", , drop = TRUE])
 #' ef      <- epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
 #' ef      <- add_coordinates(ef, loc[-1])
-#' map_epiflows(ef)
+#' map_epiflows(ef, center = "MEX")
 map_epiflows <- function(x, title = "", center = NULL, sort = TRUE, ...) {
 
   # First thing to do is to calculate the great circle arc for the flows with
@@ -124,11 +124,29 @@ map_epiflows <- function(x, title = "", center = NULL, sort = TRUE, ...) {
 
 }
 
-coord_lookup <- function(df, coords, what = "from") {
-  lookup <- df[[what]]
-  coords[match(lookup, coords$id), ]
+#' Look-up coordinates from a flows data frame
+#'
+#' @param df a data frame of flows with "from" and "to" columns. use get_flows()
+#' @param coords a data frame containing coordinates and an ID column. use get_coords()
+#' @param what a character string specifying what to lookup.
+#'
+#' @return a data frame with coordinates and ID
+#' @noRd
+#' @keywords internal
+coord_lookup <- function(the_flows, the_coords, what = "from") {
+  lookup <- the_flows[[what]]
+  the_coords[match(lookup, the_coords$id), ]
 }
 
+#' use flows and coordinates to create a SpatialLinesDataFrame class object from
+#' the sp package.
+#'
+#' @param the_flows a data frame of flows. use get_flows() 
+#' @param the_coords a data frame of coordinates. use get_coords()
+#'
+#' @return a SpatialLinesDataFrame class object.
+#' @noRd
+#' @keywords internal
 make_SpatialLinesDataFrame <- function(the_flows, the_coords) {
   # First step: create two complementary data frames using the lookup table
   from_coords <- coord_lookup(the_flows, the_coords, what = "from")
