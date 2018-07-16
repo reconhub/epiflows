@@ -8,6 +8,8 @@
 #' their stay in the infectious location and returning to their home location).
 #' The mean and 95% confidence intervals are obtained by numerically sampling
 #' num_simulations times from the incubation and infectious period distributions.
+#' If parameter return_all_simulations is set to TRUE, the function returns all simulations
+#' for each location.
 #'
 #' @param location_code a character string denoting the infectious location code
 #' @param location_population population of the infectious location
@@ -24,8 +26,12 @@
 #' @param distribution_infectious random generation distribution of the infectious period
 #' @param params_infectious vector with the parameters of the infectious distribution
 #' @param num_simulations number of simulations from the incubation and infectious distributions
+#' @param return_all_simulations logical value indicating whether the returned object is a data frame with all simulations
+#' (return_all_simulations = TRUE) or a data frame with the mean and lower and upper limits of a 95% confidence interval of
+#' the number of cases spread to each location (return_all_simulations = FALSE)
 #'
-#' @return data.frame with the mean and lower and upper limits of a 95% confidence interval of the number
+#' @return if return_all_simulations is TRUE, data frame with all simulations. If return_all_simulations is FALSE,
+#' data frame with the mean and lower and upper limits of a 95% confidence interval of the number 
 #' of cases spread to each location
 #' 
 #' @details
@@ -52,7 +58,8 @@
 #'   params_incubation = c(1.46, 0.35),
 #'   distribution_infectious = rnorm,
 #'   params_infectious = c(4.5, 1.5/1.96),
-#'   num_simulations = 100000
+#'   num_simulations = 100000,
+#'   return_all_simulations = FALSE
 #' )
 #' head(res)
 #' 
@@ -72,7 +79,8 @@ estimate_risk_spread <- function(location_code,
                                  params_incubation,
                                  distribution_infectious,
                                  params_infectious,
-                                 num_simulations = 1000) {
+                                 num_simulations = 1000,
+                                 return_all_simulations = FALSE) {
   
   if(num_simulations < 1000){
     message("It is recommended the number of simulations is at least 1000.")
@@ -170,7 +178,11 @@ estimate_risk_spread <- function(location_code,
   meancases <- colMeans(total, na.rm = TRUE)
   quant <- t(apply(total, 2, stats::quantile, c(.025, .975), na.rm = TRUE))
 
-  return(data.frame(mean_cases = meancases, lower_limit_95CI = quant[, 1], upper_limit_95CI = quant[, 2]))
+  if(return_all_simulations){
+    return(total)
+  }else{
+    return(data.frame(mean_cases = meancases, lower_limit_95CI = quant[, 1], upper_limit_95CI = quant[, 2]))
+  }
   
 }
 
