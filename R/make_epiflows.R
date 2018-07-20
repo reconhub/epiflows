@@ -109,8 +109,8 @@ make_epiflows <- function(...) {
 #' get_vars(ef, "pop_size")
 #' get_vars(ef, "duration_stay")
 make_epiflows.data.frame <- function(flows, locations = NULL,
-                                from = 1L, to = 2L, n = 3L,
-                                id = 1L, ...){
+                                     from = 1L, to = 2L, n = 3L,
+                                     id = 1L, ...){
   if (is.null(locations)) {
     ids       <- as.character(unique(unlist(flows[c(from, to)])))
     locations <- data.frame(id = ids, stringsAsFactors = FALSE)
