@@ -1,9 +1,7 @@
 #' Create an epiflows object
 #'
-#' This function reads data stored as data.frame containing linelist (case
-#' information, where each row corresponds to a unique patient), and contacts
-#' between patients. Common identifiers should be used in the two data sources
-#' for matching to be achieved.
+#' An epiflows object contains a pair of data frames that provide information
+#' about locations and flows between locations. 
 #'
 #' @export
 #' @md

@@ -79,10 +79,8 @@ Available variables are:
 }
 }
 \description{
-This function reads data stored as data.frame containing linelist (case
-information, where each row corresponds to a unique patient), and contacts
-between patients. Common identifiers should be used in the two data sources
-for matching to be achieved.
+An epiflows object contains a pair of data frames that provide information
+about locations and flows between locations.
 }
 \details{
 The \code{epiflows} object can be constructed using simply a list of locations with
