@@ -30,9 +30,10 @@ get_vars <- function(x, ...) {
 #'   `NULL` (default), the names of the available vars will be returned.
 #' @param id a logical. If `TRUE` (default), the `id` column of the locations
 #'   will be the first column of the data frame. if `FALSE`, the variable will
-#'   be returned without identifiers.
+#'   be returned with identifiers as row names.
+#' @param vector if `TRUE` the result will be coerced into a vector (or a matrix in the case of coordinates)
 
-get_vars.epiflows <- function(x, what = NULL, id = TRUE, ...) {
+get_vars.epiflows <- function(x, what = NULL, id = TRUE, vector = FALSE, ...) {
   if (is.null(what)) {
     return(x$vars)
   }
@@ -43,16 +44,29 @@ get_vars.epiflows <- function(x, what = NULL, id = TRUE, ...) {
                    "\nThe variables present are:\n%s")
       msg <- sprintf(msg, what, available_vars)
       stop(msg)
-    } else {
-      what <- if (id) c("id", what) else what
-      return(x$linelist[what])
+    # } else {
+    #   if (id) {
+    #     res <- x$linelist[c("id", what)]
+    #   } else {
+    #     res <- x$linelist[what]
+    #     rownames(res) <- x$linelist$id
+    #   }
+    #   return(res)
     }
+  } else {
+    what <- x$vars[[what]]
   }
   if (id) {
-    return(x$linelist[c("id", x$vars[[what]])])
+    res <- x$linelist[c("id", what)]
   } else {
-    return(x$linelist[x$vars[[what]]])
+    res           <- x$linelist[what]
+    rownames(res) <- x$linelist$id
   }
+  if (!id && vector) {
+    res <- as.matrix(res)
+    res <- if (ncol(res) == 1) drop(res) else res
+  }
+  res
 }
 
 

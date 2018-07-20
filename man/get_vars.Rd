@@ -9,7 +9,8 @@
 \usage{
 get_vars(x, ...)
 
-\method{get_vars}{epiflows}(x, what = NULL, id = TRUE, ...)
+\method{get_vars}{epiflows}(x, what = NULL, id = TRUE,
+  vector = FALSE, ...)
 
 get_coordinates(x, ...)
 
@@ -25,7 +26,9 @@ get_coordinates(x, ...)
 
 \item{id}{a logical. If `TRUE` (default), the `id` column of the locations
 will be the first column of the data frame. if `FALSE`, the variable will
-be returned without identifiers.}
+be returned with identifiers as row names.}
+
+\item{vector}{if `TRUE` the result will be coerced into a vector (or a matrix in the case of coordinates)}
 
 \item{location}{a character specifying a single location to return as a vector of
 coordinates. You cannot specify multiple locations with this parameter.
