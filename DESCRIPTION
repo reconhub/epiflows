@@ -5,7 +5,8 @@ Authors@R: c(person("Pawel", "Piatkowski", email = "pawel.piatkowski@posteo.net"
     person("Paula", "Moraga", email = "p.e.moraga-serrano@lancaster.ac.uk", role = "aut"),
     person("Isobel", "Blake", email = "isobel.blake@imperial.ac.uk", role = "aut"),
     person("Thibaut", "Jombart", email = "thibautjombart@gmail.com", role = "aut"),
-    person("VP", "Nagraj", email = "vpnagraj@virginia.edu", role = "aut"))
+    person("VP", "Nagraj", email = "vpnagraj@virginia.edu", role = "aut"),
+    person("Zhian N.", "Kamvar", email = "zkamvar@gmail.com", role = "aut"))
 Description: A collection of tools for the processing and visualisation of flow data.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -22,7 +23,8 @@ Imports:
     sp,
     htmlwidgets,
     stats,
-    htmltools
+    htmltools,
+    visNetwork
 Suggests:
     testthat,
     roxygen2,

@@ -22,6 +22,7 @@
 #' @param ... Further arguments passed to [epicontacts::vis_epicontacts()]
 #'
 #' @importFrom epicontacts vis_epicontacts
+#' @importFrom visNetwork visIgraphLayout
 
 vis_epiflows <- function(x, arrows = TRUE, max_width = 10, ...) {
 
