@@ -22,7 +22,7 @@ test_that("Correct value is returned", {
   
   
   # num_countries <- length(to)
-  codes <- get_id(ef.es)
+  codes <- epicontacts::get_id(ef.es)
   set.seed(9000)
   outcome <- estimate_risk_spread(
     ## These arguments specified by user
