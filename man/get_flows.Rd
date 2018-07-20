@@ -7,12 +7,16 @@
 \usage{
 get_flows(x, ...)
 
-\method{get_flows}{epiflows}(x, ...)
+\method{get_flows}{epiflows}(x, from = NULL, to = NULL, ...)
 }
 \arguments{
 \item{x}{An \code{epiflows} object.}
 
 \item{...}{unused}
+
+\item{from}{a character string defining which regions should be included in the flows}
+
+\item{to}{a character string defining which regions should be included in the flows}
 }
 \value{
 A \code{data.frame} with 3 columns:
@@ -23,7 +27,7 @@ A \code{data.frame} with 3 columns:
 
  \item \code{to}: destination of the flow
 
- \item \code{flow}: magnitude of the flow - can be a number of passengers per
+ \item \code{n}: magnitude of the flow - can be a number of passengers per
  unit of time, a rate, a probability of migration
 
 }
