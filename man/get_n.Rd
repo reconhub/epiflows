@@ -44,7 +44,7 @@ others    <- setdiff(flows$to, YF_Brazil$states$location_code)
 locations <- merge(locations,
                    data.frame(location_code = others, stringsAsFactors = FALSE),
                    by = "location_code", all = TRUE)
-ef <- epiflows(flows, locations, pop_size = "location_population")
+ef <- make_epiflows(flows, locations, pop_size = "location_population")
 get_n(ef, from = "Espirito Santo")
 get_n(ef, to   = "Espirito Santo")
 }

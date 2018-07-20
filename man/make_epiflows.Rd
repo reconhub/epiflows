@@ -2,33 +2,134 @@
 % Please edit documentation in R/make_epiflows.R
 \name{make_epiflows}
 \alias{make_epiflows}
-\title{Make an `epiflows` object}
+\alias{make_epiflows.data.frame}
+\alias{make_epiflows.integer}
+\alias{make_epiflows.numeric}
+\title{Create an epiflows object}
 \usage{
-make_epiflows(to, from, code, locationsdata)
+make_epiflows(...)
+
+\method{make_epiflows}{data.frame}(flows, locations = NULL, from = 1L,
+  to = 2L, n = 3L, id = 1L, ...)
+
+\method{make_epiflows}{integer}(inflow, outflow, focus, locations,
+  id = 1L, ...)
+
+\method{make_epiflows}{numeric}(inflow, outflow, focus, locations,
+  id = 1L, ...)
 }
 \arguments{
-\item{to}{A named vector of flows to the specified location.
-A one-row data frame or a list is also allowed.}
+\item{...}{Any number of varaibles that can be used for mapping or modelling.
+See \code{\link[=get_vars]{get_vars()}} for details.}
 
-\item{from}{A named vector of flows from the specified location
-(see above).}
+\item{flows}{a data frame where each row represents a flow from one location
+to the next. This must have at least three columns:
+\itemize{
+\item Where the flow started (as specified in \code{from}, below)
+\item Where the flow ended (as specified in \code{to}, below)
+\item How many cases were involved (as specified in \code{n}, below)
+}}
 
-\item{code}{Character string; location code of the origin.}
+\item{locations}{a data frame where each row represents a location. This can
+have any number of columns specifying useful metadata about the location,
+but it must contain at least one column specifying the location ID used in
+the \code{flows} data frame (as specified by the \code{id} argument, below).}
 
-\item{locationsdata}{A data frame of location data. Locations should be
-uniquely identified by codes from the `code` column.}
+\item{from}{the column in the \code{flows} data frame indicating where the flow
+started. This can be an integer or character. Default is the first column.}
+
+\item{to}{the column in the \code{flows} data frame indicating where the flow
+terminated. This can be an integer or character. Default is the second column.}
+
+\item{n}{the column in the \code{flows} data frame indicating how many cases were
+contained in the flow. This can be an integer or character. Default is the
+third column.}
+
+\item{id}{The column to use for the identifier in the \code{locations} data frame.
+This defaults to the first column.}
+
+\item{inflow}{a **named** integer or numeric vector specifying the number of
+cases flowing into a location specified by `focus`.}
+
+\item{outflow}{a **named** integer or numeric vector specifying the number of
+cases flowing from a location specified by `focus`.}
+
+\item{focus}{a character vector specifying the focal location for integer
+input. This is necessary for integer input to make clear what "outflow" and
+"inflow" are relative to.}
 }
 \value{
-An \code{epiflows} object.
+An \code{epiflows} object in list format with four elements:
+\itemize{
+\item \strong{locations} (accessible via \code{\link[=get_locations]{get_locations()}}): a data frame of
+locations with first column 'id' containing character vector of unique
+identifiers.
+\item \strong{flows} (accessible via \code{\link[=get_flows]{get_flows()}}): data.frame of flows with first
+two columns named 'from' and 'to' indicating directed flows between two
+locations, and a third column named 'n', specifying the number of cases in
+each
+\item \strong{vars} (accessible via \code{\link[=get_vars]{get_vars()}}). This contains a named list of
+available variables that can be used in further plotting and/or modelling.
+Available variables are:
+\itemize{
+\item coordinates
+\item pop_size
+\item duration_of_stay
+}
+}
 }
 \description{
-Takes a list of location data and a matrix of flows, and creates
-an object of class `epiflows`. An error is thrown if the input is invalid.
+An epiflows object contains a pair of data frames that provide information
+about locations and flows between locations.
 }
-\examples{
-# TBD
+\details{
+The \code{epiflows} object can be constructed using simply a list of locations with
+optional metadata (similar to a linelist) and a list of flows that describes
+the number of cases flowing from one location to another. Optional metadata
+such as coordinates and duration of stay can be included in the linelist for
+use in \code{\link[=estimate_risk_spread]{estimate_risk_spread()}} or \code{\link[=map_epiflows]{map_epiflows()}}.
+
+\subsection{Developer note: object structure}{
+
+Because a flow of cases from one location to another can be thought of as a
+contact with a wider scope, the \code{epiflows} object inherits from the
+\code{epicontacts} object, constructed via \code{\link[epicontacts:make_epicontacts]{epicontacts::make_epicontacts()}}.
+This means that all the methods for subsetting an object of class
+\code{epicontacts} also applies to \code{epiflows}, including the use of the function
+\code{\link[epicontacts:thin]{epicontacts::thin()}}. One caveat is that, internally, the names of the
+elements within the object do not match the terminology used in \emph{epiflows}.
 
 }
+}
+\examples{
+data(YF_Brazil)
+from  <- as.data.frame.table(YF_Brazil$T_D, stringsAsFactors = FALSE)
+to    <- as.data.frame.table(YF_Brazil$T_O, stringsAsFactors = FALSE)[c(2, 1, 3)]
+flows <- rbind(setNames(from, c("from", "to", "n")),
+               setNames(to, c("from", "to", "n")))
+locations <- YF_Brazil$states
+others    <- setdiff(flows$to, YF_Brazil$states$location_code)
+los       <- data.frame(location_code = names(YF_Brazil$length_of_stay), 
+                        length_of_stay = YF_Brazil$length_of_stay)
+locations <- merge(locations,
+                   data.frame(location_code = others, stringsAsFactors = FALSE),
+                   by = "location_code", all = TRUE)
+locations <- merge(locations, los, by = "location_code", all = TRUE)
+ef <- make_epiflows(flows, 
+                    locations, 
+                    pop_size = "location_population",
+                    duration_stay = "length_of_stay")
+ef
+# Access variable information
+get_vars(ef, "pop_size")
+get_vars(ef, "duration_stay")
+data(Mex_travel_2009)
+flows   <- Mex_travel_2009[[1]]
+outflow <- setNames(flows[["MEX"]], rownames(flows))
+inflow  <- unlist(flows["MEX", , drop = TRUE])
+ef <- make_epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
+ef
+}
 \author{
-Pawel Piatkowski
+Zhian Kamvar, Thibaut Jombart
 }

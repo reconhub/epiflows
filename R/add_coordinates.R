@@ -23,7 +23,7 @@
 #' flows   <- Mex_travel_2009[[1]]
 #' outflow <- setNames(flows[["MEX"]], rownames(flows))
 #' inflow  <- unlist(flows["MEX", , drop = TRUE])
-#' ef <- epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
+#' ef <- make_epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
 #' 
 #' # generating random coordinates for demonstration
 #' dummy_coordinates <- data.frame(lon = runif(41, min = -95, max = 95),

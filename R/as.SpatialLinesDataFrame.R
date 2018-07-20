@@ -34,7 +34,7 @@
 #' flows   <- Mex_travel_2009[[1]]
 #' outflow <- setNames(flows[["MEX"]], rownames(flows))
 #' inflow  <- unlist(flows["MEX", , drop = TRUE])
-#' ef      <- epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
+#' ef      <- make_epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
 #' ef      <- add_coordinates(ef, loc[-1])
 #' as.SpatialLinesDataFrame(ef)
 as.SpatialLinesDataFrame <- function(x) {
