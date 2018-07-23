@@ -16,6 +16,11 @@
 #' @author Thibaut Jombart, Zhian Kamvar
 #'
 #' @return A data frame with the variables requested
+#' @examples 
+#' data("Brazil_epiflows")
+#' get_vars(Brazil_epiflows, "duration_stay")
+#' get_vars(Brazil_epiflows, "duration_stay", vector = TRUE)
+#' get_pop_size(Brazil_epiflows)
 
 get_vars <- function(x, ...) {
   UseMethod("get_vars", x)

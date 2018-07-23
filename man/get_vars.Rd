@@ -56,6 +56,10 @@ The function \code{get_coordinates()} is equivalent to \code{get_vars(x, "coordi
 }
 \examples{
 
+data("Brazil_epiflows")
+get_vars(Brazil_epiflows, "duration_stay")
+get_vars(Brazil_epiflows, "duration_stay", vector = TRUE)
+get_pop_size(Brazil_epiflows)
 }
 \author{
 Thibaut Jombart, Zhian Kamvar

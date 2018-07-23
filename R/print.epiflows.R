@@ -6,10 +6,10 @@
 #' @param ... Additional parameters (not used).
 #'
 #' @examples
-#' flows <- do.call(make_epiflows, Mex_travel_2009)
-#' print(flows)
+#' data("Brazil_epiflows")
+#' print(Brazil_epiflows)
 #'
-#' @author Pawel Piatkowski
+#' @author Zhian N. Kamvar, Thibaut Jombart
 #'
 #' @export
 print.epiflows <- function(x, ...) {
