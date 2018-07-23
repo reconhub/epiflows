@@ -1,4 +1,4 @@
-#' Access flow data
+#' Access location metadata
 #'
 #' This accessor extracts variables from the `locations` data frame in an
 #' `epiflow` object. `get_vars` is a generic with a method defined for
@@ -44,14 +44,6 @@ get_vars.epiflows <- function(x, what = NULL, id = TRUE, vector = FALSE, ...) {
                    "\nThe variables present are:\n%s")
       msg <- sprintf(msg, what, available_vars)
       stop(msg)
-    # } else {
-    #   if (id) {
-    #     res <- x$linelist[c("id", what)]
-    #   } else {
-    #     res <- x$linelist[what]
-    #     rownames(res) <- x$linelist$id
-    #   }
-    #   return(res)
     }
   } else {
     what <- x$vars[[what]]
@@ -62,36 +54,13 @@ get_vars.epiflows <- function(x, what = NULL, id = TRUE, vector = FALSE, ...) {
     res           <- x$linelist[what]
     rownames(res) <- x$linelist$id
   }
-  if (!id && vector) {
+  if (vector) {
+    if (id) {
+      rownames(res) <- res$id
+      res           <- res[, -1, drop = FALSE]
+    }
     res <- as.matrix(res)
     res <- if (ncol(res) == 1) drop(res) else res
-  }
-  res
-}
-
-
-#' @rdname get_vars
-#'
-#' @export
-get_coordinates <- function(x, ...) {
-  UseMethod("get_coordinates", x)
-}
-
-
-#' @export
-#' @rdname get_vars
-#' @param location a character specifying a single location to return as a vector of
-#'   coordinates. You cannot specify multiple locations with this parameter.
-#'   Defaults to `NULL`, indicating all locations.
-#'
-get_coordinates.epiflows <- function(x, location = NULL, ...) {
-  res <- try(get_vars(x, "coordinates", id = TRUE), silent = TRUE)
-  if (inherits(res, "try-error")) {
-    xprint <- deparse(substitute(x))
-    stop(sprintf("coordinates are not set in %s", xprint))
-  }
-  if (is.character(location) && length(location) == 1L) {
-    res <- as.numeric(drop(res[res$id == location, 2:3]))
   }
   res
 }
