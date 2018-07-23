@@ -4,26 +4,44 @@
 \alias{[.epiflows}
 \title{Subset `epiflows` objects}
 \usage{
-\method{[}{epiflows}(ef, i, ...)
+\method{[}{epiflows}(x, i, j, k = TRUE, l = TRUE, ...)
 }
 \arguments{
-\item{ef}{An \code{epiflows} object.}
+\item{x}{An \code{epiflows} object.}
 
-\item{i}{A character vector of one or more location codes.}
+\item{i}{An integer, logical, or character vector of one or more location.}
 
-\item{...}{Additional parameters (not used).}
+\item{j}{An integer, logical, or character vector to subset the flows data frame.}
+
+\item{k}{A character vector of one or more columns to be retained in the location data.}
+
+\item{l}{A character vector of one or more columns to be retained in the flows data frame. Note: if using numbers, the first column stands for the first column after "n".}
+
+\item{...}{Additional parameters passed to \code{\link{[.epicontacts}}.}
 }
 \value{
 An \code{epiflows} object.
 }
 \description{
-Returns a subset of an epiflows object based on location code(s).
+An epiflows object inherits the epicontacts class, so the
+  subsetting mechanism is also inherited. The benefits is that it's
+  extremely flexible. However, this also means that it's possible for
+  the contacts to contain IDs that are not present in the locations 
+  metadata and vice versa. The best way to consistently subset an
+  epiflows object is present in the examples.
+}
+\details{
+Returns a subset of an epiflows object.
 }
 \examples{
-flows <- do.call(make_epiflows, Mex_travel_2009)
-flows["MEX"]
+data(Brazil_epiflows)
+# You can subset, but the flows information will still be present
+Brazil_epiflows[j = "Espirito Santo"]
+# To help with this, use `thin` from epiflows
+epicontacts::thin(flows[j = "Espirito Santo"])
+epicontacts::thin(flows[j = c("Espirito Santo", "Rio de Jenerio")])
 
 }
 \author{
-Pawel Piatkowski
+Zhian N. Kamvar
 }
