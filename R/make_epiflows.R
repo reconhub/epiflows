@@ -87,27 +87,25 @@ make_epiflows <- function(...) {
 #' @export
 #'
 #' @examples
-#' data(YF_Brazil)
-#' from  <- as.data.frame.table(YF_Brazil$T_D, stringsAsFactors = FALSE)
-#' to    <- as.data.frame.table(YF_Brazil$T_O, stringsAsFactors = FALSE)[c(2, 1, 3)]
-#' flows <- rbind(setNames(from, c("from", "to", "n")),
-#'                setNames(to, c("from", "to", "n")))
-#' locations <- YF_Brazil$states
-#' others    <- setdiff(flows$to, YF_Brazil$states$location_code)
-#' los       <- data.frame(location_code = names(YF_Brazil$length_of_stay), 
-#'                         length_of_stay = YF_Brazil$length_of_stay)
-#' locations <- merge(locations,
-#'                    data.frame(location_code = others, stringsAsFactors = FALSE),
-#'                    by = "location_code", all = TRUE)
-#' locations <- merge(locations, los, by = "location_code", all = TRUE)
-#' ef <- make_epiflows(flows, 
-#'                     locations, 
-#'                     pop_size = "location_population",
-#'                     duration_stay = "length_of_stay")
+#' ## Load data
+#' data(YF_flows)
+#' data(YF_locations)
+#' YF_flows
+#' YF_locations
+#' ## Use both to create the epiflows object.
+#' ef <- make_epiflows(flows         = YF_flows, 
+#'                     locations     = YF_locations, 
+#'                     pop_size      = "location_population",
+#'                     duration_stay = "length_of_stay",
+#'                     num_cases     = "num_cases_time_window",
+#'                     first_date    = "first_date_cases",
+#'                     last_date     = "last_date_cases"
+#'                    )
 #' ef
 #' # Access variable information
-#' get_vars(ef, "pop_size")
+#' get_pop_size(ef)
 #' get_vars(ef, "duration_stay")
+#' get_vars(ef, "num_cases")
 make_epiflows.data.frame <- function(flows, locations = NULL,
                                      from = 1L, to = 2L, n = 3L,
                                      id = 1L, ...){
