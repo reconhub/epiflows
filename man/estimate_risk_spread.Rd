@@ -8,7 +8,8 @@ location}
 estimate_risk_spread(location_code, location_population,
   num_cases_time_window, first_date_cases, last_date_cases,
   num_travellers_to_other_locations, num_travellers_from_other_locations,
-  avg_length_stay_days, r_incubation, r_infectious, n_sim = 1000)
+  avg_length_stay_days, r_incubation, r_infectious, n_sim = 1000,
+  return_all_simulations = FALSE)
 }
 \arguments{
 \item{location_code}{a character string denoting the infectious location code}
@@ -43,21 +44,27 @@ generating 'n' random durations of infectious period}
 
 \item{n_sim}{number of simulations from the incubation and
 infectious distributions}
+
+\item{return_all_simulations}{logical value indicating whether the returned object is a data frame with all simulations
+(return_all_simulations = TRUE) or a data frame with the mean and lower and upper limits of a 95% confidence interval of
+the number of cases spread to each location (return_all_simulations = FALSE)}
 }
 \value{
-a \code{data.frame} with the mean and lower and upper limits of a 95%
-  confidence interval of the number of cases spread to each location
+if return_all_simulations is TRUE, data frame with all simulations. If return_all_simulations is FALSE,
+data frame with the mean and lower and upper limits of a 95% confidence interval of the number 
+of cases spread to each location
 }
 \description{
 Calculates the mean and 95% confidence interval of the estimated number of
 disease cases that could potentially seed a disease outbreak in the locations
-they are travelling to, comprising exportations (infected residents of the
-infectious location travelling abroad during the incubation or infectious
-period), and importations (international tourists infected by the disease
-during their stay in the infectious location and returning to their home
-location). The mean and 95% confidence intervals are obtained by numerically
-sampling \code{num_simulations} times from the incubation and infectious
-period distributions.
+they are travelling to, comprising exportations (infected residents of the infectious
+location travelling abroad during the incubation or infectious period), and
+importations (international tourists infected by the disease during
+their stay in the infectious location and returning to their home location).
+The mean and 95% confidence intervals are obtained by numerically sampling
+n_sim times from the incubation and infectious period distributions.
+If parameter return_all_simulations is set to TRUE, the function returns all simulations
+for each location.
 }
 \examples{
 
@@ -89,8 +96,9 @@ res <- estimate_risk_spread(location_code =
   avg_length_stay_days = YF_Brazil$length_of_stay,
   r_incubation = incubation,
   r_infectious = infectious,
-  n_sim = 100000 )
-
+  n_sim = 100000,
+  return_all_simulations = FALSE
+)
 head(res)
 
 }

@@ -8,7 +8,7 @@
 #' importations (international tourists infected by the disease during
 #' their stay in the infectious location and returning to their home location).
 #' The mean and 95% confidence intervals are obtained by numerically sampling
-#' num_simulations times from the incubation and infectious period distributions.
+#' n_sim times from the incubation and infectious period distributions.
 #' If parameter return_all_simulations is set to TRUE, the function returns all simulations
 #' for each location.
 #'
@@ -105,7 +105,7 @@ estimate_risk_spread <- function(location_code,
                                  n_sim = 1000,
                                  return_all_simulations = FALSE) {
   
-  if(num_simulations < 1000){
+  if(n_sim < 1000){
     message("It is recommended the number of simulations is at least 1000.")
   }
 
