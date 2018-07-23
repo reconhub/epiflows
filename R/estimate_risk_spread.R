@@ -3,13 +3,14 @@
 #'
 #' Calculates the mean and 95% confidence interval of the estimated number of
 #' disease cases that could potentially seed a disease outbreak in the locations
-#' they are travelling to, comprising exportations (infected residents of the
-#' infectious location travelling abroad during the incubation or infectious
-#' period), and importations (international tourists infected by the disease
-#' during their stay in the infectious location and returning to their home
-#' location). The mean and 95% confidence intervals are obtained by numerically
-#' sampling \code{num_simulations} times from the incubation and infectious
-#' period distributions.
+#' they are travelling to, comprising exportations (infected residents of the infectious
+#' location travelling abroad during the incubation or infectious period), and
+#' importations (international tourists infected by the disease during
+#' their stay in the infectious location and returning to their home location).
+#' The mean and 95% confidence intervals are obtained by numerically sampling
+#' num_simulations times from the incubation and infectious period distributions.
+#' If parameter return_all_simulations is set to TRUE, the function returns all simulations
+#' for each location.
 #'
 #' @param location_code a character string denoting the infectious location code
 #'
@@ -44,8 +45,17 @@
 #' @param n_sim number of simulations from the incubation and
 #'   infectious distributions
 #'
-#' @return a \code{data.frame} with the mean and lower and upper limits of a 95%
-#'   confidence interval of the number of cases spread to each location
+#' @param return_all_simulations logical value indicating whether the returned object is a data frame with all simulations
+#' (return_all_simulations = TRUE) or a data frame with the mean and lower and upper limits of a 95% confidence interval of
+#' the number of cases spread to each location (return_all_simulations = FALSE)
+#'
+#' @return if return_all_simulations is TRUE, data frame with all simulations. If return_all_simulations is FALSE,
+#' data frame with the mean and lower and upper limits of a 95% confidence interval of the number 
+#' of cases spread to each location
+#' 
+#' @author Paula Moraga
+#'
+#' @export
 #'
 #' @examples
 #'
@@ -77,13 +87,10 @@
 #'   avg_length_stay_days = YF_Brazil$length_of_stay,
 #'   r_incubation = incubation,
 #'   r_infectious = infectious,
-#'   n_sim = 100000 )
-#'
+#'   n_sim = 100000,
+#'   return_all_simulations = FALSE
+#' )
 #' head(res)
-#'
-#' @author Paula Moraga
-#'
-#' @export
 #'
 estimate_risk_spread <- function(location_code,
                                  location_population,
@@ -95,7 +102,12 @@ estimate_risk_spread <- function(location_code,
                                  avg_length_stay_days,
                                  r_incubation,
                                  r_infectious,
-                                 n_sim = 1000) {
+                                 n_sim = 1000,
+                                 return_all_simulations = FALSE) {
+  
+  if(num_simulations < 1000){
+    message("It is recommended the number of simulations is at least 1000.")
+  }
 
 
   ## time_window_days is the number of days between the first and last disease
@@ -192,7 +204,11 @@ estimate_risk_spread <- function(location_code,
   out <- data.frame(mean_cases = meancases,
                     lower_limit_95CI = quant[, 1],
                     upper_limit_95CI = quant[, 2])
-  return(out)
 
+  if(return_all_simulations){
+    return(total)
+  }else{
+    return(out)
+  }
 }
 
