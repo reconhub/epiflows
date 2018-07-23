@@ -17,3 +17,8 @@ test_that("Subset of an epiflows object is returned", {
 test_that("subsetting with nothing returns an identical object", {
   expect_identical(Brazil_epiflows, Brazil_epiflows[])
 })
+
+test_that("print method works", {
+  expect_output(print(epicontacts::thin(Brazil_epiflows[j = "Minas Gerais"])),
+                "11 locations")
+})
