@@ -106,7 +106,7 @@ estimate_risk_spread <- function(location_code,
                                  return_all_simulations = FALSE) {
   
   if(n_sim < 1000){
-    message("It is recommended the number of simulations is at least 1000.")
+    warning("It is recommended the number of simulations is at least 1000.")
   }
 
 
