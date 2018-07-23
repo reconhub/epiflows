@@ -13,7 +13,7 @@ test_that("Correct value is returned", {
     r_infectious = function(n) rnorm(n, 4.5, 1.5/1.96),
     n_sim = 1e3,
     ## These arguments will be done inside the function
-    location_population = get_vars(ef.es, "pop_size", id = FALSE)["Espirito Santo", ],
+    location_population = get_pop_size(ef.es)["Espirito Santo"],
     num_cases_time_window = get_vars(ef.es, "num_cases_time_window", id = FALSE)["Espirito Santo", ],
     first_date_cases = get_vars(ef.es, "first_date_cases", id = FALSE)["Espirito Santo", ],
     last_date_cases = get_vars(ef.es, "last_date_cases", id = FALSE)["Espirito Santo", ],
@@ -33,7 +33,7 @@ test_that("a matrix of simulations is returned if requested", {
       r_infectious = function(n) rnorm(n, 4.5, 1.5/1.96),
       n_sim = 99,
       ## These arguments will be done inside the function
-      location_population = get_vars(ef.es, "pop_size", id = FALSE)["Espirito Santo", ],
+      location_population = get_pop_size(ef.es)["Espirito Santo"],
       num_cases_time_window = get_vars(ef.es, "num_cases_time_window", id = FALSE)["Espirito Santo", ],
       first_date_cases = get_vars(ef.es, "first_date_cases", id = FALSE)["Espirito Santo", ],
       last_date_cases = get_vars(ef.es, "last_date_cases", id = FALSE)["Espirito Santo", ],
