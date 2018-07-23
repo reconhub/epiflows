@@ -19,19 +19,9 @@
 #' @export
 #'
 #' @examples
-#' data(YF_Brazil)
-#' from  <- as.data.frame.table(YF_Brazil$T_D, stringsAsFactors = FALSE)
-#' to    <- as.data.frame.table(YF_Brazil$T_O, stringsAsFactors = FALSE)[c(2, 1, 3)]
-#' flows <- rbind(setNames(from, c("from", "to", "n")),
-#'                setNames(to, c("from", "to", "n")))
-#' locations <- YF_Brazil$states
-#' others    <- setdiff(flows$to, YF_Brazil$states$location_code)
-#' locations <- merge(locations,
-#'                    data.frame(location_code = others, stringsAsFactors = FALSE),
-#'                    by = "location_code", all = TRUE)
-#' ef <- make_epiflows(flows, locations, pop_size = "location_population")
-#' get_n(ef, from = "Espirito Santo")
-#' get_n(ef, to   = "Espirito Santo")
+#' data(Brazil_epiflows)
+#' get_n(Brazil_epiflows, from = "Espirito Santo")
+#' get_n(Brazil_epiflows, to   = "Espirito Santo")
 get_n <- function(x, from = NULL, to = NULL, ...) {
   UseMethod("get_n")
 }

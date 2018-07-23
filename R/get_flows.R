@@ -11,7 +11,7 @@
 #'
 #' @param ... unused
 #' 
-#' @author Thibaut Jombart
+#' @author Zhian N. Kamvar
 #'
 #' @return A \code{data.frame} with 3 columns:
 #'

@@ -38,5 +38,5 @@ object. \code{get_flows} is a generic with a method defined for
 \code{epiflows} objects.
 }
 \author{
-Thibaut Jombart
+Zhian N. Kamvar
 }
