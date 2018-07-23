@@ -6,8 +6,7 @@ bef <- add_coordinates(Brazil_epiflows, coordinates = YF_coordinates[-1])
 
 
 test_that("invalid plots don't work", {
-  expect_error(plot(Brazil_epiflows, type = "beer"), 
-               '\'arg\' should be one of “map”, “network”, “grid”')
+  expect_error(plot(Brazil_epiflows, type = "beer"))
 })
 
 test_that("grid plot method works", {
