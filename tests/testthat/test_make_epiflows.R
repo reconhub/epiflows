@@ -6,7 +6,7 @@ test_that("make_epiflows() creates correct object", {
   outflow <- setNames(flows[["MEX"]], rownames(flows))
   inflow  <- unlist(flows["MEX", , drop = TRUE])
   expect_warning(ef <- make_epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]]),
-                 "pruning")
+                 "Pruning")
   # Test if a valid epiflows object has been created
   expect_s3_class(ef, "epiflows")
   expect_s3_class(ef, "epicontacts")
