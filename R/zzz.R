@@ -4,7 +4,7 @@
                      "duration_stay",
                      "first_date",
                      "last_date",
-                     "num_cases_time_window"
+                     "num_cases"
   )
   op <- options()
   if (!"epiflows.vars" %in% names(op)) {
