@@ -3,10 +3,16 @@
 \docType{data}
 \name{YF_Brazil}
 \alias{YF_Brazil}
+\alias{Brazil_epiflows}
+\alias{YF_flows}
+\alias{YF_locations}
 \title{Yellow Fever Data from Brazil; 2016-12 to 2017-05}
 \format{An object of class \code{list} of length 4.}
 \usage{
-YF_Brazil
+data("Brazil_epiflows")
+  data("YF_locations")
+  data("YF_flows")
+  data("YF_Brazil")
 }
 \description{
 This data set contains flows to and from five states in Brazil formatted in
@@ -30,6 +36,50 @@ location visiting other locations
 \item \code{$length_of_stay} A named vector containing the average length of stay in
 days of travellers from other locations visiting the infectious locations.
 }
+}
+\examples{
+# This is an example of an epiflows object
+data("Brazil_epiflows")
+Brazil_epiflows
+
+# The above data was constructed from a data frame containing flows and 
+# one containing location metadata
+data("YF_flows")
+data("YF_locations")
+ef <- make_epiflows(flows         = YF_flows, 
+                    locations     = YF_locations, 
+                    pop_size      = "location_population",
+                    duration_stay = "length_of_stay",
+                    num_cases     = "num_cases_time_window",
+                    first_date    = "first_date_cases",
+                    last_date     = "last_date_cases"
+                   )
+
+# Both of the above data frames were constructed like so:
+
+data("YF_Brazil")
+
+# Create the flows data frame
+from  <- as.data.frame.table(YF_Brazil$T_D, stringsAsFactors = FALSE)
+to    <- as.data.frame.table(t(YF_Brazil$T_O), stringsAsFactors = FALSE)
+flows <- rbind(from, to)
+colnames(flows) <- c("from", "to", "n")
+
+## Create the locations data frame
+locations <- YF_Brazil$states
+los       <- data.frame(location_code = names(YF_Brazil$length_of_stay), 
+                        length_of_stay = YF_Brazil$length_of_stay)
+locations <- merge(locations, los, by = "location_code", all = TRUE)
+
+## Use both to create the epiflows object.
+ef <- make_epiflows(flows, 
+                    locations, 
+                    pop_size = "location_population",
+                    duration_stay = "length_of_stay",
+                    num_cases = "num_cases_time_window",
+                    first_date = "first_date_cases",
+                    last_date = "last_date_cases"
+)
 }
 \references{
 Dorigatti I, Hamlet A, Aguas R, Cattarino L, Cori A, Donnelly CA,
