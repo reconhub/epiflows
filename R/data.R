@@ -31,10 +31,11 @@
 #' 
 #' @md
 #' @usage data("Brazil_epiflows")
+#'   data("YF_coordinates")
 #'   data("YF_locations")
 #'   data("YF_flows")
 #'   data("YF_Brazil")
-#' @aliases Brazil_epiflows YF_flows YF_locations
+#' @aliases Brazil_epiflows YF_flows YF_locations YF_coordinates
 #' @seealso [make_epiflows()] for transformation to an epiflows object
 #'   [estimate_risk_spread()]
 #' @references Dorigatti I, Hamlet A, Aguas R, Cattarino L, Cori A, Donnelly CA,

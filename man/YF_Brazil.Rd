@@ -6,10 +6,12 @@
 \alias{Brazil_epiflows}
 \alias{YF_flows}
 \alias{YF_locations}
+\alias{YF_coordinates}
 \title{Yellow Fever Data from Brazil; 2016-12 to 2017-05}
 \format{An object of class \code{list} of length 4.}
 \usage{
 data("Brazil_epiflows")
+  data("YF_coordinates")
   data("YF_locations")
   data("YF_flows")
   data("YF_Brazil")

@@ -50,6 +50,7 @@ add_coordinates <- function(ef, coordinates = c("lon", "lat"), loc_column = "id"
   if (!is.null(ef$vars$coordinates) && !overwrite) {
     stop("coordinates are present in the object. Use `overwrite = TRUE` to replace them.")
   }
+  coordinates <- if (is.matrix(coordinates)) as.data.frame(coordinates) else coordinates
   if (is.data.frame(coordinates)) {
     if (ncol(coordinates) != 2) {
       stop("The data frame `coordinates` should contain exactly two columns specifying the longitude and latitude coordinates")
