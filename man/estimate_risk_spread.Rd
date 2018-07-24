@@ -15,12 +15,12 @@ estimate_risk_spread(...)
   avg_length_stay_days, r_incubation, r_infectious, n_sim = 1000,
   return_all_simulations = FALSE, ...)
 
-\method{estimate_risk_spread}{epiflows}(x, location_code,
-  r_incubation = function(n) rlnorm(n, 1.46, 0.35),
-  r_infectious = function(n) rnorm(n, 4.5, 1.5/1.96), n_sim = 1e+05,
-  ...)
+\method{estimate_risk_spread}{epiflows}(x, location_code, r_incubation,
+  r_infectious, n_sim = 1000, return_all_simulations = FALSE, ...)
 }
 \arguments{
+\item{...}{Arguments passed onto the default method.}
+
 \item{location_code}{a character string denoting the infectious location code}
 
 \item{location_population}{population of the infectious location}

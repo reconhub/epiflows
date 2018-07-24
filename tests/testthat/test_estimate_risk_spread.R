@@ -1,10 +1,9 @@
 context("Test estimate_risk_spread()")
 data("Brazil_epiflows")
 ef.es <- epicontacts::thin(Brazil_epiflows[, j = "Espirito Santo"])
+codes <- get_id(ef.es)
 
 test_that("Correct value is returned", {
-  # num_countries <- length(to)
-  codes <- get_id(ef.es)
   set.seed(9000)
   outcome <- estimate_risk_spread(
     ## These arguments specified by user
@@ -47,3 +46,66 @@ test_that("a matrix of simulations is returned if requested", {
   expect_is(outcome, "matrix")
   expect_equal(dim(outcome), c(99, 10))
 })
+
+
+test_that("estimate_risk_spread works on epiflow objects", {
+  expect_warning({
+    set.seed(9000)
+    res <- estimate_risk_spread(Brazil_epiflows, 
+                                location_code = "Espirito Santo",
+                                r_incubation = function(n) rlnorm(n, 1.46, 0.35),
+                                r_infectious = function(n) rnorm(n, 4.5, 1.5/1.96),
+                                n_sim = 99
+                                )
+    }, 
+    regexp = "number of simulations"
+  )
+  expect_true(all(rownames(res) %in% codes[-1]))
+})
+
+test_that("estimate_risk_spread arguments can be overridden", {
+  expect_warning({
+    set.seed(9000)
+    res1 <- estimate_risk_spread(Brazil_epiflows, 
+                                location_code = "Espirito Santo",
+                                r_incubation = function(n) rlnorm(n, 1.46, 0.35),
+                                r_infectious = function(n) rnorm(n, 4.5, 1.5/1.96),
+                                n_sim = 9
+    )
+  }, 
+  regexp = "number of simulations"
+  )
+  expect_warning({
+    set.seed(9000)
+    res2 <- estimate_risk_spread(Brazil_epiflows, 
+                                 location_code = "Espirito Santo",
+                                 r_incubation = function(n) rlnorm(n, 1.46, 0.35),
+                                 r_infectious = function(n) rnorm(n, 4.5, 1.5/1.96),
+                                 n_sim = 9,
+                                 num_cases_time_window = 2.6e5
+    )
+  }, 
+  regexp = "number of simulations"
+  )
+  expect_true(all(res2 > res1))
+})
+
+
+test_that("errors are thrown for ambiguities or wrong arguments", {
+  expect_error({
+    set.seed(9000)
+    res2 <- estimate_risk_spread(Brazil_epiflows, 
+                                 location_code = "Espirito Santo",
+                                 r_incubation = function(n) rlnorm(n, 1.46, 0.35),
+                                 r_infectious = function(n) rnorm(n, 4.5, 1.5/1.96),
+                                 n_sim = 9,
+                                 num = 2.6e5,
+                                 grind = 1,
+                                 core = TRUE
+    )
+  },
+  regexp = "Unmatched arguments: grind, core\n  Matched multiple arguments: num")
+})
+
+
+

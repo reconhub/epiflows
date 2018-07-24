@@ -48,6 +48,8 @@
 #' @param return_all_simulations logical value indicating whether the returned object is a data frame with all simulations
 #' (return_all_simulations = TRUE) or a data frame with the mean and lower and upper limits of a 95% confidence interval of
 #' the number of cases spread to each location (return_all_simulations = FALSE)
+#' 
+#' @param ... Arguments passed onto the default method.
 #'
 #' @return if return_all_simulations is TRUE, data frame with all simulations. If return_all_simulations is FALSE,
 #' data frame with the mean and lower and upper limits of a 95% confidence interval of the number 
@@ -128,7 +130,7 @@ estimate_risk_spread.default <- function(location_code,
                                          n_sim = 1000,
                                          return_all_simulations = FALSE, 
                                          ...) {
-  
+  dots  <- stop_if_ambiguous_dots(list(...), "estimate_risk_spread.default")
   if (n_sim < 1000) {
     warning("It is recommended the number of simulations is at least 1000.")
   }
@@ -239,12 +241,10 @@ estimate_risk_spread.default <- function(location_code,
 #' @export
 #' @rdname estimate_risk_spread
 #' @param x an epiflows object
-estimate_risk_spread.epiflows <- function(x,
-                                          location_code,
-                                          r_incubation  = function(n) rlnorm(n, 1.46, 0.35),
-                                          r_infectious  = function(n) rnorm(n, 4.5, 1.5/1.96),
-                                          n_sim         = 1e5,
-                                          ...) {
+#' @importFrom stats na.omit
+estimate_risk_spread.epiflows <- function(x, location_code, r_incubation, 
+                                          r_infectious, n_sim = 1000, 
+                                          return_all_simulations = FALSE, ...) {
   if (missing(location_code)) {
     stop("The argument location_code must be specified. Please choose")
   }
@@ -254,22 +254,30 @@ estimate_risk_spread.epiflows <- function(x,
   num_cases  <- get_vars(xi, "num_cases", vector = TRUE)[location_code]
   first_date <- get_vars(xi, "first_date", vector = TRUE)[location_code]
   last_date  <- get_vars(xi, "last_date", vector = TRUE)[location_code]
+  
   # vectors from a given location
   n_to       <- get_n(xi, from = location_code)
   n_from     <- get_n(xi, to   = location_code)
-  duration   <- na.omit(get_vars(xi, "duration_stay", vector = TRUE))
-  estimate_risk_spread(
-    location_code                       = location_code,
-    r_incubation                        = r_incubation,
-    r_infectious                        = r_infectious,
-    n_sim                               = n_sim,
-    location_population                 = pop_size,
-    num_cases_time_window               = num_cases,
-    first_date_cases                    = first_date,
-    last_date_cases                     = last_date,
-    num_travellers_to_other_locations   = n_to,
-    num_travellers_from_other_locations = n_from,
-    avg_length_stay_days                = duration,
-    ...
+  duration   <- stats::na.omit(get_vars(xi, "duration_stay", vector = TRUE))
+  
+  # Environment to store dots
+  denv       <- new.env()
+  denv$dots  <- stop_if_ambiguous_dots(list(...), "estimate_risk_spread.default")
+  
+  args <- c(
+    dots_precedence("location_code", location_code, denv),
+    dots_precedence("r_incubation", r_incubation, denv),
+    dots_precedence("r_infectious", r_infectious, denv),
+    dots_precedence("n_sim", n_sim, denv),
+    dots_precedence("location_population", pop_size, denv),
+    dots_precedence("num_cases_time_window", num_cases, denv),
+    dots_precedence("first_date_cases", first_date, denv),
+    dots_precedence("last_date_cases", last_date, denv),
+    dots_precedence("num_travellers_to_other_locations", n_to, denv),
+    dots_precedence("num_travellers_from_other_locations", n_from, denv),
+    dots_precedence("avg_length_stay_days", duration, denv),
+    dots_precedence("return_all_simulations", return_all_simulations, denv),
+    denv$dots
   )
+  do.call("estimate_risk_spread.default", args)
 }
