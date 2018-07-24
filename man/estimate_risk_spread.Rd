@@ -2,14 +2,23 @@
 % Please edit documentation in R/estimate_risk_spread.R
 \name{estimate_risk_spread}
 \alias{estimate_risk_spread}
+\alias{estimate_risk_spread.default}
+\alias{estimate_risk_spread.epiflows}
 \title{Travel-related disease cases spreaded to other locations from an infectious
 location}
 \usage{
-estimate_risk_spread(location_code, location_population,
+estimate_risk_spread(...)
+
+\method{estimate_risk_spread}{default}(location_code, location_population,
   num_cases_time_window, first_date_cases, last_date_cases,
   num_travellers_to_other_locations, num_travellers_from_other_locations,
   avg_length_stay_days, r_incubation, r_infectious, n_sim = 1000,
-  return_all_simulations = FALSE)
+  return_all_simulations = FALSE, ...)
+
+\method{estimate_risk_spread}{epiflows}(x, location_code,
+  r_incubation = function(n) rlnorm(n, 1.46, 0.35),
+  r_infectious = function(n) rnorm(n, 4.5, 1.5/1.96), n_sim = 1e+05,
+  ...)
 }
 \arguments{
 \item{location_code}{a character string denoting the infectious location code}
@@ -48,6 +57,8 @@ infectious distributions}
 \item{return_all_simulations}{logical value indicating whether the returned object is a data frame with all simulations
 (return_all_simulations = TRUE) or a data frame with the mean and lower and upper limits of a 95% confidence interval of
 the number of cases spread to each location (return_all_simulations = FALSE)}
+
+\item{x}{an epiflows object}
 }
 \value{
 if return_all_simulations is TRUE, data frame with all simulations. If return_all_simulations is FALSE,
@@ -67,14 +78,18 @@ If parameter return_all_simulations is set to TRUE, the function returns all sim
 for each location.
 }
 \examples{
+## Using an epiflows object --------------------------------
 
-## load data
-data(YF_Brazil)
-indstate <- 1 # "Espirito Santo" (indstate = 1), 
-              # "Minas Gerais" (indstate = 2), 
-              # "Southeast Brazil" (indstate = 5)
-
-
+data("YF_flows")
+data("YF_locations")
+ef <- make_epiflows(flows         = YF_flows, 
+                    locations     = YF_locations, 
+                    pop_size      = "location_population",
+                    duration_stay = "length_of_stay",
+                    num_cases     = "num_cases_time_window",
+                    first_date    = "first_date_cases",
+                    last_date     = "last_date_cases"
+)
 ## functions generating incubation and infectious periods
 incubation <- function(n) {
   rlnorm(n, 1.46, 0.35)
@@ -84,6 +99,19 @@ infectious <- function(n) {
   rnorm(n, 4.5, 1.5/1.96)
 }
 
+res <- estimate_risk_spread(ef, 
+                            location_code          = "Espirito Santo",
+                            r_incubation           = incubation,
+                            r_infectious           = infectious,
+                            n_sim                  = 1e5,
+                            return_all_simulations = TRUE)
+boxplot(res, las = 3)
+
+## Using other data --------------------------------------------------
+data(YF_Brazil)
+indstate <- 1 # "Espirito Santo" (indstate = 1), 
+              # "Minas Gerais" (indstate = 2), 
+              # "Southeast Brazil" (indstate = 5)
 
 res <- estimate_risk_spread(location_code =
   YF_Brazil$states$location_code[indstate], location_population =

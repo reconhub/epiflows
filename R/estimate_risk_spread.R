@@ -58,14 +58,18 @@
 #' @export
 #'
 #' @examples
-#'
-#' ## load data
-#' data(YF_Brazil)
-#' indstate <- 1 # "Espirito Santo" (indstate = 1), 
-#'               # "Minas Gerais" (indstate = 2), 
-#'               # "Southeast Brazil" (indstate = 5)
-#'
-#'
+#' ## Using an epiflows object --------------------------------
+#' 
+#' data("YF_flows")
+#' data("YF_locations")
+#' ef <- make_epiflows(flows         = YF_flows, 
+#'                     locations     = YF_locations, 
+#'                     pop_size      = "location_population",
+#'                     duration_stay = "length_of_stay",
+#'                     num_cases     = "num_cases_time_window",
+#'                     first_date    = "first_date_cases",
+#'                     last_date     = "last_date_cases"
+#' )
 #' ## functions generating incubation and infectious periods
 #' incubation <- function(n) {
 #'   rlnorm(n, 1.46, 0.35)
@@ -74,7 +78,20 @@
 #' infectious <- function(n) {
 #'   rnorm(n, 4.5, 1.5/1.96)
 #' }
+#' 
+#' res <- estimate_risk_spread(ef, 
+#'                             location_code          = "Espirito Santo",
+#'                             r_incubation           = incubation,
+#'                             r_infectious           = infectious,
+#'                             n_sim                  = 1e5,
+#'                             return_all_simulations = TRUE)
+#' boxplot(res, las = 3)
 #'
+#' ## Using other data --------------------------------------------------
+#' data(YF_Brazil)
+#' indstate <- 1 # "Espirito Santo" (indstate = 1), 
+#'               # "Minas Gerais" (indstate = 2), 
+#'               # "Southeast Brazil" (indstate = 5)
 #'
 #' res <- estimate_risk_spread(location_code =
 #'   YF_Brazil$states$location_code[indstate], location_population =
@@ -92,20 +109,27 @@
 #' )
 #' head(res)
 #'
-estimate_risk_spread <- function(location_code,
-                                 location_population,
-                                 num_cases_time_window,
-                                 first_date_cases,
-                                 last_date_cases,
-                                 num_travellers_to_other_locations,
-                                 num_travellers_from_other_locations,
-                                 avg_length_stay_days,
-                                 r_incubation,
-                                 r_infectious,
-                                 n_sim = 1000,
-                                 return_all_simulations = FALSE) {
+estimate_risk_spread <- function(...) {
+  UseMethod("estimate_risk_spread")
+}
+
+#' @export
+#' @rdname estimate_risk_spread
+estimate_risk_spread.default <- function(location_code,
+                                         location_population,
+                                         num_cases_time_window,
+                                         first_date_cases,
+                                         last_date_cases,
+                                         num_travellers_to_other_locations,
+                                         num_travellers_from_other_locations,
+                                         avg_length_stay_days,
+                                         r_incubation,
+                                         r_infectious,
+                                         n_sim = 1000,
+                                         return_all_simulations = FALSE, 
+                                         ...) {
   
-  if(n_sim < 1000){
+  if (n_sim < 1000) {
     warning("It is recommended the number of simulations is at least 1000.")
   }
 
@@ -212,3 +236,40 @@ estimate_risk_spread <- function(location_code,
   }
 }
 
+#' @export
+#' @rdname estimate_risk_spread
+#' @param x an epiflows object
+estimate_risk_spread.epiflows <- function(x,
+                                          location_code,
+                                          r_incubation  = function(n) rlnorm(n, 1.46, 0.35),
+                                          r_infectious  = function(n) rnorm(n, 4.5, 1.5/1.96),
+                                          n_sim         = 1e5,
+                                          ...) {
+  if (missing(location_code)) {
+    stop("The argument location_code must be specified. Please choose")
+  }
+  xi <- epicontacts::thin(x[, j = location_code])
+  # Scalars
+  pop_size   <- get_vars(xi, "pop_size", vector = TRUE)[location_code]
+  num_cases  <- get_vars(xi, "num_cases", vector = TRUE)[location_code]
+  first_date <- get_vars(xi, "first_date", vector = TRUE)[location_code]
+  last_date  <- get_vars(xi, "last_date", vector = TRUE)[location_code]
+  # vectors from a given location
+  n_to       <- get_n(xi, from = location_code)
+  n_from     <- get_n(xi, to   = location_code)
+  duration   <- na.omit(get_vars(xi, "duration_stay", vector = TRUE))
+  estimate_risk_spread(
+    location_code                       = location_code,
+    r_incubation                        = r_incubation,
+    r_infectious                        = r_infectious,
+    n_sim                               = n_sim,
+    location_population                 = pop_size,
+    num_cases_time_window               = num_cases,
+    first_date_cases                    = first_date,
+    last_date_cases                     = last_date,
+    num_travellers_to_other_locations   = n_to,
+    num_travellers_from_other_locations = n_from,
+    avg_length_stay_days                = duration,
+    ...
+  )
+}

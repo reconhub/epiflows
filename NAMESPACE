@@ -2,6 +2,8 @@
 
 S3method("[",epiflows)
 S3method(as.SpatialLinesDataFrame,epiflows)
+S3method(estimate_risk_spread,default)
+S3method(estimate_risk_spread,epiflows)
 S3method(get_coordinates,epiflows)
 S3method(get_flows,epiflows)
 S3method(get_locations,epiflows)
