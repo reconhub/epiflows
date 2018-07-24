@@ -52,6 +52,7 @@ get_vars.epiflows <- function(x, what = NULL, id = TRUE, vector = FALSE, ...) {
     }
   } else {
     what <- x$vars[[what]]
+    what <- if (is.numeric(what)) names(x$linelist)[what] else what
   }
   if (id) {
     res <- x$linelist[c("id", what)]
