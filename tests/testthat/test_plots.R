@@ -1,6 +1,7 @@
 context("Visualization tests")
 
 data("Brazil_epiflows")
+data("YF_coordinates")
 bef <- add_coordinates(Brazil_epiflows, coordinates = YF_coordinates[-1])
 
 
@@ -8,6 +9,15 @@ bef <- add_coordinates(Brazil_epiflows, coordinates = YF_coordinates[-1])
 test_that("invalid plots don't work", {
   expect_error(plot(Brazil_epiflows, type = "beer"))
 })
+
+test_that("default plotting will give us a network if no coordinates are available", {
+  skip_on_cran()
+  skip_if_not_installed("vdiffr")
+  expect_message(net <- plot(Brazil_epiflows))
+  vdiffr::expect_doppelganger(title = "full net", fig = net)
+})
+
+
 
 test_that("grid plot method works", {
   skip_on_cran()

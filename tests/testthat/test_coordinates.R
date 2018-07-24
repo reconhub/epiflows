@@ -11,7 +11,7 @@ test_that("coordinates can be added over the internet", {
   data("YF_coordinates")
   expect_error(add_coordinates(b1, YF_coordinates), "two columns")
   expect_error(add_coordinates(YF_coordinates), "YF_coordinates must be an object of class epiflows")
-  expect_error(get_coordinates(b1), "coordinates are not set in b1")
+  expect_null(get_coordinates(b1))
   suppressWarnings(b2  <- add_coordinates(b1))
   expect_error(add_coordinates(b2), "Use `overwrite = TRUE`")
   coo                  <- get_coordinates(b2)
