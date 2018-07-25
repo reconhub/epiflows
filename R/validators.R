@@ -8,14 +8,19 @@
 #' @return a named list
 #' @noRd
 valid_dots <- function(dots) {
+  if (length(dots) == 0) return(dots)
   # These names can be expanded
   out <- dots[names(dots) %in% getOption("epiflows.vars")]
   #
   # TODO: Throw error if there are any unnamed arguments
   #
   if (length(out) < length(dots)) {
-    diffnames <- paste(setdiff(names(dots), names(out)), collapse = ",")
-    warning(paste("Ignoring the following variables:", diffnames))
+    diffnames <- paste(setdiff(names(dots), names(out)), collapse = ", ")
+    msg <- paste("Unknown variables were found:", diffnames, "\n\n",
+                 "Please inspect them to make sure they are correct.",
+                 "If they are correct, please add them to `epiflows.vars`.",
+                 "Type ?epiflows.vars for details")
+    stop(msg, call. = FALSE)
   }
   out
 }

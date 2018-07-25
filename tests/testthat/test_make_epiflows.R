@@ -39,6 +39,23 @@ test_that("make_epiflows.data.frame() works as expected", {
   expect_identical(ef, Brazil_epiflows)
 })
 
+test_that("make_epiflows() will bork if there are extra varaibles", {
+  expect_error({
+    make_epiflows(flows         = YF_flows, 
+                  locations     = YF_locations, 
+                  poop_size     = "location_population",
+                  duration_stay = "length_of_stay",
+                  num_cases     = "num_cases_time_window",
+                  first_date    = "first_date_cases",
+                  last_date     = "last_date_cases",
+                  grind         = "core"
+    )
+  },
+  regex = "Unknown variables were found: poop_size, grind")
+})
+
+
+
 test_that("make_epiflows() can work with numeric data", {
   ef <- make_epiflows(flows         = YF_flows, 
                       locations     = YF_locations, 
