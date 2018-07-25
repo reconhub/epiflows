@@ -249,21 +249,25 @@ estimate_risk_spread.epiflows <- function(x, location_code, r_incubation,
     stop("The argument location_code must be specified. Please choose")
   }
   xi <- epicontacts::thin(x[, j = location_code])
-  # Scalars
+  # Scalars ---------------------------------------------------------
   pop_size   <- get_vars(xi, "pop_size", vector = TRUE)[location_code]
   num_cases  <- get_vars(xi, "num_cases", vector = TRUE)[location_code]
   first_date <- get_vars(xi, "first_date", vector = TRUE)[location_code]
   last_date  <- get_vars(xi, "last_date", vector = TRUE)[location_code]
   
-  # vectors from a given location
+  # vectors from a given location -----------------------------------
   n_to       <- get_n(xi, from = location_code)
   n_from     <- get_n(xi, to   = location_code)
-  duration   <- stats::na.omit(get_vars(xi, "duration_stay", vector = TRUE))
+  anti_loc   <- get_id(xi) != location_code
+  duration   <- get_vars(xi, "duration_stay", vector = TRUE)[anti_loc]
   
-  # Environment to store dots
-  denv       <- new.env()
-  denv$dots  <- stop_if_ambiguous_dots(list(...), "estimate_risk_spread.default")
+  # Environment to store dots ---------------------------------------
+  denv      <- new.env()
+  denv$dots <- stop_if_ambiguous_dots(list(...), "estimate_risk_spread.default")
   
+  # Construct the arguments -----------------------------------------
+  # If an argument was specified in the dots, it should be given 
+  # precedence since the user had to manually put that in there.
   args <- c(
     dots_precedence("location_code", location_code, denv),
     dots_precedence("r_incubation", r_incubation, denv),
