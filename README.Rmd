@@ -6,6 +6,7 @@ output: github_document
 [![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/epiflows)](https://cran.r-project.org/package=epiflows)
 [![Travis-CI Build Status](https://travis-ci.org/reconhub/epiflows.svg?branch=master)](https://travis-ci.org/reconhub/epiflows)
+[![codecov](https://codecov.io/gh/reconhub/epiflows/branch/master/graph/badge.svg)](https://codecov.io/gh/reconhub/epiflows)
 
 
 # Welcome to the *epiflows* package!
@@ -15,32 +16,78 @@ output: github_document
 
 ## Installing the package
 
-To install the current stable, CRAN version of the package, type:
-```{r install, eval = FALSE}
-install.packages("epiflows")
-```
+<!-- To install the current stable, CRAN version of the package, type: -->
+<!-- ```{r install, eval = FALSE} -->
+<!-- install.packages("epiflows") -->
+<!-- ``` -->
 
-To benefit from the latest features and bug fixes, install the development, *github* version of the package using:
+<!-- To benefit from the latest features and bug fixes, install the development, *github* version of the package using: -->
+Currently, epiflows is a work in progress and can be installed from github using
+the *remotes*, *ghit*, or *devtools* package:
+
 ```{r install2, eval = FALSE}
-devtools::install_github("reconhub/epiflows")
+if (!require("remotes")) install.packages("remotes", repos = "https://cloud.rstudio.org")
+remotes::install_github("reconhub/epiflows")
 ```
-
-Note that this requires the package *devtools* installed.
-
 
 # What does it do?
 
 The main features of the package include:
 
-* `epiflows`: an S3 class for storing flow data, as well as country metadata
-* `make_epiflows`: a constructor for `epiflows`
-* `add_coordinates`: add latitude/longitude to the location data in an `epiflows` object using `ggmap::geocode()`
-* `fn_number_cases_spread`: calculate estimates (point estimate and 95% CI) for disease spread from flow data
-* `get_flow_data`: return flow data to and/or from specified location
-* `get_location_data`: return metadata for specified location(s)
-* `x[i]`: subset an `epiflows` object to location(s) *i*
-* `plot`: plot flows from an `epiflows` object on a *leaflet* world map
-* `print`: print summary for an `epiflows` object
+## Estimation of risk
+
+* `estimate_risk_spread()`: calculate estimates (point estimate and 95% CI) for disease spread from flow data
+
+### Example
+
+Estimating the number of new cases flowing to other countries from Espirito Santo, Brazil.
+
+```{r the_estimate}
+library("epicontacts")
+library("epiflows")
+library("ggplot2")
+data("Brazil_epiflows")
+print(Brazil_epiflows)
+res <- estimate_risk_spread(Brazil_epiflows, 
+                            location_code = "Espirito Santo",
+                            r_incubation = function(n) rlnorm(n, 1.46, 0.35),
+                            r_infectious = function(n) rnorm(n, 4.5, 1.5/1.96),
+                            n_sim = 1e5
+                           )
+res
+res$location <- rownames(res)
+ggplot(res, aes(x = mean_cases, y = location)) +
+  geom_point(size = 2) +
+  geom_errorbarh(aes(xmin = lower_limit_95CI, xmax = upper_limit_95CI), height = .25) +
+  theme_bw(base_size = 12, base_family = "Helvetica") +
+  ggtitle("Risk of yellow fever spread from Espirito Santo, Brazil") +
+  xlab("Number of cases") +
+  xlim(c(0, 2))
+```
+
+## Data structure to store flows and metadata
+
+* `epiflows`: an S3 class for storing flow data, as well as country metadata. 
+   This class contains two data frames containing flows and location metadata based on the `epicontacts` class from the [epicontacts pacakge](http://www.repidemicsconsortium.org/epicontacts/).
+* `make_epiflows()`: a constructor for `epiflows` from either a pair of data frames or inflows and outflows and location data frame.
+* `add_coordinates()`: add latitude/longitude to the location data in an `epiflows` object using `ggmap::geocode()`
+
+## Basic methods
+
+* `x[j = myLocations]`: subset an `epiflows` object to location(s) *myLocations*
+* `plot()`: plot flows from an `epiflows` object on a *leaflet* world map
+* `print()`: print summary for an `epiflows` object
+
+
+## Accessors
+
+* `get_flows()`: return flow data 
+* `get_locations()`: return metadata for all locations
+* `get_vars()`: access variables from metadata
+* `get_coordinates()`: return coordinates for each location (if provided)
+* `get_id()`: return a vector of location identifiers
+* `get_n()`: return the number of cases per flow
+* `get_pop_size()`: return the population size for each location (if provided)
 
 # Resources
 

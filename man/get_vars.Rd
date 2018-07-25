@@ -20,8 +20,8 @@ get_pop_size(x)
 
 get_vars(x, ...)
 
-\method{get_vars}{epiflows}(x, what = NULL, id = TRUE,
-  vector = FALSE, ...)
+\method{get_vars}{epiflows}(x, what = NULL, id = TRUE, vector = FALSE,
+  ...)
 }
 \arguments{
 \item{x}{An \code{epiflows} object.}

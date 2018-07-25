@@ -4,8 +4,8 @@
 \alias{map_epiflows}
 \title{Map flows of people between locations}
 \usage{
-map_epiflows(x, title = "", center = NULL, sort = TRUE,
-  pal = "YlOrBr", adjust_width = TRUE, ...)
+map_epiflows(x, title = "", center = NULL, sort = TRUE, pal = "YlOrBr",
+  adjust_width = TRUE, ...)
 }
 \arguments{
 \item{x}{An \code{epiflows} object.}
