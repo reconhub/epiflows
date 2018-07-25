@@ -51,18 +51,7 @@ Estimating the number of new cases flowing to other countries from
 Espirito Santo, Brazil (Dorigatti *et al.*, 2017).
 
 ``` r
-library("epicontacts")
 library("epiflows")
-```
-
-    ## 
-    ## Attaching package: 'epiflows'
-
-    ## The following object is masked from 'package:epicontacts':
-    ## 
-    ##     get_id
-
-``` r
 library("ggplot2")
 data("Brazil_epiflows")
 print(Brazil_epiflows)
@@ -152,7 +141,7 @@ ggplot(res, aes(x = mean_cases, y = location)) +
   theme_bw(base_size = 12, base_family = "Helvetica") +
   ggtitle("Risk of yellow fever spread from Espirito Santo, Brazil") +
   xlab("Number of cases") +
-  xlim(c(0, 2))
+  xlim(c(0, NA))
 ```
 
 ![](README_files/figure-gfm/the_estimate-1.png)<!-- -->

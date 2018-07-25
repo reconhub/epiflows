@@ -43,7 +43,6 @@ The main features of the package include:
 Estimating the number of new cases flowing to other countries from Espirito Santo, Brazil (Dorigatti *et al.*, 2017).
 
 ```{r the_estimate}
-library("epicontacts")
 library("epiflows")
 library("ggplot2")
 data("Brazil_epiflows")
@@ -63,7 +62,7 @@ ggplot(res, aes(x = mean_cases, y = location)) +
   theme_bw(base_size = 12, base_family = "Helvetica") +
   ggtitle("Risk of yellow fever spread from Espirito Santo, Brazil") +
   xlab("Number of cases") +
-  xlim(c(0, 2))
+  xlim(c(0, NA))
 ```
 
 ## Data structure to store flows and metadata
