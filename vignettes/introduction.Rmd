@@ -5,39 +5,132 @@ output:
    rmarkdown::html_vignette:
      toc: true
      toc_depth: 2
+     fig_width: 7
+     fig_height: 7
+     out_width: "100%"
 vignette: >
-  %\VignetteIndexEntry{Overview}
+  %\VignetteIndexEntry{00 Overview}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-*epiflows* provides ...
 
-# Installing the package
+`epiflows` is a package for predicting and visualising spread of infectious diseases based on flows between geographical locations, e.g., countries.
+`epiflows` provides functions for calculating spread estimates, handling flow data, and visualization.
 
-To install the current stable, CRAN version of the package, type:
-```{r install, eval=FALSE}
-install.packages("epiflows")
+## Installing the package
+
+<!-- To install the current stable, CRAN version of the package, type: -->
+<!-- ```{r install, eval = FALSE} -->
+<!-- install.packages("epiflows") -->
+<!-- ``` -->
+
+<!-- To benefit from the latest features and bug fixes, install the development, *github* version of the package using: -->
+Currently, epiflows is a work in progress and can be installed from github using
+the *remotes*, *ghit*, or *devtools* package:
+
+```{r install2, eval = FALSE}
+if (!require("remotes")) install.packages("remotes", repos = "https://cloud.rstudio.org")
+remotes::install_github("reconhub/epiflows")
 ```
 
-To benefit from the latest features and bug fixes, install the development, *github* version of the package using:
-```{r install2, eval=FALSE}
-devtools::install_github("reconhub/epiflows")
+# What does it do?
+
+The main features of the package include:
+
+## Estimation of risk
+
+* `estimate_risk_spread()`: calculate estimates (point estimate and 95% CI) for disease spread from flow data
+
+### Example
+
+Estimating the number of new cases flowing to other countries from Espirito Santo, Brazil (Dorigatti *et al.*, 2017).
+
+```{r the_estimate}
+library("epiflows")
+library("ggplot2")
+data("Brazil_epiflows")
+print(Brazil_epiflows)
+set.seed(2018-07-25)
+res <- estimate_risk_spread(Brazil_epiflows, 
+                            location_code = "Espirito Santo",
+                            r_incubation = function(n) rlnorm(n, 1.46, 0.35),
+                            r_infectious = function(n) rnorm(n, 4.5, 1.5/1.96),
+                            n_sim = 1e5
+                           )
+res
+res$location <- rownames(res)
+ggplot(res, aes(x = mean_cases, y = location)) +
+  geom_point(size = 2) +
+  geom_errorbarh(aes(xmin = lower_limit_95CI, xmax = upper_limit_95CI), height = .25) +
+  theme_bw(base_size = 12, base_family = "Helvetica") +
+  ggtitle("Risk of yellow fever spread from Espirito Santo, Brazil") +
+  xlab("Number of cases") +
+  xlim(c(0, NA))
 ```
 
-Note that this requires the package *devtools* installed.
+## Data structure to store flows and metadata
 
-# Main visible functions of the package
+* `epiflows`: an S3 class for storing flow data, as well as country metadata. 
+   This class contains two data frames containing flows and location metadata based on the `epicontacts` class from the [epicontacts pacakge](http://www.repidemicsconsortium.org/epicontacts/).
+* `make_epiflows()`: a constructor for `epiflows` from either a pair of data frames or inflows and outflows and location data frame.
+* `add_coordinates()`: add latitude/longitude to the location data in an `epiflows` object using `ggmap::geocode()`
 
-The main functions of the package include:
+The easiest way to create an epiflows object is from two data frames (type `vignette("epiflows-class")` for more details:
 
-...
+```{r make_epiflows}
+data("YF_locations")
+data("YF_flows")
+data("YF_coordinates")
+loc <- merge(x = YF_locations, 
+             y = YF_coordinates,
+             by.x = "location_code",
+             by.y = "id",
+             sort = FALSE)
+loc
+ef <- make_epiflows(flows         = YF_flows, 
+                    locations     = loc, 
+                    coordinates   = c("lon", "lat"), 
+                    pop_size      = "location_population",
+                    duration_stay = "length_of_stay",
+                    num_cases     = "num_cases_time_window",
+                    first_date    = "first_date_cases",
+                    last_date     = "last_date_cases"
+                   )
+ef
+```
 
-Also consider adding some examples.
+## Basic methods
 
-# Main internal functions
+* `x[j = myLocations]`: subset an `epiflows` object to location(s) *myLocations* and all that it(they) interact(s) with. 
+* `print()`: print summary for an `epiflows` object
 
-In case you want to describe internal function as well.
-... 
+## Plotting
 
+You can use `plot()` to plot flows from an `epiflows` object on one of:
+
+  - [*leaflet*](https://rstudio.github.io/leaflet/) world map (default if coordinates; standalone function: `map_epiflows()`)
+  - a [*visNetwork*](https://datastorm-open.github.io/visNetwork/) interactive graph (default if no coordinates; standalone function: `vis_epiflows()`)
+  - a grid/bubble plot (standalone function: `grid_epiflows()`).
+
+```{r plotting}
+vis_epiflows(ef)
+map_epiflows(ef)
+grid_epiflows(ef)
+```
+
+
+## Accessors
+
+* `get_flows()`: return flow data 
+* `get_locations()`: return metadata for all locations
+* `get_vars()`: access variables from metadata
+* `get_coordinates()`: return coordinates for each location (if provided)
+* `get_id()`: return a vector of location identifiers
+* `get_n()`: return the number of cases per flow
+* `get_pop_size()`: return the population size for each location (if provided)
+
+# References
+
+Dorigatti I, Hamlet A, Aguas R, Cattarino L, Cori A, Donnelly CA, Garske T, Imai N, Ferguson NM. International risk of yellow fever spread from the ongoing outbreak in Brazil, December 2016 to May 2017. Euro Surveill. 2017;22(28):pii=30572. DOI: [10.2807/1560-7917.ES.2017.22.28.30572](https://doi.org/10.2807/1560-7917.ES.2017.22.28.30572)
 
