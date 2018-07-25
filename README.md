@@ -48,7 +48,7 @@ The main features of the package include:
 ### Example
 
 Estimating the number of new cases flowing to other countries from
-Espirito Santo, Brazil.
+Espirito Santo, Brazil (Dorigatti *et al.*, 2017).
 
 ``` r
 library("epicontacts")
@@ -115,6 +115,7 @@ print(Brazil_epiflows)
     ## # ... with 90 more rows
 
 ``` r
+set.seed(2018-07-25)
 res <- estimate_risk_spread(Brazil_epiflows, 
                             location_code = "Espirito Santo",
                             r_incubation = function(n) rlnorm(n, 1.46, 0.35),
@@ -132,16 +133,16 @@ res
 ```
 
     ##                          mean_cases lower_limit_95CI upper_limit_95CI
-    ## Italy                     0.2231523        0.1521121        0.3078378
-    ## Spain                     0.2253126        0.1537608        0.3127081
-    ## Portugal                  0.2315067        0.1565687        0.3383500
-    ## Germany                   0.1862595        0.1259677        0.2722201
-    ## United Kingdom            0.1612410        0.1195382        0.2089645
-    ## United States of America  0.9245639        0.6252844        1.3512593
-    ## Argentina                 1.1274019        0.7624641        1.6477091
-    ## Chile                     0.2646030        0.1789552        0.3867279
-    ## Uruguay                   0.2406887        0.1627847        0.3517829
-    ## Paraguay                  0.1618671        0.1213237        0.1927066
+    ## Italy                     0.2233656        0.1520966        0.3078136
+    ## Spain                     0.2255171        0.1537452        0.3126801
+    ## Portugal                  0.2317019        0.1565528        0.3383112
+    ## Germany                   0.1864162        0.1259548        0.2721890
+    ## United Kingdom            0.1613418        0.1195261        0.2089475
+    ## United States of America  0.9253419        0.6252207        1.3511047
+    ## Argentina                 1.1283506        0.7623865        1.6475205
+    ## Chile                     0.2648277        0.1789370        0.3866836
+    ## Uruguay                   0.2408942        0.1627681        0.3517426
+    ## Paraguay                  0.1619724        0.1213114        0.1926966
 
 ``` r
 res$location <- rownames(res)
@@ -208,3 +209,11 @@ Contributions are welcome via **pull requests**.
 Please note that this project is released with a [Contributor Code of
 Conduct](CONDUCT.md). By participating in this project you agree to
 abide by its terms.
+
+# References
+
+Dorigatti I, Hamlet A, Aguas R, Cattarino L, Cori A, Donnelly CA, Garske
+T, Imai N, Ferguson NM. International risk of yellow fever spread from
+the ongoing outbreak in Brazil, December 2016 to May 2017. Euro
+Surveill. 2017;22(28):pii=30572. DOI:
+[10.2807/1560-7917.ES.2017.22.28.30572](https://doi.org/10.2807/1560-7917.ES.2017.22.28.30572)
