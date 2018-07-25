@@ -9,5 +9,8 @@
   op <- options()
   if (!"epiflows.vars" %in% names(op)) {
     options(epiflows.vars = epiflows.vars)
+  } else {
+    oefv <- getOption("epiflows.vars")
+    options(epiflows.vars = unique(c(oefv, epiflows.vars)))
   }
 }
