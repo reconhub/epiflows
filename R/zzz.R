@@ -1,16 +1,15 @@
 .onLoad <- function(...) {
-  epiflows.vars <- c("coordinates", 
-                     "pop_size", 
-                     "duration_stay",
-                     "first_date",
-                     "last_date",
-                     "num_cases"
-  )
   op <- options()
   if (!"epiflows.vars" %in% names(op)) {
-    options(epiflows.vars = epiflows.vars)
+    invisible(global_vars(reset = TRUE))
   } else {
-    oefv <- getOption("epiflows.vars")
-    options(epiflows.vars = unique(c(oefv, epiflows.vars)))
+    invisible(global_vars(set = TRUE))
   }
+}
+
+.onAttach <- function(...) {
+  msg <- sprintf("epiflows is loaded with the following global variables in `epiflows.vars`:\n%s",
+                 paste(global_vars(), collapse = ", ")
+                 )
+  packageStartupMessage(msg)
 }
