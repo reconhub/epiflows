@@ -47,6 +47,9 @@ as.SpatialLinesDataFrame <- function(x) {
 as.SpatialLinesDataFrame.epiflows <- function(x) {
   the_flows  <- get_flows(x)
   the_coordinates <- get_coordinates(x)
+  if (is.null(the_coordinates)) {
+    stop(sprintf("%s does not have coordinates set", deparse(substitute(x))))
+  }
   make_SpatialLinesDataFrame(the_flows, the_coordinates)
 }
 
