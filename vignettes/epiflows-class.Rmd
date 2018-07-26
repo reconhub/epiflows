@@ -1,6 +1,5 @@
 ---
 title: "01 Data Preparation"
-author: "Zhian N. Kamvar"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -33,8 +32,17 @@ The metadata in **locations** such as population size, duration of stay in a
 given location, date of first and last cases, etc. can be useful in estimating
 the risk of spread, but not everyone will code their data with identical column
 names. To facilitate their use in the function `estimate_risk_spread()`, the
-epiflows object stores a dictionary of variables in a place called `$vars`. 
-We can tell epiflows what variables are important when we create the object. 
+epiflows object stores a dictionary of variables in a place called `$vars`.
+You can see what variables are stored by default and add varaibles using the
+`global_vars()` function:
+
+```{r global_vars}
+library("epiflows")
+global_vars()
+```
+
+When we create our object, we will use these as arguments to tell epiflows which
+varaibles in our data frame are important.
 
 We have two such data frames containing data from a Yellow Fever outbreak in 
 Brazil (Dorigatti *et al.*, 2017). We will load these examples into our session:
@@ -77,7 +85,7 @@ incubation <- function(n) {
 infectious <- function(n) {
   rnorm(n, 4.5, 1.5/1.96)
 }
-
+set.seed(2017-07-25)
 res <- estimate_risk_spread(ef, 
                             location_code          = "Espirito Santo",
                             r_incubation           = incubation,
@@ -90,7 +98,7 @@ We can use ggplot2 to visualize these data
 
 ```{r plot-estimate, fig.width = 7, fig.height = 3}
 library("ggplot2")
-res$location <- rownames(res)
+res$location <- factor(rownames(res), rownames(res))
 ggplot(res, aes(x = mean_cases, y = location)) +
   geom_point(size = 2) +
   geom_errorbarh(aes(xmin = lower_limit_95CI, xmax = upper_limit_95CI), height = .25) +
@@ -100,6 +108,29 @@ ggplot(res, aes(x = mean_cases, y = location)) +
   xlim(c(0, NA))
 ```
 
+By default, `estimate_risk_spread()` returns a summary of the simulations. To
+obtain the full simulated output, you can set `return_all_simulations = TRUE`:
+
+```{r plot-estimate-sim, fig.width = 7, fig.height = 3}
+set.seed(2017-07-25)
+res <- estimate_risk_spread(ef, 
+                            location_code          = "Espirito Santo",
+                            r_incubation           = incubation,
+                            r_infectious           = infectious,
+                            n_sim                  = 1e5,
+                            return_all_simulations = TRUE)
+head(res)
+library("ggplot2")
+ggplot(utils::stack(as.data.frame(res)), aes(x = ind, y = values)) +
+  geom_boxplot(outlier.alpha = 0.2) +
+  theme_bw(base_size = 12, base_family = "Helvetica") +
+  ggtitle("Risk of yellow fever spread from Espirito Santo, Brazil") +
+  ylab("Number of cases") +
+  xlab("Location") +
+  ylim(c(0, NA)) +
+  coord_flip()
+
+```
 
 
 # References

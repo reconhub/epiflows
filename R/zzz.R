@@ -8,7 +8,7 @@
 }
 
 .onAttach <- function(...) {
-  msg <- sprintf("epiflows is loaded with the following global variables in `epiflows.vars`:\n%s",
+  msg <- sprintf("epiflows is loaded with the following global variables in `global_vars()`:\n%s",
                  paste(global_vars(), collapse = ", ")
                  )
   packageStartupMessage(msg)
