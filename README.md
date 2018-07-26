@@ -48,10 +48,17 @@ The main features of the package include:
 ### Example
 
 Estimating the number of new cases flowing to other countries from
-Espirito Santo, Brazil (Dorigatti *et al.*, 2017).
+Espirito Santo, Brazil (Dorigatti *et al.*,
+    2017).
 
 ``` r
 library("epiflows")
+```
+
+    ## epiflows is loaded with the following global variables in `epiflows.vars`:
+    ## coordinates, pop_size, duration_stay, first_date, last_date, num_cases
+
+``` r
 library("ggplot2")
 data("Brazil_epiflows")
 print(Brazil_epiflows)
@@ -171,6 +178,7 @@ ggplot(res, aes(x = mean_cases, y = location)) +
   - `get_flows()`: return flow data
   - `get_locations()`: return metadata for all locations
   - `get_vars()`: access variables from metadata
+  - `global_vars()`: set and reset global variables for epiflows
   - `get_coordinates()`: return coordinates for each location (if
     provided)
   - `get_id()`: return a vector of location identifiers
