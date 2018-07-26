@@ -45,6 +45,13 @@
 * `global_vars()` can return, set, and reset globally recognized variables
 * `as.SpatialLinesDataFrame()` converts an epiflows object with coordinates to
   a `SpatialLinesDataFrame` class from the *sp* package.
+  
+## New data sets
+
+* `Brazil_epiflows` is an epiflows object created from the `YF_Brazil` data
+* `YF_flows` is the data frame of flows from `YF_Brazil`
+* `YF_locations` is the data frame of locations from `YF_Brazil`
+* `YF_coordinates` are the coordinates for the locations in `YF_Brazil`
 
 ## Removed functions
 
