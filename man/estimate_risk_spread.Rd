@@ -9,14 +9,18 @@ location}
 \usage{
 estimate_risk_spread(...)
 
-\method{estimate_risk_spread}{default}(location_code, location_population,
-  num_cases_time_window, first_date_cases, last_date_cases,
-  num_travellers_to_other_locations, num_travellers_from_other_locations,
-  avg_length_stay_days, r_incubation, r_infectious, n_sim = 1000,
+\method{estimate_risk_spread}{default}(location_code = character(0),
+  location_population = numeric(0), num_cases_time_window = numeric(0),
+  first_date_cases = character(0), last_date_cases = character(0),
+  num_travellers_to_other_locations = numeric(0),
+  num_travellers_from_other_locations = numeric(0),
+  avg_length_stay_days = numeric(0), r_incubation = function(n) { },
+  r_infectious = function(n) { }, n_sim = 1000,
   return_all_simulations = FALSE, ...)
 
-\method{estimate_risk_spread}{epiflows}(x, location_code, r_incubation,
-  r_infectious, n_sim = 1000, return_all_simulations = FALSE, ...)
+\method{estimate_risk_spread}{epiflows}(x, location_code = character(0),
+  r_incubation = function(n) { }, r_infectious = function(n) { },
+  n_sim = 1000, return_all_simulations = FALSE, ...)
 }
 \arguments{
 \item{...}{Arguments passed onto the default method.}

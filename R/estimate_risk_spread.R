@@ -117,25 +117,23 @@ estimate_risk_spread <- function(...) {
 
 #' @export
 #' @rdname estimate_risk_spread
-estimate_risk_spread.default <- function(location_code,
-                                         location_population,
-                                         num_cases_time_window,
-                                         first_date_cases,
-                                         last_date_cases,
-                                         num_travellers_to_other_locations,
-                                         num_travellers_from_other_locations,
-                                         avg_length_stay_days,
-                                         r_incubation,
-                                         r_infectious,
+estimate_risk_spread.default <- function(location_code = character(0),
+                                         location_population = numeric(0),
+                                         num_cases_time_window = numeric(0),
+                                         first_date_cases = character(0),
+                                         last_date_cases = character(0),
+                                         num_travellers_to_other_locations = numeric(0),
+                                         num_travellers_from_other_locations = numeric(0),
+                                         avg_length_stay_days = numeric(0),
+                                         r_incubation = function(n) { },
+                                         r_infectious = function(n) { },
                                          n_sim = 1000,
                                          return_all_simulations = FALSE, 
                                          ...) {
-  dots  <- stop_if_ambiguous_dots(list(...), "estimate_risk_spread.default")
+  check_estimate_args(environment(), ...)
   if (n_sim < 1000) {
     warning("It is recommended the number of simulations is at least 1000.")
   }
-
-
   ## time_window_days is the number of days between the first and last disease
   ## case in infectious location
   time_window_days <- as.vector(
@@ -167,9 +165,9 @@ estimate_risk_spread.default <- function(location_code,
   #C_hat_SW <- 10 * C_SW
   C_hat_SW <- C_SW
 
-  W <- time_window_days
+  W   <- time_window_days
   T_D <- num_travellers_to_other_locations
-  T_O<- num_travellers_from_other_locations
+  T_O <- num_travellers_from_other_locations
   L_O <- avg_length_stay_days
 
 
@@ -242,12 +240,15 @@ estimate_risk_spread.default <- function(location_code,
 #' @rdname estimate_risk_spread
 #' @param x an epiflows object
 #' @importFrom stats na.omit
-estimate_risk_spread.epiflows <- function(x, location_code, r_incubation, 
-                                          r_infectious, n_sim = 1000, 
-                                          return_all_simulations = FALSE, ...) {
-  if (missing(location_code)) {
-    stop("The argument location_code must be specified. Please choose")
-  }
+estimate_risk_spread.epiflows <- function(x, 
+                                          location_code = character(0), 
+                                          r_incubation  = function(n) { }, 
+                                          r_infectious  = function(n) { }, 
+                                          n_sim = 1000, 
+                                          return_all_simulations = FALSE, 
+                                          ...) {
+  
+  check_estimate_args(environment(), ..., fun = "estimate_risk_spread.epiflows")
   xi <- epicontacts::thin(x[, j = location_code])
   # Scalars ---------------------------------------------------------
   pop_size   <- get_vars(xi, "pop_size", vector = TRUE)[location_code]
