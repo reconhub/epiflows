@@ -95,12 +95,12 @@
 #'               # "Minas Gerais" (indstate = 2), 
 #'               # "Southeast Brazil" (indstate = 5)
 #'
-#' res <- estimate_risk_spread(location_code =
-#'   YF_Brazil$states$location_code[indstate], location_population =
-#'   YF_Brazil$states$location_population[indstate], num_cases_time_window =
-#'   YF_Brazil$states$num_cases_time_window[indstate], first_date_cases =
-#'   YF_Brazil$states$first_date_cases[indstate], last_date_cases =
-#'   YF_Brazil$states$last_date_cases[indstate],
+#' res <- estimate_risk_spread(
+#'   location_code = YF_Brazil$states$location_code[indstate], 
+#'   location_population = YF_Brazil$states$location_population[indstate], 
+#'   num_cases_time_window = YF_Brazil$states$num_cases_time_window[indstate], 
+#'   first_date_cases = YF_Brazil$states$first_date_cases[indstate], 
+#'   last_date_cases = YF_Brazil$states$last_date_cases[indstate],
 #'   num_travellers_to_other_locations = YF_Brazil$T_D[indstate,],
 #'   num_travellers_from_other_locations = YF_Brazil$T_O[indstate,],
 #'   avg_length_stay_days = YF_Brazil$length_of_stay,

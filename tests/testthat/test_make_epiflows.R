@@ -51,7 +51,7 @@ test_that("make_epiflows() will bork if there are extra varaibles", {
                   grind         = "core"
     )
   },
-  regex = "Unknown variables were found: poop_size, grind")
+  regex = "Unknown variables were found: 'poop_size', 'grind'")
 })
 
 

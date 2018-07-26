@@ -15,11 +15,12 @@ valid_dots <- function(dots) {
   # TODO: Throw error if there are any unnamed arguments
   #
   if (length(out) < length(dots)) {
-    diffnames <- paste(setdiff(names(dots), names(out)), collapse = ", ")
-    msg <- paste("Unknown variables were found:", diffnames, "\n\n",
+    diffnames <- paste(setdiff(names(dots), names(out)), collapse = "', '")
+    msg <- paste0("Unknown variables were found: '", diffnames, "'\n\n",
                  "Please inspect them to make sure they are correct.",
-                 "If they are correct, please add them to `epiflows.vars`.",
-                 "Type ?epiflows.vars for details")
+                 "If they are correct, please add them using:\n\n",
+                 "\tglobal_vars('", diffnames, "', set = TRUE)\n\n",
+                 "Type ?global_vars for details")
     stop(msg, call. = FALSE)
   }
   out
