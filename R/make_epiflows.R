@@ -21,11 +21,14 @@
 #'
 #'  - **vars** (accessible via [get_vars()]). This contains a named list of
 #'    available variables that can be used in further plotting and/or modelling.
-#'    Available variables are:
-#'
-#'     - coordinates
-#'     - pop_size
-#'     - duration_of_stay
+#'    Default variables are found in [global_vars()]:
+#'    
+#'     - `coordinates`: two columns specifying the lon and lat coordinates
+#'     - `pop_size`: population size of each location
+#'     - `duration_stay`: the average duration of stay for each location
+#'     - `first_date`: the date of first recorded case
+#'     - `last_date`: the date of the last recorded case
+#'     - `num_cases`: the number of cases between the first and last date
 #'
 #' @details
 #'
@@ -78,7 +81,7 @@ make_epiflows <- function(...) {
 #'   third column.
 #'
 #' @param ... Any number of varaibles that can be used for mapping or modelling.
-#'   See [get_vars()] for details.
+#'   See [global_vars()] and [get_vars()] for details.
 #'
 #' @md
 #'

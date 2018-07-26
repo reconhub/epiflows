@@ -3,7 +3,7 @@
 \name{global_vars}
 \alias{global_vars}
 \alias{epiflows.vars}
-\title{Epiflow Default Variables}
+\title{Epiflow Global Variables}
 \usage{
 global_vars(..., set = FALSE, reset = FALSE)
 }

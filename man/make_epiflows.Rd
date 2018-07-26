@@ -20,7 +20,7 @@ make_epiflows(...)
 }
 \arguments{
 \item{...}{Any number of varaibles that can be used for mapping or modelling.
-See \code{\link[=get_vars]{get_vars()}} for details.}
+See \code{\link[=global_vars]{global_vars()}} and \code{\link[=get_vars]{get_vars()}} for details.}
 
 \item{flows}{a data frame where each row represents a flow from one location
 to the next. This must have at least three columns:
@@ -70,11 +70,14 @@ locations, and a third column named 'n', specifying the number of cases in
 each
 \item \strong{vars} (accessible via \code{\link[=get_vars]{get_vars()}}). This contains a named list of
 available variables that can be used in further plotting and/or modelling.
-Available variables are:
+Default variables are found in \code{\link[=global_vars]{global_vars()}}:
 \itemize{
-\item coordinates
-\item pop_size
-\item duration_of_stay
+\item \code{coordinates}: two columns specifying the lon and lat coordinates
+\item \code{pop_size}: population size of each location
+\item \code{duration_stay}: the average duration of stay for each location
+\item \code{first_date}: the date of first recorded case
+\item \code{last_date}: the date of the last recorded case
+\item \code{num_cases}: the number of cases between the first and last date
 }
 }
 }
