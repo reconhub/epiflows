@@ -3,11 +3,11 @@ data("YF_locations")
 data("YF_flows")
 data("Brazil_epiflows")
 data("Mex_travel_2009")
+flows   <- Mex_travel_2009[[1]]
+outflow <- setNames(flows[["MEX"]], rownames(flows))
+inflow  <- unlist(flows["MEX", , drop = TRUE])
 
 test_that("make_epiflows() creates correct object", {
-  flows   <- Mex_travel_2009[[1]]
-  outflow <- setNames(flows[["MEX"]], rownames(flows))
-  inflow  <- unlist(flows["MEX", , drop = TRUE])
   expect_warning(ef <- make_epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]]),
                  "Pruning")
   # Test if a valid epiflows object has been created
