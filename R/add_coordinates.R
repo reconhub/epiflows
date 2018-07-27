@@ -19,25 +19,16 @@
 #' @examples
 #' 
 #' # Setting up the data
-#' data(Mex_travel_2009)
-#' flows   <- Mex_travel_2009[[1]]
-#' outflow <- setNames(flows[["MEX"]], rownames(flows))
-#' inflow  <- unlist(flows["MEX", , drop = TRUE])
-#' ef <- make_epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
-#' 
-#' # generating random coordinates for demonstration
-#' dummy_coordinates <- data.frame(lon = runif(41, min = -95, max = 95),
-#'                            lat = runif(41, min = -95, max = 95))
-#' print(ef)
-#' get_coordinates(ef) # no coordinates yet
-#' print(flows <- add_coordinates(ef, coordinates = dummy_coordinates))
-#' get_coordinates(flows)
-#' get_coordinates(flows, location = "MEX") # coordinates for MEX
-#' 
+#' data("Brazil_epiflows")
+#' data("YF_coordinates")
+#' get_coordinates(Brazil_epiflows) # no coordinates yet
+#' ef <- add_coordinates(Brazil_epiflows, YF_coordinates[-1])
+#' get_coordinates(ef)
+#' get_coordinates(ef, location = "Espirito Santo") # coordinates for MEX
 #' \dontrun{
 #'   # You can use google maps' geocode functionality if you have a decent 
 #'   # internet connection
-#'   flows <- add_coordinates(ef, loc_column = "country")
+#'   ef2 <- add_coordinates(Brazil_epiflows, loc_column = "country")
 #' }
 #' 
 #' @export
