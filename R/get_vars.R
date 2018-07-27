@@ -7,7 +7,6 @@
 #' @rdname get_vars
 #' @md
 #' @param x An `epiflows` object.
-#' @param ... not currently used.
 #'
 #' @export
 #'
@@ -19,11 +18,9 @@
 #' get_vars(Brazil_epiflows) # defined global variables pointint to column names
 #' get_vars(Brazil_epiflows, "duration_stay")
 #' get_vars(Brazil_epiflows, "duration_stay", vector = TRUE)
-
 get_vars <- function(x, ...) {
   UseMethod("get_vars", x)
 }
-
 
 #' @rdname get_vars
 #'
