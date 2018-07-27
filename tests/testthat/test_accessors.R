@@ -80,4 +80,16 @@ test_that("set_vars with NULL will remove the variables", {
   expect_identical(get_vars(bef), list())
 })
 
+context("get N")
+
+test_that("get_n borks if both from and to are specified", {
+  expect_error(get_n(bef, from = "Italy", to = "Italy"),
+               "Only one of the 'from' or 'to' parameters can be non-NULL.")
+})
+
+test_that("get_n borks if there are multiple items in from or to", {
+  expect_error(get_n(bef, from = c("Italy", "Franc")), 
+               "The parameters 'from' and 'to' must contain a single item.")
+})
+
 
