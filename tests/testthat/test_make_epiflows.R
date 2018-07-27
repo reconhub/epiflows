@@ -19,6 +19,22 @@ test_that("make_epiflows() creates correct object", {
   expect_named(get_locations(ef), c("id", "country", "population"))
 })
 
+test_that("make_epiflows.integer will bork if vectors are not named", {
+  expect_error(make_epiflows(unname(inflow), outflow, focus = "MEX", locations = Mex_travel_2009[[2]]),
+               "The vectors `inflow` and `outflow` must be named to create an epiflows object.")
+})
+
+test_that("make_epiflows.integer will bork if focus is not correct", {
+  expect_error(make_epiflows(inflow, outflow, focus = 1, locations = Mex_travel_2009[[2]]),
+               "The argument `focus` must be a single character string.")
+  expect_error(make_epiflows(inflow, outflow, focus = c("TEX", "MEX"), locations = Mex_travel_2009[[2]]),
+               "The argument `focus` must be a single character string.")
+  expect_error(make_epiflows(inflow, outflow, focus = "MIX", locations = Mex_travel_2009[[2]]),
+               "`focus` must be present in both the `inflow` and `to` vectors.")
+})
+
+
+
 test_that("make_epiflows() throws an error for incorrect input", {
   # make_epiflows() shouldn't accept incomplete input
   expect_error(make_epiflows(Mex_travel_2009[[1]], NULL))
