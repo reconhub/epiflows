@@ -21,7 +21,11 @@ set_vars <- function(x, ...) {
 #' @export
 set_vars.epiflows <- function(x, ...) {
   dots <- valid_dots(list(...))
-  x$vars[names(dots)] <- dots
+  for (dot in names(dots)) {
+    # This is necesarry so that NULL values can remove the element
+    x$vars[[dot]] <- dots[[dot]]
+  }
+  x$vars <- if (length(x$vars) > 0) x$vars else list()
   x
 }
 
@@ -29,6 +33,10 @@ set_vars.epiflows <- function(x, ...) {
 #' @export
 "set_vars<-.epiflows" <- function(x, name, value) {
   if (missing(name)) {
+    if (is.null(value)) {
+      x$vars <- list()
+      return(x)
+    }
     the_call <- c(list(x), as.list(value))
   } else {
     value <- list(value)
