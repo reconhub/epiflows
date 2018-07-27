@@ -19,10 +19,12 @@ print.epiflows <- function(x, ...) {
       format(nrow(x$contacts), big.mark = ","), "flows; directed")
   if (length(x$vars) > 0) {
     cat("\n  // optional variables:", paste(names(x$vars), collapse = ", "), "\n")
+  } else {
+    cat("\n  // no variables set; use set_vars() to define variables in your locations metadata\n")
   }
   cat("\n  // locations\n\n")
-  print(dplyr::tbl_df(x$linelist))
+  print(tibble::as_data_frame(x$linelist))
   cat("\n  // flows\n\n")
-  print(dplyr::tbl_df(x$contacts))
+  print(tibble::as_data_frame(x$contacts))
   cat("\n")
 }

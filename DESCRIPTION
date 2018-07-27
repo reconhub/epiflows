@@ -19,7 +19,7 @@ Imports:
     ggmap,
     geosphere,
     ggplot2,
-    dplyr,
+    tibble,
     sp,
     htmlwidgets,
     stats,
