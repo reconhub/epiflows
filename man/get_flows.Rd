@@ -10,7 +10,7 @@ get_flows(x, ...)
 \method{get_flows}{epiflows}(x, from = NULL, to = NULL, ...)
 }
 \arguments{
-\item{x}{An \code{epiflows} object.}
+\item{x}{An `epiflows` object.}
 
 \item{...}{unused}
 
@@ -20,22 +20,21 @@ get_flows(x, ...)
 }
 \value{
 A \code{data.frame} with 3 columns:
-
 \itemize{
-
- \item \code{from}: origin of the flow
-
- \item \code{to}: destination of the flow
-
- \item \code{n}: magnitude of the flow - can be a number of passengers per
- unit of time, a rate, a probability of migration
-
+\item \code{from}: origin of the flow
+\item \code{to}: destination of the flow
+\item \code{n}: magnitude of the flow---can be a number of passengers per
+unit of time, a rate, a probability of migration
 }
 }
 \description{
 This accessor extract flow data from an \code{epiflows}
 object. \code{get_flows} is a generic with a method defined for
 \code{epiflows} objects.
+}
+\seealso{
+\code{\link[=get_n]{get_n()}}
+For location metadata: \code{\link[=get_vars]{get_vars()}}, \code{\link[=get_pop_size]{get_pop_size()}}, \code{\link[=get_coordinates]{get_coordinates()}}
 }
 \author{
 Zhian N. Kamvar

@@ -1,31 +1,27 @@
 #' Access flow data
 #'
-#' This accessor extract flow data from an \code{epiflows}
-#' object. \code{get_flows} is a generic with a method defined for
-#' \code{epiflows} objects.
+#' This accessor extract flow data from an `epiflows`
+#' object. `get_flows` is a generic with a method defined for
+#' `epiflows` objects.
 #'
 #'
 #' @rdname get_flows
 #' 
 #' @export
-#'
+#' @md
 #' @param ... unused
+#' @seealso [get_n()]
+#'   For location metadata: [get_vars()], [get_pop_size()], [get_coordinates()]
 #' 
 #' @author Zhian N. Kamvar
 #'
-#' @return A \code{data.frame} with 3 columns:
+#' @return A `data.frame` with 3 columns:
 #'
-#' \itemize{
-#'
-#'  \item \code{from}: origin of the flow
-#'
-#'  \item \code{to}: destination of the flow
+#'  - `from`: origin of the flow
+#'  - `to`: destination of the flow
+#'  - `n`: magnitude of the flow---can be a number of passengers per
+#'    unit of time, a rate, a probability of migration
 #' 
-#'  \item \code{n}: magnitude of the flow - can be a number of passengers per
-#'  unit of time, a rate, a probability of migration
-#' 
-#' }
-
 get_flows <- function(x, ...) {
   UseMethod("get_flows", x)
 }
@@ -35,7 +31,7 @@ get_flows <- function(x, ...) {
 #' 
 #' @export
 #' 
-#' @param x An \code{epiflows} object.
+#' @param x An `epiflows` object.
 #' @param from a character string defining which regions should be included in the flows
 #' @param to a character string defining which regions should be included in the flows
 

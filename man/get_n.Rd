@@ -38,3 +38,7 @@ data(Brazil_epiflows)
 get_n(Brazil_epiflows, from = "Espirito Santo")
 get_n(Brazil_epiflows, to   = "Espirito Santo")
 }
+\seealso{
+\code{\link[=get_flows]{get_flows()}}
+For location metadata: \code{\link[=get_vars]{get_vars()}}, \code{\link[=get_pop_size]{get_pop_size()}}, \code{\link[=get_coordinates]{get_coordinates()}}
+}
