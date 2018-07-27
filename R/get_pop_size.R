@@ -1,9 +1,12 @@
+#' Get population size for each entry in locations
+#' 
+#' @param x an epiflows object
 #' @return a named vector of population sizes
-#' @rdname get_vars
 #' @export
 #'
 #' @examples
-#' 
+#' data("Brazil_epiflows")
+#' get_pop_size(Brazil_epiflows)
 get_pop_size <- function(x) {
   UseMethod("get_pop_size")
 }

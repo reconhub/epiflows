@@ -14,7 +14,7 @@ get_coordinates(x, ...)
 \method{get_coordinates}{epiflows}(x, location = NULL, ...)
 }
 \arguments{
-\item{x}{An `epiflows` object.}
+\item{x}{An \code{epiflows} object.}
 
 \item{coordinates}{Either names of the appended columns with longitudes
 and latitudes, respectively (default: "lon" and "lat") or a data frame with longitude and latitude columns.}
@@ -32,11 +32,11 @@ coordinates. You cannot specify multiple locations with this parameter.
 Defaults to `NULL`, indicating all locations.}
 }
 \value{
-An updated `epiflows` object.
+An updated \code{epiflows} object.
 }
 \description{
 Adds/Retrieves longitude/latitude values to location data within an epiflows object.
-Coordinates are added to object's locations slot as `lon` and `lat`
+Coordinates are added to object's locations slot as \code{lon} and \code{lat}
 columns.
 }
 \examples{
@@ -63,6 +63,10 @@ get_coordinates(flows, location = "MEX") # coordinates for MEX
   flows <- add_coordinates(ef, loc_column = "country")
 }
 
+}
+\seealso{
+\code{\link[=map_epiflows]{map_epiflows()}}; \code{\link[=plot.epiflows]{plot.epiflows()}}; \code{\link[=get_locations]{get_locations()}}; \code{\link[=get_vars]{get_vars()}};
+\code{\link[=global_vars]{global_vars()}}
 }
 \author{
 Pawel Piatkowski, Zhian Kamvar

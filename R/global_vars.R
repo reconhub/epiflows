@@ -25,7 +25,7 @@
 #' @md
 #' @aliases epiflows.vars
 #' @export
-#' 
+#' @seealso [make_epiflows()], [get_locations()], [get_vars()], [get_coordinates()]
 #' @examples 
 #' 
 #' # see the default varaibles

@@ -13,7 +13,7 @@
 #' retrieved. If FALSE (default), overwrites only NAs.
 #' 
 #' @return An updated `epiflows` object.
-#' 
+#' @md
 #' @author Pawel Piatkowski, Zhian Kamvar
 #' 
 #' @examples
@@ -41,6 +41,8 @@
 #' }
 #' 
 #' @export
+#' @seealso [map_epiflows()]; [plot.epiflows()]; [get_locations()]; [get_vars()];
+#'   [global_vars()]
 #' @importFrom stats complete.cases
 #' @importFrom stats setNames
 add_coordinates <- function(x, coordinates = c("lon", "lat"), loc_column = "id",

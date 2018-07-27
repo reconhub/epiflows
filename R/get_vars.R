@@ -4,8 +4,6 @@
 #' `epiflow` object. `get_vars` is a generic with a method defined for
 #' `epiflows` objects.
 #'
-#' The function `get_coordinates()` is equivalent to `get_vars(x, "coordinates", id = TRUE)`
-#'
 #' @rdname get_vars
 #' @md
 #' @param x An `epiflows` object.
@@ -14,13 +12,13 @@
 #' @export
 #'
 #' @author Thibaut Jombart, Zhian Kamvar
-#'
+#' @seealso [global_vars()]; [get_pop_size()]; [get_id()]
 #' @return A data frame with the variables requested
 #' @examples 
 #' data("Brazil_epiflows")
+#' get_vars(Brazil_epiflows) # defined global variables pointint to column names
 #' get_vars(Brazil_epiflows, "duration_stay")
 #' get_vars(Brazil_epiflows, "duration_stay", vector = TRUE)
-#' get_pop_size(Brazil_epiflows)
 
 get_vars <- function(x, ...) {
   UseMethod("get_vars", x)
@@ -37,7 +35,6 @@ get_vars <- function(x, ...) {
 #'   will be the first column of the data frame. if `FALSE`, the variable will
 #'   be returned with identifiers as row names.
 #' @param vector if `TRUE` the result will be coerced into a vector (or a matrix in the case of coordinates)
-
 get_vars.epiflows <- function(x, what = NULL, id = TRUE, vector = FALSE, ...) {
   if (is.null(what)) {
     return(x$vars)

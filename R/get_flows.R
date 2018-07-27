@@ -10,7 +10,7 @@
 #' @export
 #' @md
 #' @param ... unused
-#' @seealso [get_n()]
+#' @seealso [get_n()]; 
 #'   For location metadata: [get_vars()], [get_pop_size()], [get_coordinates()]
 #' 
 #' @author Zhian N. Kamvar

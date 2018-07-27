@@ -33,7 +33,7 @@ object. \code{get_flows} is a generic with a method defined for
 \code{epiflows} objects.
 }
 \seealso{
-\code{\link[=get_n]{get_n()}}
+\code{\link[=get_n]{get_n()}};
 For location metadata: \code{\link[=get_vars]{get_vars()}}, \code{\link[=get_pop_size]{get_pop_size()}}, \code{\link[=get_coordinates]{get_coordinates()}}
 }
 \author{

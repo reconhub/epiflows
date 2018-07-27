@@ -17,7 +17,7 @@
 #' @md
 #' @return a character vector
 #' @export
-#' @seealso [get_flows()]
+#' @seealso [get_flows()]; 
 #'   For location metadata: [get_vars()], [get_pop_size()], [get_coordinates()]
 #'
 #' @examples
