@@ -55,7 +55,7 @@ Espirito Santo, Brazil (Dorigatti *et al.*,
 library("epiflows")
 ```
 
-    ## epiflows is loaded with the following global variables in `epiflows.vars`:
+    ## epiflows is loaded with the following global variables in `global_vars()`:
     ## coordinates, pop_size, duration_stay, first_date, last_date, num_cases
 
 ``` r
@@ -173,12 +173,20 @@ ggplot(res, aes(x = mean_cases, y = location)) +
     map
   - `print()`: print summary for an `epiflows` object
 
+## Global variables
+
+These are variables that `estimate_risk_spread()` understands from the
+epiflows object. These represent keys that have values mapping to column
+names in your locations metadata.
+
+  - `global_vars()`: view, set, and reset global variables for epiflows
+  - `get_vars()`: access variables from the locations metadata
+  - `set_vars()`: map variables to columns in the locations metadata
+
 ## Accessors
 
   - `get_flows()`: return flow data
   - `get_locations()`: return metadata for all locations
-  - `get_vars()`: access variables from metadata
-  - `global_vars()`: set and reset global variables for epiflows
   - `get_coordinates()`: return coordinates for each location (if
     provided)
   - `get_id()`: return a vector of location identifiers
@@ -192,7 +200,10 @@ ggplot(res, aes(x = mean_cases, y = location)) +
 
 An overview and examples of *epiflows* are provided in the vignettes:
 
-…
+1.  A Brief Introduction to epiflows: `vignette("introduction", package
+    = "epiflows")`
+2.  Constructing epiflows objects: `vignette("epiflows-class", package =
+    "epiflows")`
 
 ## Getting help online
 
