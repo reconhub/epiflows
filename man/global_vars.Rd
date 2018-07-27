@@ -92,5 +92,5 @@ ef <- make_epiflows(flows         = YF_flows,
 global_vars(reset = TRUE)
 }
 \seealso{
-\code{\link[=make_epiflows]{make_epiflows()}}, \code{\link[=get_locations]{get_locations()}}, \code{\link[=get_vars]{get_vars()}}, \code{\link[=get_coordinates]{get_coordinates()}}
+\code{\link[=make_epiflows]{make_epiflows()}}, \code{\link[=get_locations]{get_locations()}}, \code{\link[=get_vars]{get_vars()}}, \code{\link[=set_vars]{set_vars()}}, \code{\link[=get_coordinates]{get_coordinates()}}
 }
