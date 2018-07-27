@@ -6,6 +6,7 @@
 #' @description this will return the unique population ID for your epiflows object.
 #' @return a character vector of population IDs
 #' @export
+#' @md
 #' @author Zhian N. Kamvar
 #' @seealso [epicontacts::get_id()]; [get_vars()]; [get_pop_size()]; [global_vars()]
 #' @examples

@@ -48,11 +48,11 @@ third column.}
 \item{id}{The column to use for the identifier in the \code{locations} data frame.
 This defaults to the first column.}
 
-\item{inflow}{a **named** integer or numeric vector specifying the number of
-cases flowing into a location specified by `focus`.}
+\item{inflow}{a \strong{named} integer or numeric vector specifying the number of
+cases flowing into a location specified by \code{focus}.}
 
-\item{outflow}{a **named** integer or numeric vector specifying the number of
-cases flowing from a location specified by `focus`.}
+\item{outflow}{a \strong{named} integer or numeric vector specifying the number of
+cases flowing from a location specified by \code{focus}.}
 
 \item{focus}{a character vector specifying the focal location for integer
 input. This is necessary for integer input to make clear what "outflow" and
@@ -130,6 +130,13 @@ outflow <- setNames(flows[["MEX"]], rownames(flows))
 inflow  <- unlist(flows["MEX", , drop = TRUE])
 ef <- make_epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
 ef
+}
+\seealso{
+\code{\link[=global_vars]{global_vars()}} for definitions of global variables,
+\code{\link[=estimate_risk_spread]{estimate_risk_spread()}} for modelling, \code{\link[=plot.epiflows]{plot.epiflows()}} for plotting,
+\code{\link[=add_coordinates]{add_coordinates()}} for adding coordinates, \code{\link[=get_vars]{get_vars()}} for accession of
+metadata, \code{\link[=get_locations]{get_locations()}} to access the locations data frame,
+\code{\link[=get_flows]{get_flows()}} to access the flows data frame.
 }
 \author{
 Zhian Kamvar, Thibaut Jombart

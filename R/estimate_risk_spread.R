@@ -8,8 +8,8 @@
 #' importations (international tourists infected by the disease during
 #' their stay in the infectious location and returning to their home location).
 #' The mean and 95% confidence intervals are obtained by numerically sampling
-#' n_sim times from the incubation and infectious period distributions.
-#' If parameter return_all_simulations is set to TRUE, the function returns all simulations
+#' `n_sim` times from the incubation and infectious period distributions.
+#' If parameter `return_all_simulations` is set to `TRUE`, the function returns all simulations
 #' for each location.
 #'
 #' @param location_code a character string denoting the infectious location code
@@ -36,29 +36,31 @@
 #'   number for all locations or a vector with different numbers for each
 #'   location
 #'
-#' @param r_incubation a function with a single argument \code{n}
+#' @param r_incubation a function with a single argument `n`
 #'   generating 'n' random incubation periods
 #'
-#' @param r_infectious a function with a single argument \code{n}
+#' @param r_infectious a function with a single argument `n`
 #'   generating 'n' random durations of infectious period
 #'
 #' @param n_sim number of simulations from the incubation and
 #'   infectious distributions
 #'
 #' @param return_all_simulations logical value indicating whether the returned object is a data frame with all simulations
-#' (return_all_simulations = TRUE) or a data frame with the mean and lower and upper limits of a 95% confidence interval of
-#' the number of cases spread to each location (return_all_simulations = FALSE)
+#' (`return_all_simulations = TRUE`) or a data frame with the mean and lower and upper limits of a 95% confidence interval of
+#' the number of cases spread to each location (`return_all_simulations = FALSE`)
 #' 
 #' @param ... Arguments passed onto the default method.
 #'
-#' @return if return_all_simulations is TRUE, data frame with all simulations. If return_all_simulations is FALSE,
+#' @return if `return_all_simulations` is `TRUE`, data frame with all simulations. If `return_all_simulations` is `FALSE`,
 #' data frame with the mean and lower and upper limits of a 95% confidence interval of the number 
 #' of cases spread to each location
 #' 
-#' @author Paula Moraga
-#'
+#' @author Paula Moraga, Zhian Kamvar (epiflows class implementation)
+#' @md
 #' @export
-#'
+#' @seealso Construction of epiflows object: [make_epiflows()]\cr
+#'   Default variables used in the epiflows implementation: [global_vars()]\cr
+#'   Access metadata from the epiflows object: [get_vars()]
 #' @examples
 #' ## Using an epiflows object --------------------------------
 #' 

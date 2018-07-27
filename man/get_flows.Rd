@@ -32,9 +32,16 @@ This accessor extract flow data from an \code{epiflows}
 object. \code{get_flows} is a generic with a method defined for
 \code{epiflows} objects.
 }
+\examples{
+data("Brazil_epiflows")
+head(get_flows(Brazil_epiflows))
+get_flows(Brazil_epiflows, from = "Minas Gerais")
+get_flows(Brazil_epiflows, to = "Minas Gerais")
+get_flows(Brazil_epiflows, from = "Italy", to = "Minas Gerais")
+}
 \seealso{
 \code{\link[=get_n]{get_n()}};
-For location metadata: \code{\link[=get_vars]{get_vars()}}, \code{\link[=get_pop_size]{get_pop_size()}}, \code{\link[=get_coordinates]{get_coordinates()}}
+For location metadata: \code{\link[=get_locations]{get_locations()}}; \code{\link[=get_vars]{get_vars()}}, \code{\link[=get_pop_size]{get_pop_size()}}, \code{\link[=get_coordinates]{get_coordinates()}}
 }
 \author{
 Zhian N. Kamvar

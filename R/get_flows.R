@@ -11,7 +11,7 @@
 #' @md
 #' @param ... unused
 #' @seealso [get_n()]; 
-#'   For location metadata: [get_vars()], [get_pop_size()], [get_coordinates()]
+#'   For location metadata: [get_locations()]; [get_vars()], [get_pop_size()], [get_coordinates()]
 #' 
 #' @author Zhian N. Kamvar
 #'
@@ -21,7 +21,12 @@
 #'  - `to`: destination of the flow
 #'  - `n`: magnitude of the flow---can be a number of passengers per
 #'    unit of time, a rate, a probability of migration
-#' 
+#' @examples 
+#' data("Brazil_epiflows")
+#' head(get_flows(Brazil_epiflows))
+#' get_flows(Brazil_epiflows, from = "Minas Gerais")
+#' get_flows(Brazil_epiflows, to = "Minas Gerais")
+#' get_flows(Brazil_epiflows, from = "Italy", to = "Minas Gerais")
 get_flows <- function(x, ...) {
   UseMethod("get_flows", x)
 }

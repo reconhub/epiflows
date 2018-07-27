@@ -9,7 +9,7 @@ get_id(x, ...)
 \arguments{
 \item{x}{an epiflows object}
 
-\item{...}{arguments passed on to [epicontacts::get_id()]}
+\item{...}{arguments passed on to \code{\link[epicontacts:get_id]{epicontacts::get_id()}}}
 }
 \value{
 a character vector of population IDs
@@ -23,7 +23,7 @@ get_id(Brazil_epiflows)
 
 }
 \seealso{
-[epicontacts::get_id()]; [get_vars()]; [get_pop_size()]; [global_vars()]
+\code{\link[epicontacts:get_id]{epicontacts::get_id()}}; \code{\link[=get_vars]{get_vars()}}; \code{\link[=get_pop_size]{get_pop_size()}}; \code{\link[=global_vars]{global_vars()}}
 }
 \author{
 Zhian N. Kamvar

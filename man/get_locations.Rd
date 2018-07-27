@@ -16,12 +16,20 @@ get_locations(x, ...)
 }
 \value{
 A \code{data.frame} with at least 1 column called \code{id},
-  specifying the id of the location used in the `flows` data frame.
+specifying the id of the location used in the \code{flows} data frame.
 }
 \description{
 This accessor extract location data from an \code{epiflows} object.
 \code{get_locations} is a generic with a method defined for \code{epiflows}
 objects.
+}
+\examples{
+data("Brazil_epiflows")
+get_locations(Brazil_epiflows)
+}
+\seealso{
+\code{\link[=get_flows]{get_flows()}}; \code{\link[=get_id]{get_id()}}; \code{\link[=get_pop_size]{get_pop_size()}}; \code{\link[=get_vars]{get_vars()}};
+\code{\link[=get_coordinates]{get_coordinates()}}; \code{\link[=global_vars]{global_vars()}}
 }
 \author{
 Thibaut Jombart, Zhian Kamvar

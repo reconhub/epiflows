@@ -86,7 +86,11 @@ make_epiflows <- function(...) {
 #' @md
 #'
 #' @rdname make_epiflows
-#'
+#' @seealso [global_vars()] for definitions of global variables, 
+#'   [estimate_risk_spread()] for modelling, [plot.epiflows()] for plotting,
+#'   [add_coordinates()] for adding coordinates, [get_vars()] for accession of
+#'   metadata, [get_locations()] to access the locations data frame,
+#'   [get_flows()] to access the flows data frame. 
 #' @export
 #'
 #' @examples
@@ -162,6 +166,7 @@ make_epiflows.data.frame <- function(flows, locations = NULL,
 #'   "inflow" are relative to.
 #'
 #' @rdname make_epiflows
+#' @md
 #' @export
 #'
 #' @examples

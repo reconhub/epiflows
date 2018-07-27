@@ -12,7 +12,7 @@
 #' @export
 #'
 #' @author Thibaut Jombart, Zhian Kamvar
-#' @seealso [global_vars()]; [get_pop_size()]; [get_id()]
+#' @seealso [global_vars()]; [make_epiflows()]; [get_pop_size()]; [get_id()]
 #' @return A data frame with the variables requested
 #' @examples 
 #' data("Brazil_epiflows")

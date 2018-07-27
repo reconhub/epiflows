@@ -59,14 +59,14 @@ generating 'n' random durations of infectious period}
 infectious distributions}
 
 \item{return_all_simulations}{logical value indicating whether the returned object is a data frame with all simulations
-(return_all_simulations = TRUE) or a data frame with the mean and lower and upper limits of a 95% confidence interval of
-the number of cases spread to each location (return_all_simulations = FALSE)}
+(\code{return_all_simulations = TRUE}) or a data frame with the mean and lower and upper limits of a 95% confidence interval of
+the number of cases spread to each location (\code{return_all_simulations = FALSE})}
 
 \item{x}{an epiflows object}
 }
 \value{
-if return_all_simulations is TRUE, data frame with all simulations. If return_all_simulations is FALSE,
-data frame with the mean and lower and upper limits of a 95% confidence interval of the number 
+if \code{return_all_simulations} is \code{TRUE}, data frame with all simulations. If \code{return_all_simulations} is \code{FALSE},
+data frame with the mean and lower and upper limits of a 95% confidence interval of the number
 of cases spread to each location
 }
 \description{
@@ -77,8 +77,8 @@ location travelling abroad during the incubation or infectious period), and
 importations (international tourists infected by the disease during
 their stay in the infectious location and returning to their home location).
 The mean and 95% confidence intervals are obtained by numerically sampling
-n_sim times from the incubation and infectious period distributions.
-If parameter return_all_simulations is set to TRUE, the function returns all simulations
+\code{n_sim} times from the incubation and infectious period distributions.
+If parameter \code{return_all_simulations} is set to \code{TRUE}, the function returns all simulations
 for each location.
 }
 \examples{
@@ -134,6 +134,11 @@ res <- estimate_risk_spread(
 head(res)
 
 }
+\seealso{
+Construction of epiflows object: \code{\link[=make_epiflows]{make_epiflows()}}\cr
+Default variables used in the epiflows implementation: \code{\link[=global_vars]{global_vars()}}\cr
+Access metadata from the epiflows object: \code{\link[=get_vars]{get_vars()}}
+}
 \author{
-Paula Moraga
+Paula Moraga, Zhian Kamvar (epiflows class implementation)
 }

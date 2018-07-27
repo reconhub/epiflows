@@ -1,22 +1,26 @@
 #' Access flow data
 #'
-#' This accessor extract location data from an \code{epiflows} object.
-#' \code{get_locations} is a generic with a method defined for \code{epiflows}
+#' This accessor extract location data from an `epiflows` object.
+#' `get_locations` is a generic with a method defined for `epiflows`
 #' objects.
 #'
 #'
 #' @rdname get_locations
 #'
-#' @param x An \code{epiflows} object.
+#' @param x An `epiflows` object.
 #' @param ... unused
 #' 
 #' @export
-#'
+#' @md
+#' @seealso [get_flows()]; [get_id()]; [get_pop_size()]; [get_vars()];
+#'   [get_coordinates()]; [global_vars()]
 #' @author Thibaut Jombart, Zhian Kamvar
 #'
-#' @return A \code{data.frame} with at least 1 column called \code{id},
+#' @return A `data.frame` with at least 1 column called `id`,
 #'   specifying the id of the location used in the `flows` data frame.
-#'
+#' @examples
+#' data("Brazil_epiflows")
+#' get_locations(Brazil_epiflows)
 get_locations <- function(x, ...) {
   UseMethod("get_locations", x)
 }
