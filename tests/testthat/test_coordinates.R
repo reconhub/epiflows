@@ -1,5 +1,13 @@
 context("Coordinate tests")
 data("Brazil_epiflows")
+data("YF_coordinates")
+
+test_that("coordinates can be added, period", {
+  b <- add_coordinates(Brazil_epiflows, YF_coordinates[-1L])
+  expect_identical(get_coordinates(b), YF_coordinates)
+})
+
+
 
 test_that("coordinates can be added over the internet", {
   skip_on_cran()
@@ -8,7 +16,6 @@ test_that("coordinates can be added over the internet", {
   has_internet <- !is.null(curl::nslookup("r-project.org", error = FALSE))
   skip_if(!has_internet, "No internet connection")
   b1 <- epicontacts::thin(Brazil_epiflows[j = c("Minas Gerais", "Italy"), contacts = "both"])
-  data("YF_coordinates")
   expect_error(add_coordinates(b1, YF_coordinates), "two columns")
   expect_error(add_coordinates(YF_coordinates), "YF_coordinates must be an object of class epiflows")
   expect_null(get_coordinates(b1))
