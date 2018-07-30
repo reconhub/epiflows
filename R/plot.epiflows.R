@@ -43,13 +43,9 @@ plot.epiflows <- function(x, type = c("map", "network", "grid"), ...) {
                  "using 'network' instead", sep = "\n")
     message(msg)
   }
-  if (type == "map") {
-    return(map_epiflows(x, ...))
-  }
-  if (type == "network") {
-    return(vis_epiflows(x, ...))
-  }
-  if (type == "grid") {
-    return(grid_epiflows(x, ...))
-  }
+  switch(EXPR = type,
+         map     =  map_epiflows(x, ...),
+         network =  vis_epiflows(x, ...),
+         grid    = grid_epiflows(x, ...)
+        )
 }

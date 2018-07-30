@@ -16,5 +16,5 @@ get_pop_size <- function(x) {
 #' @rdname get_pop_size
 #' @export
 get_pop_size.epiflows <- function(x) {
-  return(get_vars(x, "pop_size", id = FALSE, vector = TRUE))
+  get_vars(x, "pop_size", id = FALSE, vector = TRUE)
 }

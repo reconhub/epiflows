@@ -36,8 +36,11 @@
 #'   [global_vars()]
 #' @importFrom stats complete.cases
 #' @importFrom stats setNames
-add_coordinates <- function(x, coordinates = c("lon", "lat"), loc_column = "id",
+add_coordinates <- function(x,
+                            coordinates = c("lon", "lat"),
+                            loc_column = "id",
                             overwrite = FALSE) {
+    
   if (!inherits(x, "epiflows")) {
     efprint <- as.character(deparse(substitute(x)))
     stop(sprintf("%s must be an object of class epiflows", efprint))

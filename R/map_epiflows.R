@@ -67,14 +67,14 @@ map_epiflows <- function(x, title = "", center = NULL, sort = TRUE,
                    )
   labels <- lapply(labels, htmltools::HTML)
   graph  <- leaflet::leaflet(data = sldf)
-  if (!is.null(center)) {
-    if (is.character(center) && length(center) == 1) {
-      center <- get_coordinates(x, center)
-    } else if (is.numeric(center) && length(center) == 2) {
-      center <- center
-    } else {
-      stop("center must be a single character string to use for ID lookup or a set of coordinates")
-    }
+  
+  if (is.character(center) && length(center) == 1) {
+    center <- get_coordinates(x, center)
+  }
+  if (!is.null(center) && (!is.numeric(center) || length(center) != 2)) {
+    stop("center must be a single character string to use for ID lookup or a set of coordinates")
+  }
+  if (!is.null(center) && !all(is.finite(center))) {
     graph <- leaflet::setView(graph,
                               lng = center[[1]],
                               lat = center[[2]],
