@@ -55,6 +55,33 @@ test_that("make_epiflows.data.frame() works as expected", {
   expect_identical(ef, Brazil_epiflows)
 })
 
+test_that("make_epiflows.data.frame() can handle 'n' correctly", {
+  # If there is an extra variable called "n", it should be correctly moved to
+  # the third position and all the handlers should be able to do their jobs.
+  flo <- YF_flows
+  names(flo)[3] <- "flows"
+  flo$n <- "n"
+  flo$rando <- runif(nrow(flo))
+  flo <- flo[c(1, 2, 4, 3, 5)]
+  expect_warning({
+    ef <- make_epiflows(flows         = flo, 
+                        locations     = YF_locations, 
+                        n             = 4,
+                        pop_size      = "location_population",
+                        duration_stay = "length_of_stay",
+                        num_cases     = "num_cases_time_window",
+                        first_date    = "first_date_cases",
+                        last_date     = "last_date_cases"
+    )
+  }, regex = "A varaible named `n` exists in the flows data frame. This will be renamed to n.1")
+  expect_identical(get_flows(ef), get_flows(Brazil_epiflows))
+  expect_identical(names(get_flows(ef)), c("from", "to", "n"))
+  expect_identical(names(get_flows(ef[], all = TRUE)), c("from", "to", "n", "n.1", "rando"))
+  expect_identical(names(get_flows(ef[l = 2], all = TRUE)), c("from", "to", "n", "rando"))
+})
+
+
+
 test_that("make_epiflows() will bork if there are extra varaibles", {
   expect_error({
     make_epiflows(flows         = YF_flows, 
@@ -69,6 +96,22 @@ test_that("make_epiflows() will bork if there are extra varaibles", {
   },
   regex = "Unknown variables were found: 'poop_size', 'grind'")
 })
+
+test_that("make_epiflows() will bork if the user tries to specify extra vars that don't exist in their data", {
+  expect_error({
+    make_epiflows(flows         = YF_flows, 
+                  locations     = YF_locations, 
+                  pop_size      = "location_population",
+                  duration_stay = "length_of_stay",
+                  num_cases     = "num_cases_time_window",
+                  first_date    = "first_date_cases",
+                  last_date     = "last_date_cases",
+                  coordinates   = "core"
+    )
+  },
+  regex = "column 'core' is NULL")
+})
+
 
 
 

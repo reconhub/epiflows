@@ -23,7 +23,9 @@ test_that("grid plot method works", {
   skip_on_cran()
   skip_if_not_installed("vdiffr")
   bgrid <- plot(Brazil_epiflows, type = "grid")
+  bgrid_nocolor <- plot(Brazil_epiflows, type = "grid", color_by = "none")
   vdiffr::expect_doppelganger(title = "grid plot", fig = bgrid)
+  vdiffr::expect_doppelganger(title = "grid plot no color", fig = bgrid_nocolor)
 })
 
 
@@ -39,6 +41,12 @@ test_that("vis plots work", {
   vdiffr::expect_doppelganger(title = "map plot", fig = bef_map)
   vdiffr::expect_doppelganger(title = "map plot 2", fig = bef_map_thin)
 })
+
+test_that("maps bork if the input doesn't make sense", {
+  expect_error(map_epiflows(bef, center = c("house", "mouse")),
+               "center must be a single character string to use for ID lookup or a set of coordinates")
+})
+
 
 
 test_that("network plots work", {

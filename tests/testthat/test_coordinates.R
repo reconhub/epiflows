@@ -1,4 +1,5 @@
 context("Coordinate tests")
+data("Brazil_epiflows")
 
 test_that("coordinates can be added over the internet", {
   skip_on_cran()
@@ -6,7 +7,6 @@ test_that("coordinates can be added over the internet", {
   skip_if_not_installed("curl")
   has_internet <- !is.null(curl::nslookup("r-project.org", error = FALSE))
   skip_if(!has_internet, "No internet connection")
-  data("Brazil_epiflows")
   b1 <- epicontacts::thin(Brazil_epiflows[j = c("Minas Gerais", "Italy"), contacts = "both"])
   data("YF_coordinates")
   expect_error(add_coordinates(b1, YF_coordinates), "two columns")
@@ -31,3 +31,20 @@ test_that("coordinates can be added over the internet", {
                         overwrite = TRUE)
   suppressWarnings(b4 <- add_coordinates(b4, overwrite = TRUE))
 })
+
+test_that("add_coordinates expects two character strings", {
+  expect_error(add_coordinates(Brazil_epiflows, coordinates = c(1, 2)),
+               "`coordinates` should contain exactly two character strings")
+  expect_error(add_coordinates(Brazil_epiflows, coordinates = "lat"),
+               "`coordinates` should contain exactly two character strings")
+  expect_error(add_coordinates(Brazil_epiflows, coordinates = c("lat", "lon", "zee")),
+               "`coordinates` should contain exactly two character strings")
+})
+
+test_that("add_coordinates will bork if the loc_column is not valid", {
+  expect_error(add_coordinates(Brazil_epiflows, loc_column = "ED"),
+               "`ED` is not a valid column name")
+})
+
+
+

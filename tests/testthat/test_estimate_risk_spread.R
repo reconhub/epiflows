@@ -29,6 +29,57 @@ test_that("an error will be thrown if arguments are misspelled", {
   regexp = "'location_code' is missing. Please supply a character value.\n.+Unmatched arguments: loocation_code")
 })
 
+test_that("avg_length_stay_days can take a single value as input", {
+  expect_warning({
+    set.seed(9000)
+    res1 <- estimate_risk_spread(Brazil_epiflows, 
+                                location_code = "Espirito Santo",
+                                r_incubation = function(n) rlnorm(n, 1.46, 0.35),
+                                r_infectious = function(n) rnorm(n, 4.5, 1.5/1.96),
+                                n_sim = 99,
+                                avg_length_stay_days = rep(2, 10)
+    )
+  }, 
+  regexp = "number of simulations"
+  )
+  expect_warning({
+    set.seed(9000)
+    res2 <- estimate_risk_spread(Brazil_epiflows, 
+                                location_code = "Espirito Santo",
+                                r_incubation = function(n) rlnorm(n, 1.46, 0.35),
+                                r_infectious = function(n) rnorm(n, 4.5, 1.5/1.96),
+                                n_sim = 99,
+                                avg_length_stay_days = 2
+    )
+  }, 
+  regexp = "number of simulations"
+  )
+  
+  
+  
+  expect_identical(res1, res2)
+})
+
+test_that("avg_length_stay_days will bork if given an incorrect length", {
+  expect_error({
+    set.seed(9000)
+    suppressWarnings({
+      res2 <- estimate_risk_spread(Brazil_epiflows, 
+                                   location_code = "Espirito Santo",
+                                   r_incubation = function(n) rlnorm(n, 1.46, 0.35),
+                                   r_infectious = function(n) rnorm(n, 4.5, 1.5/1.96),
+                                   n_sim = 99,
+                                   avg_length_stay_days = c(2, 2)
+      )
+    })
+  }, 
+  regexp = "avg_length_stay_days must have length equal to 1 or to the number of locations"
+  )
+})
+
+
+
+
 
 
 test_that("Correct value is returned", {
