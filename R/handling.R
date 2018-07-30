@@ -37,7 +37,7 @@
     j <- TRUE
   }
   # Retaining n
-  l       <- if (is.numeric(l)) l + 1L
+  l       <- if (is.numeric(l)) c(1L, l + 1L)
   dots    <- list(...)
   contact <- if ("contacts" %in% names(dots)) dots$contacts else "either"
   NextMethod(contacts = contact)

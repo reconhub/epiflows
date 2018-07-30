@@ -136,6 +136,9 @@ make_epiflows.data.frame <- function(flows, locations = NULL,
       names(out$contacts)[names(out$contacts) == "n"] <- "n.1"
     }
     names(out$contacts)[newn] <- "n"
+    first_columns <- c(1:2L, newn)
+    other_columns <- setdiff(seq_len(ncol(out$contacts)), first_columns)
+    out$contacts  <- out$contacts[, c(first_columns, other_columns)]
   }
   dots         <- valid_dots(list(...))
   out$contacts <- valid_flows(out$contacts)
@@ -149,7 +152,7 @@ make_epiflows.data.frame <- function(flows, locations = NULL,
                                         new_names = names(out$linelist))
     }
     for (j in dots[[i]]) {
-      stop_if_invalid(out$linelist[[j]])
+      dots[[i]] <- stop_if_invalid_column(j, out$linelist)
     }
   }
   out$vars    <- dots

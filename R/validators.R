@@ -28,18 +28,12 @@ valid_dots <- function(dots) {
 
 ## Terminates the workflow and throws an error
 ## when x is NULL, NA, or an empty object (e.g., character(0)).
-stop_if_invalid <- function(x) {
-  object_name <- as.character(substitute(x))
-
-  if (is.null(x)) {
-    stop(object_name, " is NULL")
-  }
-  if (length(x) == 0) {
-    stop(object_name, " is empty")
-  }
-  if (all(is.na(x))) {
-    stop(object_name, " is NA")
-  }
+stop_if_invalid_column <- function(x, linelist) {
+  res <- linelist[[x]]
+  if (is.null(res))     stop("column '", x, "' is NULL")
+  if (length(res) == 0) stop("column '", x, "' is empty")
+  if (all(is.na(res)))  stop("column '", x, "' is NA")
+  x
 }
 
 valid_flows <- function(flows) {
