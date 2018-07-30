@@ -152,7 +152,7 @@ make_epiflows.data.frame <- function(flows, locations = NULL,
                                         new_names = names(out$linelist))
     }
     for (j in dots[[i]]) {
-      dots[[i]] <- stop_if_invalid_column(j, out$linelist)
+      stop_if_invalid_column(j, out$linelist)
     }
   }
   out$vars    <- dots

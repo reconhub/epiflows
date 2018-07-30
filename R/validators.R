@@ -33,7 +33,6 @@ stop_if_invalid_column <- function(x, linelist) {
   if (is.null(res))     stop("column '", x, "' is NULL")
   if (length(res) == 0) stop("column '", x, "' is empty")
   if (all(is.na(res)))  stop("column '", x, "' is NA")
-  x
 }
 
 valid_flows <- function(flows) {
