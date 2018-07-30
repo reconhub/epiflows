@@ -7,6 +7,15 @@ test_that("coordinates can be added, period", {
   expect_identical(get_coordinates(b), YF_coordinates)
 })
 
+test_that("coordinates won't be replaced if they already exist and none are missing", {
+  b <- add_coordinates(Brazil_epiflows, YF_coordinates[-1L])
+  c <- add_coordinates(b, overwrite = TRUE)
+  expect_identical(get_coordinates(b), get_coordinates(c))
+  expect_identical(get_coordinates(b), YF_coordinates)
+})
+
+
+
 
 
 test_that("coordinates can be added over the internet", {
