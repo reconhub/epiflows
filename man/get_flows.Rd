@@ -7,7 +7,8 @@
 \usage{
 get_flows(x, ...)
 
-\method{get_flows}{epiflows}(x, from = NULL, to = NULL, ...)
+\method{get_flows}{epiflows}(x, from = NULL, to = NULL, all = FALSE,
+  ...)
 }
 \arguments{
 \item{x}{An `epiflows` object.}
@@ -17,6 +18,8 @@ get_flows(x, ...)
 \item{from}{a character string defining which regions should be included in the flows}
 
 \item{to}{a character string defining which regions should be included in the flows}
+
+\item{all}{when `TRUE`, all the columns of the flows data frame will be returned. Defaults to `FALSE`, which returns "from", "to", and "n".}
 }
 \value{
 A \code{data.frame} with 3 columns:
