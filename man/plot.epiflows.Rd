@@ -2,38 +2,43 @@
 % Please edit documentation in R/plot.epiflows.R
 \name{plot.epiflows}
 \alias{plot.epiflows}
-\title{Plot a flow map}
+\title{Various plots for epiflows objects}
 \usage{
-\method{plot}{epiflows}(x, origin, title = sprintf("Flows from \%s",
-  origin_name), loc_column = "country", lon_lat_columns = c("lon", "lat"),
-  ...)
+\method{plot}{epiflows}(x, type = c("map", "network", "grid"), ...)
 }
 \arguments{
-\item{x}{An \code{epiflows} object.}
+\item{x}{an epiflows object.}
 
-\item{origin}{Code of the location of origin.}
+\item{type}{The type of plot to produce (defaults to map).}
 
-\item{title}{Plot title.}
-
-\item{loc_column}{Name of the column where location names are stored
-(default: "country").}
-
-\item{lon_lat_columns}{Names of the columns with longitudes and latitudes,
-respectively (default: "lon" and "lat").}
-
-\item{...}{Additional parameters (not used).}
-}
-\value{
-A \code{leaflet} object
+\item{...}{arguments passed on to a given type}
 }
 \description{
-Returns an interactive map of population flows from the specified
-location of origin.
+The \code{plot} method for \code{epiflows} objects offers types of
+graphics (argument \code{type}):
 }
-\author{
-Paula Moraga, Pawel Piatkowski
+\details{
+\itemize{
+\item \code{map}: flows are displayed on an interactive map; see \link{map_epiflows} for
+more details
+\item \code{network}: flows are displayed as a network using the htmlwidget
+\code{visNetwork} and the plotting method for \code{epicontacts} objects; see
+\link{vis_epiflows} for more details
+\item \code{grid}: flows are displayed as a grid between origins and destinations;
+see \link{grid_epiflows} for more details
+}
+}
+\examples{
+data("Brazil_epiflows")
 
-flows <- do.call(make_epiflows, Mex_travel_2009)
-flows <- add_coordinates(flows)
-plot(flows, "MEX")
+# no coordinates, defaults to network
+plot(Brazil_epiflows) 
+
+# grid bubbleplot
+plot(Brazil_epiflows, "grid")
+
+# adding coordinates defaults to map
+data("YF_coordinates")
+ef <- add_coordinates(Brazil_epiflows, YF_coordinates[-1])
+plot(ef)
 }

@@ -15,10 +15,10 @@
 Displays a short summary of an \code{epiflows} object.
 }
 \examples{
-flows <- do.call(make_epiflows, Mex_travel_2009)
-print(flows)
+data("Brazil_epiflows")
+print(Brazil_epiflows)
 
 }
 \author{
-Pawel Piatkowski
+Zhian N. Kamvar, Thibaut Jombart
 }

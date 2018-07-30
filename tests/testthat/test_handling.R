@@ -1,29 +1,24 @@
 context("Test subsetting")
 
-flows <- Mex_travel_2009[[1]]
-to <- structure(flows[["MEX"]], names = rownames(flows))
-from <- unlist(flows["MEX", ])
-ef <- make_epiflows(
-  to = to,
-  from = from,
-  code = "MEX",
-  locationsdata = Mex_travel_2009[[2]]
-)
+data("Brazil_epiflows")
 
 test_that("Subset of an epiflows object is returned", {
-  code_subset <- c("MEX", "JPN")
-  ef_MEX_JPN <- ef[code_subset]
-  # Test if location codes match
-  expect_named(ef_MEX_JPN$flows$to, code_subset)
-  expect_named(ef_MEX_JPN$flows$from, code_subset)
-  expect_equal(ef_MEX_JPN$locationsdata$code, code_subset)
+  Brazil_pops <- get_id(Brazil_epiflows)[1:5]
+  code_subset <- Brazil_pops[c(1, 3)]
+  ef_ES_SP    <- Brazil_epiflows[j = code_subset]
+  tef_ES_SP   <- epicontacts::thin(Brazil_epiflows[j = code_subset])
+  ids         <- get_id(ef_ES_SP)
+  expect_identical(ids, get_id(Brazil_epiflows))
+  expect_failure(expect_identical(ids, get_id(tef_ES_SP)))
+  expect_false(all(Brazil_pops %in% get_flows(ef_ES_SP, from = ids)$from))
+  expect_false(all(Brazil_pops %in% get_flows(tef_ES_SP, from = ids)$from))
 })
 
-test_that("Subsetting fails for invalid types", {
-  expect_error(ef[1])
-  expect_error(ef[TRUE])
+test_that("subsetting with nothing returns an identical object", {
+  expect_identical(Brazil_epiflows, Brazil_epiflows[])
 })
 
-test_that("Subsetting fails for incorrect codes", {
-  expect_error(ef["I_DONT_EXIST"])
+test_that("print method works", {
+  expect_output(print(epicontacts::thin(Brazil_epiflows[j = "Minas Gerais"])),
+                "11 locations")
 })

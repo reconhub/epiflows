@@ -1,0 +1,261 @@
+---
+title: "01 Data Preparation"
+date: "`r Sys.Date()`"
+output: 
+   rmarkdown::html_vignette:
+     toc: true
+     toc_depth: 2
+     fig_width: 7
+     fig_height: 7
+     out_width: "100%"
+vignette: >
+  %\VignetteIndexEntry{01 Data Preparation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+Epiflows can be constructed from two data frames:
+
+ - **flows** - Each row represents a flow of cases from one location to another
+   This must have at least three columns:
+     1. The location from where the flow originates
+     2. The location where the flow terminates
+     3. The number of cases in the flow (can be an absolute number or estimate)
+ - **locations** - Each row represents a different location located in **flows**
+   with associated metadata. It must have a minimum of one column specifying the
+   location identifier that will match the first two columns of **flows**.
+
+The metadata in **locations** such as population size, duration of stay in a 
+given location, date of first and last cases, etc. can be useful in estimating
+the risk of spread, but not everyone will code their data with identical column
+names. To facilitate their use in the function `estimate_risk_spread()`, the
+epiflows object stores a dictionary of variables in a place called `$vars`.
+You can see what variables are stored by default and add varaibles using the
+`global_vars()` function:
+
+```{r global_vars}
+library("epiflows")
+global_vars()
+```
+
+When we create our object, we will use these as arguments to tell epiflows which
+varaibles in our data frame are important.
+
+We have two such data frames containing data from a Yellow Fever outbreak in 
+Brazil (Dorigatti *et al.*, 2017). We will load these examples into our session:
+
+```{r}
+library("epiflows")
+data("YF_flows")
+data("YF_locations")
+head(YF_flows)
+YF_locations
+```
+
+We want to use these data to estimate the risk of spread to other locations. This can be done with the
+procedure implemented in the `estimate_risk_spread()` function, which can take an epiflows object.
+
+# Construction of the epiflows object from data frames
+
+With these data frames, we can construct the epiflows object using the `make_epiflows()` function.
+Note that this assumes that the required columns (*id*, *from*, *to*, and *n*) are in the correct
+order. If they aren't we can specify their locations with the options in `make_epiflows()`. Type
+`help("make_epiflows")` for more details.
+
+```{r}
+ef <- make_epiflows(flows         = YF_flows, 
+                    locations     = YF_locations, 
+                    pop_size      = "location_population",
+                    duration_stay = "length_of_stay",
+                    num_cases     = "num_cases_time_window",
+                    first_date    = "first_date_cases",
+                    last_date     = "last_date_cases"
+                   )
+print(ef)
+```
+
+Now we can use this with `esitmate_risk_spread()`
+
+```{r estimate}
+incubation <- function(n) {
+  rlnorm(n, 1.46, 0.35)
+}
+
+infectious <- function(n) {
+  rnorm(n, 4.5, 1.5/1.96)
+}
+set.seed(2017-07-25)
+res <- estimate_risk_spread(ef, 
+                            location_code          = "Espirito Santo",
+                            r_incubation           = incubation,
+                            r_infectious           = infectious,
+                            n_sim                  = 1e5)
+res
+```
+
+We can use ggplot2 to visualize these data
+
+```{r plot-estimate, fig.width = 7, fig.height = 3}
+library("ggplot2")
+res$location <- factor(rownames(res), rownames(res))
+ggplot(res, aes(x = mean_cases, y = location)) +
+  geom_point(size = 2) +
+  geom_errorbarh(aes(xmin = lower_limit_95CI, xmax = upper_limit_95CI), height = .25) +
+  theme_bw(base_size = 12, base_family = "Helvetica") +
+  ggtitle("Risk of yellow fever spread from Espirito Santo, Brazil") +
+  xlab("Number of cases") +
+  xlim(c(0, NA))
+```
+
+By default, `estimate_risk_spread()` returns a summary of the simulations. To
+obtain the full simulated output, you can set `return_all_simulations = TRUE`:
+
+```{r plot-estimate-sim, fig.width = 7, fig.height = 3}
+set.seed(2017-07-25)
+res <- estimate_risk_spread(ef, 
+                            location_code          = "Espirito Santo",
+                            r_incubation           = incubation,
+                            r_infectious           = infectious,
+                            n_sim                  = 1e5,
+                            return_all_simulations = TRUE)
+head(res)
+library("ggplot2")
+ggplot(utils::stack(as.data.frame(res)), aes(x = ind, y = values)) +
+  geom_boxplot(outlier.alpha = 0.2) +
+  theme_bw(base_size = 12, base_family = "Helvetica") +
+  ggtitle("Risk of yellow fever spread from Espirito Santo, Brazil") +
+  ylab("Number of cases") +
+  xlab("Location") +
+  ylim(c(0, NA)) +
+  coord_flip()
+
+```
+
+
+# Using `set_vars()` to update variable keys in the object
+
+In some cases, it may be useful to store several vectors that can represent a single variable in the model and switch them out. These vectors can be stored as separate columns in the data frame and you can use the function `set_vars()` to change which column a default variable points to. 
+
+## Example: different durations of stay
+
+### data preparation
+
+Such a case may arise if you have several different durations of stay based on the location of origin. For example, let's imagine that this was the case for the Brazilian data. First, we'll construct some dummy data.
+
+```{r fakedata}
+data("YF_Brazil")
+set.seed(5000)
+short_stays <- as.data.frame(replicate(5, rpois(10, 5) + round(runif(10), 1)))
+colnames(short_stays) <- c("ES", "MG", "RdJ", "SP", "SB")
+rownames(short_stays) <- names(YF_Brazil$length_of_stay)
+short_stays
+```
+
+Now, we can merge it with our original locations metadata using the `location_code` column to join the two together correctly:
+
+```{r merge}
+short_stays$location_code <- rownames(short_stays)
+(locations <- merge(YF_locations, short_stays, by = "location_code", all = TRUE, sort = FALSE))
+```
+
+Now we can create the epiflows object like we did before, but using our added data:
+
+```{r}
+ef <- make_epiflows(flows         = YF_flows, 
+                    locations     = locations, 
+                    pop_size      = "location_population",
+                    duration_stay = "length_of_stay",
+                    num_cases     = "num_cases_time_window",
+                    first_date    = "first_date_cases",
+                    last_date     = "last_date_cases"
+                   )
+```
+
+### Using `set_vars()`
+
+We can run the model the same, but now we have the option to switch out which columns from our locations data frame we want to use:
+
+```{r plot-estimate-dummy, fig.width = 7, fig.height = 3}
+get_vars(ef)$duration_stay
+set_vars(ef, "duration_stay") <- "ES"
+get_vars(ef)$duration_stay
+set.seed(2017-07-25)
+incubation <- function(n) {
+  rlnorm(n, 1.46, 0.35)
+}
+
+infectious <- function(n) {
+  rnorm(n, 4.5, 1.5/1.96)
+}
+set.seed(2017-07-25)
+res <- estimate_risk_spread(ef, 
+                            location_code          = "Espirito Santo",
+                            r_incubation           = incubation,
+                            r_infectious           = infectious,
+                            n_sim                  = 1e5)
+res$location <- factor(rownames(res), rownames(res))
+ggplot(res, aes(x = mean_cases, y = location)) +
+  geom_point(size = 2) +
+  geom_errorbarh(aes(xmin = lower_limit_95CI, xmax = upper_limit_95CI), height = .25) +
+  theme_bw(base_size = 12, base_family = "Helvetica") +
+  ggtitle("Risk of yellow fever spread from Espirito Santo, Brazil") +
+  xlab("Number of cases") +
+  xlim(c(0, NA))
+```
+
+Changing it back is simple:
+
+```{r plot-estimate-dummy2, fig.width = 7, fig.height = 3}
+
+set_vars(ef, "duration_stay") <- "length_of_stay"
+
+set.seed(2017-07-25)
+res <- estimate_risk_spread(ef, 
+                            location_code          = "Espirito Santo",
+                            r_incubation           = incubation,
+                            r_infectious           = infectious,
+                            n_sim                  = 1e5)
+res$location <- factor(rownames(res), rownames(res))
+ggplot(res, aes(x = mean_cases, y = location)) +
+  geom_point(size = 2) +
+  geom_errorbarh(aes(xmin = lower_limit_95CI, xmax = upper_limit_95CI), height = .25) +
+  theme_bw(base_size = 12, base_family = "Helvetica") +
+  ggtitle("Risk of yellow fever spread from Espirito Santo, Brazil") +
+  xlab("Number of cases") +
+  xlim(c(0, NA))
+```
+
+### Using a custom argument
+
+Or, you can specify it by adding it as an argument in the function
+
+```{r plot-estimate-dummy3, fig.width = 7, fig.height = 3}
+set.seed(2017-07-25)
+res <- estimate_risk_spread(ef, 
+                            location_code          = "Espirito Santo",
+                            r_incubation           = incubation,
+                            r_infectious           = infectious,
+                            n_sim                  = 1e5,
+                            avg_length_stay_days   = rep(2, 10))
+res$location <- factor(rownames(res), rownames(res))
+ggplot(res, aes(x = mean_cases, y = location)) +
+  geom_point(size = 2) +
+  geom_errorbarh(aes(xmin = lower_limit_95CI, xmax = upper_limit_95CI), height = .25) +
+  theme_bw(base_size = 12, base_family = "Helvetica") +
+  ggtitle("Risk of yellow fever spread from Espirito Santo, Brazil") +
+  xlab("Number of cases") +
+  xlim(c(0, NA))
+```
+
+# References
+
+Dorigatti I, Hamlet A, Aguas R, Cattarino L, Cori A, Donnelly CA, Garske T, Imai N, Ferguson NM. International risk of yellow fever spread from the ongoing outbreak in Brazil, December 2016 to May 2017. Euro Surveill. 2017;22(28):pii=30572. DOI: [10.2807/1560-7917.ES.2017.22.28.30572](https://doi.org/10.2807/1560-7917.ES.2017.22.28.30572)

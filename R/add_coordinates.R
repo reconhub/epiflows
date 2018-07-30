@@ -1,53 +1,89 @@
-#' Add location coordinates
+#' Add/Retrieve location coordinates
 #' 
-#' Adds longitude/latitude values to location data within an epiflows object.
-#' Coordinates are added to object's locationsdata slot as `lon` and `lat`
+#' Adds/Retrieves longitude/latitude values to location data within an epiflows object.
+#' Coordinates are added to object's locations slot as `lon` and `lat`
 #' columns.
 #' 
-#' @param ef An \code{epiflows} object.
+#' @param x An `epiflows` object.
 #' @param loc_column Name of the column where location names are stored
 #' (default: "country").
-#' @param lon_lat_columns Names of the appended columns with longitudes
-#' and latitudes, respectively (default: "lon" and "lat").
+#' @param coordinates Either names of the appended columns with longitudes
+#' and latitudes, respectively (default: "lon" and "lat") or a data frame with longitude and latitude columns.
 #' @param overwrite If TRUE, retrieves all geocodes, even those already
 #' retrieved. If FALSE (default), overwrites only NAs.
 #' 
-#' @return An updated \code{epiflows} object.
-#' 
-#' @author Pawel Piatkowski
+#' @return An updated `epiflows` object.
+#' @md
+#' @author Pawel Piatkowski, Zhian Kamvar
 #' 
 #' @examples
-#' flows <- do.call(make_epiflows, Mex_travel_2009)
-#' flows <- add_coordinates(flows)
-#' flows$locationsdata
+#' 
+#' # Setting up the data
+#' data("Brazil_epiflows")
+#' data("YF_coordinates")
+#' get_coordinates(Brazil_epiflows) # no coordinates yet
+#' ef <- add_coordinates(Brazil_epiflows, YF_coordinates[-1])
+#' get_coordinates(ef)
+#' get_coordinates(ef, location = "Espirito Santo") # coordinates for MEX
+#' \dontrun{
+#'   # You can use google maps' geocode functionality if you have a decent 
+#'   # internet connection
+#'   ef2 <- add_coordinates(Brazil_epiflows, loc_column = "country")
+#' }
 #' 
 #' @export
-add_coordinates <- function(ef,
-                            loc_column = "country",
-                            lon_lat_columns = c("lon", "lat"),
+#' @seealso [map_epiflows()]; [plot.epiflows()]; [get_locations()]; [get_vars()];
+#'   [global_vars()]
+#' @importFrom stats complete.cases
+#' @importFrom stats setNames
+add_coordinates <- function(x,
+                            coordinates = c("lon", "lat"),
+                            loc_column = "id",
                             overwrite = FALSE) {
-  if (!"epiflows" %in% class(ef)) {
-    stop("`ef` must be an object of class epiflows")
+    
+  if (!inherits(x, "epiflows")) {
+    efprint <- as.character(deparse(substitute(x)))
+    stop(sprintf("%s must be an object of class epiflows", efprint))
   }
-  if (!loc_column %in% names(ef$locationsdata)) {
-    stop(sprintf("`%s` is not a valid column name", loc_column))
+  if (!is.null(x$vars$coordinates) && !overwrite) {
+    stop("coordinates are present in the object. Use `overwrite = TRUE` to replace them.")
   }
-  if (!is.character(lon_lat_columns) || length(lon_lat_columns) != 2) {
-    stop("`lon_lat_columns` should contain exactly two character strings")
-  }
-  if (!overwrite && all(lon_lat_columns %in% names(ef$locationsdata))) {
-    # If overwrite == FALSE and lon/lat columns already exist,
-    # overwrite only rows with NA lon and lat
-    which_rows <- apply(is.na(ef$locationsdata[, lon_lat_columns]), 1, all)
-    print(ef$locationsdata[which_rows, loc_column])
-    ef$locationsdata[which_rows, lon_lat_columns] <- ggmap::geocode(
-      as.character(ef$locationsdata[which_rows, loc_column])
-    )
+  coordinates <- if (is.matrix(coordinates)) as.data.frame(coordinates) else coordinates
+  if (is.data.frame(coordinates)) {
+    if (ncol(coordinates) != 2) {
+      stop("The data frame `coordinates` should contain exactly two columns specifying the longitude and latitude coordinates")
+    }
+    if (all(c("lon", "lat") %in% tolower(names(coordinates)))) {
+      # Ensuring they are in the correct order if they are named lon/lat
+      # otherwise, we just assume they are.
+      names(coordinates) <- tolower(names(coordinates))
+      coordinates <- coordinates[c("lon", "lat")]
+    }
+    if (overwrite && !is.null(x$vars$coordinates)) {
+      names(coordinates)               <- x$vars$coordinates
+      x$linelist[x$vars$coordinates] <- coordinates
+    } else {
+      x$linelist    <- cbind(get_locations(x), coordinates) 
+      x$vars$coordinates <- setNames(names(coordinates), c("lon", "lat"))
+    }
   } else {
-    # Otherwise, get all geocodes and write them to lon/lat columns
-    ef$locationsdata[, lon_lat_columns] <- ggmap::geocode(
-      as.character(ef$locationsdata[, loc_column])
-    )
+    if (!is.character(coordinates) || length(coordinates) != 2) {
+      stop("`coordinates` should contain exactly two character strings")
+    }
+    x$vars$coordinates <- setNames(coordinates, c("lon", "lat"))
+    if (!loc_column %in% names(get_locations(x))) {
+      stop(sprintf("`%s` is not a valid column name", loc_column))
+    }
+    the_locations <- as.character(get_vars(x, loc_column)[[1]])
+    if (overwrite && all(coordinates %in% names(get_locations(x)))) {
+      # If overwrite == FALSE and lon/lat columns already exist,
+      # overwrite only rows with NA lon and lat
+      which_rows <- !complete.cases(get_coordinates(x))
+      x$linelist[which_rows, coordinates] <- ggmap::geocode(the_locations[which_rows])
+    } else {
+      # Otherwise, get all geocodes and write them to lon/lat columns
+      x$linelist[, coordinates] <- ggmap::geocode(as.character(the_locations))
+    }
   }
-  ef
+  x
 }
