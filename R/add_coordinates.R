@@ -79,7 +79,9 @@ add_coordinates <- function(x,
       # If overwrite == FALSE and lon/lat columns already exist,
       # overwrite only rows with NA lon and lat
       which_rows <- !complete.cases(get_coordinates(x))
-      x$linelist[which_rows, coordinates] <- ggmap::geocode(the_locations[which_rows])
+      if (any(which_rows)) {
+        x$linelist[which_rows, coordinates] <- ggmap::geocode(the_locations[which_rows])
+      }
     } else {
       # Otherwise, get all geocodes and write them to lon/lat columns
       x$linelist[, coordinates] <- ggmap::geocode(as.character(the_locations))
