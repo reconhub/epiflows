@@ -14,7 +14,7 @@
 #' 
 #' @return An updated `epiflows` object.
 #' @md
-#' @author Pawel Piatkowski, Zhian Kamvar
+#' @author Pawel Piatkowski, Salla Toikkanen, Zhian Kamvar
 #' 
 #' @examples
 #' 

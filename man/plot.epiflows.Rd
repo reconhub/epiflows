@@ -42,3 +42,6 @@ data("YF_coordinates")
 ef <- add_coordinates(Brazil_epiflows, YF_coordinates[-1])
 plot(ef)
 }
+\author{
+Salla Toikkanen, Thibaut Jombart, Zhian Kamvar
+}

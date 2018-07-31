@@ -17,6 +17,7 @@
 #' @param x an epiflows object.
 #' @param type The type of plot to produce (defaults to map).
 #' @param ... arguments passed on to a given type
+#' @author Salla Toikkanen, Thibaut Jombart, Zhian Kamvar
 #'
 #' @export
 #' @md
