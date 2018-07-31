@@ -12,11 +12,11 @@ make_epiflows(...)
 \method{make_epiflows}{data.frame}(flows, locations = NULL, from = 1L,
   to = 2L, n = 3L, id = 1L, ...)
 
-\method{make_epiflows}{integer}(inflow, outflow, focus, locations,
-  id = 1L, ...)
+\method{make_epiflows}{integer}(inflow, outflow, focus, locations, id = 1L,
+  ...)
 
-\method{make_epiflows}{numeric}(inflow, outflow, focus, locations,
-  id = 1L, ...)
+\method{make_epiflows}{numeric}(inflow, outflow, focus, locations, id = 1L,
+  ...)
 }
 \arguments{
 \item{...}{Any number of varaibles that can be used for mapping or modelling.
