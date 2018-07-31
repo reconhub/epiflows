@@ -84,7 +84,7 @@
     <div class="page-header toc-ignore">
       <h1>01 Data Preparation</h1>
             
-            <h4 class="date">2018-07-30</h4>
+            <h4 class="date">2018-07-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/reconhub/epiflows/blob/master/vignettes/epiflows-class.Rmd"><code>vignettes/epiflows-class.Rmd</code></a></small>
       <div class="hidden name"><code>epiflows-class.Rmd</code></div>
@@ -110,191 +110,191 @@
 <strong>locations</strong> - Each row represents a different location located in <strong>flows</strong> with associated metadata. It must have a minimum of one column specifying the location identifier that will match the first two columns of <strong>flows</strong>.</li>
 </ul>
 <p>The metadata in <strong>locations</strong> such as population size, duration of stay in a given location, date of first and last cases, etc. can be useful in estimating the risk of spread, but not everyone will code their data with identical column names. To facilitate their use in the function <code><a href="../reference/estimate_risk_spread.html">estimate_risk_spread()</a></code>, the epiflows object stores a dictionary of variables in a place called <code>$vars</code>. You can see what variables are stored by default and add varaibles using the <code><a href="../reference/global_vars.html">global_vars()</a></code> function:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(<span class="st">"epiflows"</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co">#&gt; epiflows is loaded with the following global variables in `global_vars()`:</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">#&gt; coordinates, pop_size, duration_stay, first_date, last_date, num_cases</span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw"><a href="../reference/global_vars.html">global_vars</a></span>()</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co">#&gt; [1] "coordinates"   "pop_size"      "duration_stay" "first_date"   </span></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co">#&gt; [5] "last_date"     "num_cases"</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"epiflows"</span>)
+<span class="co">#&gt; epiflows is loaded with the following global variables in `global_vars()`:</span>
+<span class="co">#&gt; coordinates, pop_size, duration_stay, first_date, last_date, num_cases</span>
+<span class="kw"><a href="../reference/global_vars.html">global_vars</a></span>()
+<span class="co">#&gt; [1] "coordinates"   "pop_size"      "duration_stay" "first_date"   </span>
+<span class="co">#&gt; [5] "last_date"     "num_cases"</span></code></pre></div>
 <p>When we create our object, we will use these as arguments to tell epiflows which varaibles in our data frame are important.</p>
 <p>We have two such data frames containing data from a Yellow Fever outbreak in Brazil (Dorigatti <em>et al.</em>, 2017). We will load these examples into our session:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(<span class="st">"epiflows"</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">data</span>(<span class="st">"YF_flows"</span>)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw">data</span>(<span class="st">"YF_locations"</span>)</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="kw">head</span>(YF_flows)</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt;               from    to         n</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt; 1   Espirito Santo Italy  2827.572</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt; 2     Minas Gerais Italy 15714.103</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; 3   Rio de Janeiro Italy  8163.938</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; 4        Sao Paulo Italy 34038.681</span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt; 5 Southeast Brazil Italy 76281.763</span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#&gt; 6   Espirito Santo Spain  3270.500</span></a>
-<a class="sourceLine" id="cb2-12" data-line-number="12">YF_locations</a>
-<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">#&gt;               location_code location_population num_cases_time_window</span></a>
-<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#&gt; 1            Espirito Santo             3973697                  2600</span></a>
-<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt; 2              Minas Gerais            20997560                  4870</span></a>
-<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#&gt; 3            Rio de Janeiro            16635996                   170</span></a>
-<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt; 4                 Sao Paulo            44749699                   200</span></a>
-<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt; 5          Southeast Brazil            86356952                  7840</span></a>
-<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt; 6                 Argentina                  NA                    NA</span></a>
-<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#&gt; 7                     Chile                  NA                    NA</span></a>
-<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="co">#&gt; 8                   Germany                  NA                    NA</span></a>
-<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="co">#&gt; 9                     Italy                  NA                    NA</span></a>
-<a class="sourceLine" id="cb2-23" data-line-number="23"><span class="co">#&gt; 10                 Paraguay                  NA                    NA</span></a>
-<a class="sourceLine" id="cb2-24" data-line-number="24"><span class="co">#&gt; 11                 Portugal                  NA                    NA</span></a>
-<a class="sourceLine" id="cb2-25" data-line-number="25"><span class="co">#&gt; 12                    Spain                  NA                    NA</span></a>
-<a class="sourceLine" id="cb2-26" data-line-number="26"><span class="co">#&gt; 13           United Kingdom                  NA                    NA</span></a>
-<a class="sourceLine" id="cb2-27" data-line-number="27"><span class="co">#&gt; 14 United States of America                  NA                    NA</span></a>
-<a class="sourceLine" id="cb2-28" data-line-number="28"><span class="co">#&gt; 15                  Uruguay                  NA                    NA</span></a>
-<a class="sourceLine" id="cb2-29" data-line-number="29"><span class="co">#&gt;    first_date_cases last_date_cases length_of_stay</span></a>
-<a class="sourceLine" id="cb2-30" data-line-number="30"><span class="co">#&gt; 1        2017-01-04      2017-04-30             NA</span></a>
-<a class="sourceLine" id="cb2-31" data-line-number="31"><span class="co">#&gt; 2        2016-12-19      2017-04-20             NA</span></a>
-<a class="sourceLine" id="cb2-32" data-line-number="32"><span class="co">#&gt; 3        2017-02-19      2017-05-10             NA</span></a>
-<a class="sourceLine" id="cb2-33" data-line-number="33"><span class="co">#&gt; 4        2016-12-17      2017-04-20             NA</span></a>
-<a class="sourceLine" id="cb2-34" data-line-number="34"><span class="co">#&gt; 5        2016-12-17      2017-05-10             NA</span></a>
-<a class="sourceLine" id="cb2-35" data-line-number="35"><span class="co">#&gt; 6              &lt;NA&gt;            &lt;NA&gt;           10.9</span></a>
-<a class="sourceLine" id="cb2-36" data-line-number="36"><span class="co">#&gt; 7              &lt;NA&gt;            &lt;NA&gt;           10.3</span></a>
-<a class="sourceLine" id="cb2-37" data-line-number="37"><span class="co">#&gt; 8              &lt;NA&gt;            &lt;NA&gt;           22.3</span></a>
-<a class="sourceLine" id="cb2-38" data-line-number="38"><span class="co">#&gt; 9              &lt;NA&gt;            &lt;NA&gt;           30.1</span></a>
-<a class="sourceLine" id="cb2-39" data-line-number="39"><span class="co">#&gt; 10             &lt;NA&gt;            &lt;NA&gt;            7.3</span></a>
-<a class="sourceLine" id="cb2-40" data-line-number="40"><span class="co">#&gt; 11             &lt;NA&gt;            &lt;NA&gt;           27.2</span></a>
-<a class="sourceLine" id="cb2-41" data-line-number="41"><span class="co">#&gt; 12             &lt;NA&gt;            &lt;NA&gt;           27.2</span></a>
-<a class="sourceLine" id="cb2-42" data-line-number="42"><span class="co">#&gt; 13             &lt;NA&gt;            &lt;NA&gt;           19.5</span></a>
-<a class="sourceLine" id="cb2-43" data-line-number="43"><span class="co">#&gt; 14             &lt;NA&gt;            &lt;NA&gt;           18.5</span></a>
-<a class="sourceLine" id="cb2-44" data-line-number="44"><span class="co">#&gt; 15             &lt;NA&gt;            &lt;NA&gt;            8.0</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"epiflows"</span>)
+<span class="kw">data</span>(<span class="st">"YF_flows"</span>)
+<span class="kw">data</span>(<span class="st">"YF_locations"</span>)
+<span class="kw">head</span>(YF_flows)
+<span class="co">#&gt;               from    to         n</span>
+<span class="co">#&gt; 1   Espirito Santo Italy  2827.572</span>
+<span class="co">#&gt; 2     Minas Gerais Italy 15714.103</span>
+<span class="co">#&gt; 3   Rio de Janeiro Italy  8163.938</span>
+<span class="co">#&gt; 4        Sao Paulo Italy 34038.681</span>
+<span class="co">#&gt; 5 Southeast Brazil Italy 76281.763</span>
+<span class="co">#&gt; 6   Espirito Santo Spain  3270.500</span>
+YF_locations
+<span class="co">#&gt;               location_code location_population num_cases_time_window</span>
+<span class="co">#&gt; 1            Espirito Santo             3973697                  2600</span>
+<span class="co">#&gt; 2              Minas Gerais            20997560                  4870</span>
+<span class="co">#&gt; 3            Rio de Janeiro            16635996                   170</span>
+<span class="co">#&gt; 4                 Sao Paulo            44749699                   200</span>
+<span class="co">#&gt; 5          Southeast Brazil            86356952                  7840</span>
+<span class="co">#&gt; 6                 Argentina                  NA                    NA</span>
+<span class="co">#&gt; 7                     Chile                  NA                    NA</span>
+<span class="co">#&gt; 8                   Germany                  NA                    NA</span>
+<span class="co">#&gt; 9                     Italy                  NA                    NA</span>
+<span class="co">#&gt; 10                 Paraguay                  NA                    NA</span>
+<span class="co">#&gt; 11                 Portugal                  NA                    NA</span>
+<span class="co">#&gt; 12                    Spain                  NA                    NA</span>
+<span class="co">#&gt; 13           United Kingdom                  NA                    NA</span>
+<span class="co">#&gt; 14 United States of America                  NA                    NA</span>
+<span class="co">#&gt; 15                  Uruguay                  NA                    NA</span>
+<span class="co">#&gt;    first_date_cases last_date_cases length_of_stay</span>
+<span class="co">#&gt; 1        2017-01-04      2017-04-30             NA</span>
+<span class="co">#&gt; 2        2016-12-19      2017-04-20             NA</span>
+<span class="co">#&gt; 3        2017-02-19      2017-05-10             NA</span>
+<span class="co">#&gt; 4        2016-12-17      2017-04-20             NA</span>
+<span class="co">#&gt; 5        2016-12-17      2017-05-10             NA</span>
+<span class="co">#&gt; 6              &lt;NA&gt;            &lt;NA&gt;           10.9</span>
+<span class="co">#&gt; 7              &lt;NA&gt;            &lt;NA&gt;           10.3</span>
+<span class="co">#&gt; 8              &lt;NA&gt;            &lt;NA&gt;           22.3</span>
+<span class="co">#&gt; 9              &lt;NA&gt;            &lt;NA&gt;           30.1</span>
+<span class="co">#&gt; 10             &lt;NA&gt;            &lt;NA&gt;            7.3</span>
+<span class="co">#&gt; 11             &lt;NA&gt;            &lt;NA&gt;           27.2</span>
+<span class="co">#&gt; 12             &lt;NA&gt;            &lt;NA&gt;           27.2</span>
+<span class="co">#&gt; 13             &lt;NA&gt;            &lt;NA&gt;           19.5</span>
+<span class="co">#&gt; 14             &lt;NA&gt;            &lt;NA&gt;           18.5</span>
+<span class="co">#&gt; 15             &lt;NA&gt;            &lt;NA&gt;            8.0</span></code></pre></div>
 <p>We want to use these data to estimate the risk of spread to other locations. This can be done with the procedure implemented in the <code><a href="../reference/estimate_risk_spread.html">estimate_risk_spread()</a></code> function, which can take an epiflows object.</p>
 </div>
 <div id="construction-of-the-epiflows-object-from-data-frames" class="section level1">
 <h1 class="hasAnchor">
 <a href="#construction-of-the-epiflows-object-from-data-frames" class="anchor"></a>Construction of the epiflows object from data frames</h1>
 <p>With these data frames, we can construct the epiflows object using the <code><a href="../reference/make_epiflows.html">make_epiflows()</a></code> function. Note that this assumes that the required columns (<em>id</em>, <em>from</em>, <em>to</em>, and <em>n</em>) are in the correct order. If they aren’t we can specify their locations with the options in <code><a href="../reference/make_epiflows.html">make_epiflows()</a></code>. Type <code>help("make_epiflows")</code> for more details.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">ef &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make_epiflows.html">make_epiflows</a></span>(<span class="dt">flows         =</span> YF_flows, </a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">                    <span class="dt">locations     =</span> YF_locations, </a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">                    <span class="dt">pop_size      =</span> <span class="st">"location_population"</span>,</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">                    <span class="dt">duration_stay =</span> <span class="st">"length_of_stay"</span>,</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">                    <span class="dt">num_cases     =</span> <span class="st">"num_cases_time_window"</span>,</a>
-<a class="sourceLine" id="cb3-6" data-line-number="6">                    <span class="dt">first_date    =</span> <span class="st">"first_date_cases"</span>,</a>
-<a class="sourceLine" id="cb3-7" data-line-number="7">                    <span class="dt">last_date     =</span> <span class="st">"last_date_cases"</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8">                   )</a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="kw">print</span>(ef)</a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt; /// Epidemiological Flows //</span></a>
-<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt;   // class: epiflows, epicontacts</span></a>
-<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt;   // 15 locations; 100 flows; directed</span></a>
-<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt;   // optional variables: pop_size, duration_stay, num_cases, first_date, last_date </span></a>
-<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt;   // locations</span></a>
-<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#&gt; # A tibble: 15 x 6</span></a>
-<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="co">#&gt;    id    location_popula… num_cases_time_… first_date_cases last_date_cases</span></a>
-<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co">#&gt;  * &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt;            &lt;fct&gt;          </span></a>
-<a class="sourceLine" id="cb3-22" data-line-number="22"><span class="co">#&gt;  1 Espi…          3973697             2600 2017-01-04       2017-04-30     </span></a>
-<a class="sourceLine" id="cb3-23" data-line-number="23"><span class="co">#&gt;  2 Mina…         20997560             4870 2016-12-19       2017-04-20     </span></a>
-<a class="sourceLine" id="cb3-24" data-line-number="24"><span class="co">#&gt;  3 Rio …         16635996              170 2017-02-19       2017-05-10     </span></a>
-<a class="sourceLine" id="cb3-25" data-line-number="25"><span class="co">#&gt;  4 Sao …         44749699              200 2016-12-17       2017-04-20     </span></a>
-<a class="sourceLine" id="cb3-26" data-line-number="26"><span class="co">#&gt;  5 Sout…         86356952             7840 2016-12-17       2017-05-10     </span></a>
-<a class="sourceLine" id="cb3-27" data-line-number="27"><span class="co">#&gt;  6 Arge…               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span></a>
-<a class="sourceLine" id="cb3-28" data-line-number="28"><span class="co">#&gt;  7 Chile               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span></a>
-<a class="sourceLine" id="cb3-29" data-line-number="29"><span class="co">#&gt;  8 Germ…               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span></a>
-<a class="sourceLine" id="cb3-30" data-line-number="30"><span class="co">#&gt;  9 Italy               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span></a>
-<a class="sourceLine" id="cb3-31" data-line-number="31"><span class="co">#&gt; 10 Para…               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span></a>
-<a class="sourceLine" id="cb3-32" data-line-number="32"><span class="co">#&gt; 11 Port…               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span></a>
-<a class="sourceLine" id="cb3-33" data-line-number="33"><span class="co">#&gt; 12 Spain               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span></a>
-<a class="sourceLine" id="cb3-34" data-line-number="34"><span class="co">#&gt; 13 Unit…               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span></a>
-<a class="sourceLine" id="cb3-35" data-line-number="35"><span class="co">#&gt; 14 Unit…               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span></a>
-<a class="sourceLine" id="cb3-36" data-line-number="36"><span class="co">#&gt; 15 Urug…               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span></a>
-<a class="sourceLine" id="cb3-37" data-line-number="37"><span class="co">#&gt; # ... with 1 more variable: length_of_stay &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb3-38" data-line-number="38"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb3-39" data-line-number="39"><span class="co">#&gt;   // flows</span></a>
-<a class="sourceLine" id="cb3-40" data-line-number="40"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb3-41" data-line-number="41"><span class="co">#&gt; # A tibble: 100 x 3</span></a>
-<a class="sourceLine" id="cb3-42" data-line-number="42"><span class="co">#&gt;    from             to         n</span></a>
-<a class="sourceLine" id="cb3-43" data-line-number="43"><span class="co">#&gt;    &lt;chr&gt;            &lt;chr&gt;  &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb3-44" data-line-number="44"><span class="co">#&gt;  1 Espirito Santo   Italy  2828.</span></a>
-<a class="sourceLine" id="cb3-45" data-line-number="45"><span class="co">#&gt;  2 Minas Gerais     Italy 15714.</span></a>
-<a class="sourceLine" id="cb3-46" data-line-number="46"><span class="co">#&gt;  3 Rio de Janeiro   Italy  8164.</span></a>
-<a class="sourceLine" id="cb3-47" data-line-number="47"><span class="co">#&gt;  4 Sao Paulo        Italy 34039.</span></a>
-<a class="sourceLine" id="cb3-48" data-line-number="48"><span class="co">#&gt;  5 Southeast Brazil Italy 76282.</span></a>
-<a class="sourceLine" id="cb3-49" data-line-number="49"><span class="co">#&gt;  6 Espirito Santo   Spain  3270.</span></a>
-<a class="sourceLine" id="cb3-50" data-line-number="50"><span class="co">#&gt;  7 Minas Gerais     Spain 18176.</span></a>
-<a class="sourceLine" id="cb3-51" data-line-number="51"><span class="co">#&gt;  8 Rio de Janeiro   Spain  9443.</span></a>
-<a class="sourceLine" id="cb3-52" data-line-number="52"><span class="co">#&gt;  9 Sao Paulo        Spain 39371.</span></a>
-<a class="sourceLine" id="cb3-53" data-line-number="53"><span class="co">#&gt; 10 Southeast Brazil Spain 88231.</span></a>
-<a class="sourceLine" id="cb3-54" data-line-number="54"><span class="co">#&gt; # ... with 90 more rows</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ef &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make_epiflows.html">make_epiflows</a></span>(<span class="dt">flows         =</span> YF_flows, 
+                    <span class="dt">locations     =</span> YF_locations, 
+                    <span class="dt">pop_size      =</span> <span class="st">"location_population"</span>,
+                    <span class="dt">duration_stay =</span> <span class="st">"length_of_stay"</span>,
+                    <span class="dt">num_cases     =</span> <span class="st">"num_cases_time_window"</span>,
+                    <span class="dt">first_date    =</span> <span class="st">"first_date_cases"</span>,
+                    <span class="dt">last_date     =</span> <span class="st">"last_date_cases"</span>
+                   )
+<span class="kw">print</span>(ef)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; /// Epidemiological Flows //</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   // class: epiflows, epicontacts</span>
+<span class="co">#&gt;   // 15 locations; 100 flows; directed</span>
+<span class="co">#&gt;   // optional variables: pop_size, duration_stay, num_cases, first_date, last_date </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   // locations</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; # A tibble: 15 x 6</span>
+<span class="co">#&gt;    id    location_popula… num_cases_time_… first_date_cases last_date_cases</span>
+<span class="co">#&gt;  * &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt;            &lt;fct&gt;          </span>
+<span class="co">#&gt;  1 Espi…          3973697             2600 2017-01-04       2017-04-30     </span>
+<span class="co">#&gt;  2 Mina…         20997560             4870 2016-12-19       2017-04-20     </span>
+<span class="co">#&gt;  3 Rio …         16635996              170 2017-02-19       2017-05-10     </span>
+<span class="co">#&gt;  4 Sao …         44749699              200 2016-12-17       2017-04-20     </span>
+<span class="co">#&gt;  5 Sout…         86356952             7840 2016-12-17       2017-05-10     </span>
+<span class="co">#&gt;  6 Arge…               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span>
+<span class="co">#&gt;  7 Chile               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span>
+<span class="co">#&gt;  8 Germ…               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span>
+<span class="co">#&gt;  9 Italy               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span>
+<span class="co">#&gt; 10 Para…               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span>
+<span class="co">#&gt; 11 Port…               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span>
+<span class="co">#&gt; 12 Spain               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span>
+<span class="co">#&gt; 13 Unit…               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span>
+<span class="co">#&gt; 14 Unit…               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span>
+<span class="co">#&gt; 15 Urug…               NA               NA &lt;NA&gt;             &lt;NA&gt;           </span>
+<span class="co">#&gt; # ... with 1 more variable: length_of_stay &lt;dbl&gt;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   // flows</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; # A tibble: 100 x 3</span>
+<span class="co">#&gt;    from             to         n</span>
+<span class="co">#&gt;    &lt;chr&gt;            &lt;chr&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 Espirito Santo   Italy  2828.</span>
+<span class="co">#&gt;  2 Minas Gerais     Italy 15714.</span>
+<span class="co">#&gt;  3 Rio de Janeiro   Italy  8164.</span>
+<span class="co">#&gt;  4 Sao Paulo        Italy 34039.</span>
+<span class="co">#&gt;  5 Southeast Brazil Italy 76282.</span>
+<span class="co">#&gt;  6 Espirito Santo   Spain  3270.</span>
+<span class="co">#&gt;  7 Minas Gerais     Spain 18176.</span>
+<span class="co">#&gt;  8 Rio de Janeiro   Spain  9443.</span>
+<span class="co">#&gt;  9 Sao Paulo        Spain 39371.</span>
+<span class="co">#&gt; 10 Southeast Brazil Spain 88231.</span>
+<span class="co">#&gt; # ... with 90 more rows</span></code></pre></div>
 <p>Now we can use this with <code>esitmate_risk_spread()</code></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">incubation &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">  <span class="kw">rlnorm</span>(n, <span class="fl">1.46</span>, <span class="fl">0.35</span>)</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">}</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">infectious &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</a>
-<a class="sourceLine" id="cb4-6" data-line-number="6">  <span class="kw">rnorm</span>(n, <span class="fl">4.5</span>, <span class="fl">1.5</span><span class="op">/</span><span class="fl">1.96</span>)</a>
-<a class="sourceLine" id="cb4-7" data-line-number="7">}</a>
-<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="kw">set.seed</span>(<span class="dv">2017-07-25</span>)</a>
-<a class="sourceLine" id="cb4-9" data-line-number="9">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/estimate_risk_spread.html">estimate_risk_spread</a></span>(ef, </a>
-<a class="sourceLine" id="cb4-10" data-line-number="10">                            <span class="dt">location_code          =</span> <span class="st">"Espirito Santo"</span>,</a>
-<a class="sourceLine" id="cb4-11" data-line-number="11">                            <span class="dt">r_incubation           =</span> incubation,</a>
-<a class="sourceLine" id="cb4-12" data-line-number="12">                            <span class="dt">r_infectious           =</span> infectious,</a>
-<a class="sourceLine" id="cb4-13" data-line-number="13">                            <span class="dt">n_sim                  =</span> <span class="fl">1e5</span>)</a>
-<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt; Exportations done</span></a>
-<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt; Importations done</span></a>
-<a class="sourceLine" id="cb4-16" data-line-number="16">res</a>
-<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt;                          mean_cases lower_limit_95CI upper_limit_95CI</span></a>
-<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">#&gt; Italy                     0.2231010        0.1521863        0.3071570</span></a>
-<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="co">#&gt; Spain                     0.2252568        0.1538359        0.3119207</span></a>
-<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="co">#&gt; Portugal                  0.2314011        0.1566451        0.3372611</span></a>
-<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="co">#&gt; Germany                   0.1861744        0.1260291        0.2713440</span></a>
-<a class="sourceLine" id="cb4-22" data-line-number="22"><span class="co">#&gt; United Kingdom            0.1611980        0.1195965        0.2084865</span></a>
-<a class="sourceLine" id="cb4-23" data-line-number="23"><span class="co">#&gt; United States of America  0.9241416        0.6255894        1.3469106</span></a>
-<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="co">#&gt; Argentina                 1.1268870        0.7628361        1.6424064</span></a>
-<a class="sourceLine" id="cb4-25" data-line-number="25"><span class="co">#&gt; Chile                     0.2644830        0.1790425        0.3854833</span></a>
-<a class="sourceLine" id="cb4-26" data-line-number="26"><span class="co">#&gt; Uruguay                   0.2405802        0.1628641        0.3506508</span></a>
-<a class="sourceLine" id="cb4-27" data-line-number="27"><span class="co">#&gt; Paraguay                  0.1618686        0.1213829        0.1924263</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">incubation &lt;-<span class="st"> </span><span class="cf">function</span>(n) {
+  <span class="kw">rlnorm</span>(n, <span class="fl">1.46</span>, <span class="fl">0.35</span>)
+}
+
+infectious &lt;-<span class="st"> </span><span class="cf">function</span>(n) {
+  <span class="kw">rnorm</span>(n, <span class="fl">4.5</span>, <span class="fl">1.5</span><span class="op">/</span><span class="fl">1.96</span>)
+}
+<span class="kw">set.seed</span>(<span class="dv">2017</span><span class="op">-</span><span class="dv">07</span><span class="op">-</span><span class="dv">25</span>)
+res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/estimate_risk_spread.html">estimate_risk_spread</a></span>(ef, 
+                            <span class="dt">location_code          =</span> <span class="st">"Espirito Santo"</span>,
+                            <span class="dt">r_incubation           =</span> incubation,
+                            <span class="dt">r_infectious           =</span> infectious,
+                            <span class="dt">n_sim                  =</span> <span class="fl">1e5</span>)
+<span class="co">#&gt; Exportations done</span>
+<span class="co">#&gt; Importations done</span>
+res
+<span class="co">#&gt;                          mean_cases lower_limit_95CI upper_limit_95CI</span>
+<span class="co">#&gt; Italy                     0.2231010        0.1521863        0.3071570</span>
+<span class="co">#&gt; Spain                     0.2252568        0.1538359        0.3119207</span>
+<span class="co">#&gt; Portugal                  0.2314011        0.1566451        0.3372611</span>
+<span class="co">#&gt; Germany                   0.1861744        0.1260291        0.2713440</span>
+<span class="co">#&gt; United Kingdom            0.1611980        0.1195965        0.2084865</span>
+<span class="co">#&gt; United States of America  0.9241416        0.6255894        1.3469106</span>
+<span class="co">#&gt; Argentina                 1.1268870        0.7628361        1.6424064</span>
+<span class="co">#&gt; Chile                     0.2644830        0.1790425        0.3854833</span>
+<span class="co">#&gt; Uruguay                   0.2405802        0.1628641        0.3506508</span>
+<span class="co">#&gt; Paraguay                  0.1618686        0.1213829        0.1924263</span></code></pre></div>
 <p>We can use ggplot2 to visualize these data</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">library</span>(<span class="st">"ggplot2"</span>)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">res<span class="op">$</span>location &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">rownames</span>(res), <span class="kw">rownames</span>(res))</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(res, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> mean_cases, <span class="dt">y =</span> location)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_point">geom_point</a></span>(<span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_errorbarh">geom_errorbarh</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">xmin =</span> lower_limit_95CI, <span class="dt">xmax =</span> upper_limit_95CI), <span class="dt">height =</span> <span class="fl">.25</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">12</span>, <span class="dt">base_family =</span> <span class="st">"Helvetica"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(<span class="st">"Risk of yellow fever spread from Espirito Santo, Brazil"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Number of cases"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/lims">xlim</a></span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="ot">NA</span>))</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"ggplot2"</span>)
+res<span class="op">$</span>location &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">rownames</span>(res), <span class="kw">rownames</span>(res))
+<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(res, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> mean_cases, <span class="dt">y =</span> location)) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_point">geom_point</a></span>(<span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_errorbarh">geom_errorbarh</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">xmin =</span> lower_limit_95CI, <span class="dt">xmax =</span> upper_limit_95CI), <span class="dt">height =</span> .<span class="dv">25</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">12</span>, <span class="dt">base_family =</span> <span class="st">"Helvetica"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(<span class="st">"Risk of yellow fever spread from Espirito Santo, Brazil"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Number of cases"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/lims">xlim</a></span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="ot">NA</span>))</code></pre></div>
 <p><img src="epiflows-class_files/figure-html/plot-estimate-1.png" width="672"></p>
 <p>By default, <code><a href="../reference/estimate_risk_spread.html">estimate_risk_spread()</a></code> returns a summary of the simulations. To obtain the full simulated output, you can set <code>return_all_simulations = TRUE</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">2017-07-25</span>)</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/estimate_risk_spread.html">estimate_risk_spread</a></span>(ef, </a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">                            <span class="dt">location_code          =</span> <span class="st">"Espirito Santo"</span>,</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4">                            <span class="dt">r_incubation           =</span> incubation,</a>
-<a class="sourceLine" id="cb6-5" data-line-number="5">                            <span class="dt">r_infectious           =</span> infectious,</a>
-<a class="sourceLine" id="cb6-6" data-line-number="6">                            <span class="dt">n_sim                  =</span> <span class="fl">1e5</span>,</a>
-<a class="sourceLine" id="cb6-7" data-line-number="7">                            <span class="dt">return_all_simulations =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="co">#&gt; Exportations done</span></a>
-<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">#&gt; Importations done</span></a>
-<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="kw">head</span>(res)</a>
-<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="co">#&gt;          Italy     Spain  Portugal   Germany United Kingdom</span></a>
-<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">#&gt; [1,] 0.1881972 0.1902371 0.1937110 0.1558506      0.1454655</span></a>
-<a class="sourceLine" id="cb6-13" data-line-number="13"><span class="co">#&gt; [2,] 0.1643659 0.1661475 0.1691815 0.1361153      0.1291680</span></a>
-<a class="sourceLine" id="cb6-14" data-line-number="14"><span class="co">#&gt; [3,] 0.2300272 0.2325205 0.2367666 0.1904910      0.1643677</span></a>
-<a class="sourceLine" id="cb6-15" data-line-number="15"><span class="co">#&gt; [4,] 0.2479176 0.2506047 0.2551811 0.2053064      0.1724519</span></a>
-<a class="sourceLine" id="cb6-16" data-line-number="16"><span class="co">#&gt; [5,] 0.2580284 0.2600902 0.2655881 0.2136794      0.1770208</span></a>
-<a class="sourceLine" id="cb6-17" data-line-number="17"><span class="co">#&gt; [6,] 0.2005721 0.2027461 0.2064485 0.1660986      0.1510575</span></a>
-<a class="sourceLine" id="cb6-18" data-line-number="18"><span class="co">#&gt;      United States of America Argentina     Chile   Uruguay  Paraguay</span></a>
-<a class="sourceLine" id="cb6-19" data-line-number="19"><span class="co">#&gt; [1,]                0.7736187 0.9433412 0.2214082 0.2014016 0.1501050</span></a>
-<a class="sourceLine" id="cb6-20" data-line-number="20"><span class="co">#&gt; [2,]                0.6756559 0.8238866 0.1933715 0.1758983 0.1310973</span></a>
-<a class="sourceLine" id="cb6-21" data-line-number="21"><span class="co">#&gt; [3,]                0.9455686 1.1530148 0.2706200 0.2461665 0.1665537</span></a>
-<a class="sourceLine" id="cb6-22" data-line-number="22"><span class="co">#&gt; [4,]                1.0191100 1.2426903 0.2916674 0.2653121 0.1712946</span></a>
-<a class="sourceLine" id="cb6-23" data-line-number="23"><span class="co">#&gt; [5,]                1.0606723 1.2933709 0.3035624 0.2761323 0.1739739</span></a>
-<a class="sourceLine" id="cb6-24" data-line-number="24"><span class="co">#&gt; [6,]                0.8244880 1.0053706 0.2359669 0.2146448 0.1587483</span></a>
-<a class="sourceLine" id="cb6-25" data-line-number="25"><span class="kw">library</span>(<span class="st">"ggplot2"</span>)</a>
-<a class="sourceLine" id="cb6-26" data-line-number="26"><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(utils<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/utils/topics/stack">stack</a></span>(<span class="kw">as.data.frame</span>(res)), <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> ind, <span class="dt">y =</span> values)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-27" data-line-number="27"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_boxplot">geom_boxplot</a></span>(<span class="dt">outlier.alpha =</span> <span class="fl">0.2</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-28" data-line-number="28"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">12</span>, <span class="dt">base_family =</span> <span class="st">"Helvetica"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-29" data-line-number="29"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(<span class="st">"Risk of yellow fever spread from Espirito Santo, Brazil"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-30" data-line-number="30"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ylab</a></span>(<span class="st">"Number of cases"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-31" data-line-number="31"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Location"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-32" data-line-number="32"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/lims">ylim</a></span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="ot">NA</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-33" data-line-number="33"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/coord_flip">coord_flip</a></span>()</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2017</span><span class="op">-</span><span class="dv">07</span><span class="op">-</span><span class="dv">25</span>)
+res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/estimate_risk_spread.html">estimate_risk_spread</a></span>(ef, 
+                            <span class="dt">location_code          =</span> <span class="st">"Espirito Santo"</span>,
+                            <span class="dt">r_incubation           =</span> incubation,
+                            <span class="dt">r_infectious           =</span> infectious,
+                            <span class="dt">n_sim                  =</span> <span class="fl">1e5</span>,
+                            <span class="dt">return_all_simulations =</span> <span class="ot">TRUE</span>)
+<span class="co">#&gt; Exportations done</span>
+<span class="co">#&gt; Importations done</span>
+<span class="kw">head</span>(res)
+<span class="co">#&gt;          Italy     Spain  Portugal   Germany United Kingdom</span>
+<span class="co">#&gt; [1,] 0.1881972 0.1902371 0.1937110 0.1558506      0.1454655</span>
+<span class="co">#&gt; [2,] 0.1643659 0.1661475 0.1691815 0.1361153      0.1291680</span>
+<span class="co">#&gt; [3,] 0.2300272 0.2325205 0.2367666 0.1904910      0.1643677</span>
+<span class="co">#&gt; [4,] 0.2479176 0.2506047 0.2551811 0.2053064      0.1724519</span>
+<span class="co">#&gt; [5,] 0.2580284 0.2600902 0.2655881 0.2136794      0.1770208</span>
+<span class="co">#&gt; [6,] 0.2005721 0.2027461 0.2064485 0.1660986      0.1510575</span>
+<span class="co">#&gt;      United States of America Argentina     Chile   Uruguay  Paraguay</span>
+<span class="co">#&gt; [1,]                0.7736187 0.9433412 0.2214082 0.2014016 0.1501050</span>
+<span class="co">#&gt; [2,]                0.6756559 0.8238866 0.1933715 0.1758983 0.1310973</span>
+<span class="co">#&gt; [3,]                0.9455686 1.1530148 0.2706200 0.2461665 0.1665537</span>
+<span class="co">#&gt; [4,]                1.0191100 1.2426903 0.2916674 0.2653121 0.1712946</span>
+<span class="co">#&gt; [5,]                1.0606723 1.2933709 0.3035624 0.2761323 0.1739739</span>
+<span class="co">#&gt; [6,]                0.8244880 1.0053706 0.2359669 0.2146448 0.1587483</span>
+<span class="kw">library</span>(<span class="st">"ggplot2"</span>)
+<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(utils<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/utils/topics/stack">stack</a></span>(<span class="kw">as.data.frame</span>(res)), <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> ind, <span class="dt">y =</span> values)) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_boxplot">geom_boxplot</a></span>(<span class="dt">outlier.alpha =</span> <span class="fl">0.2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">12</span>, <span class="dt">base_family =</span> <span class="st">"Helvetica"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(<span class="st">"Risk of yellow fever spread from Espirito Santo, Brazil"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ylab</a></span>(<span class="st">"Number of cases"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Location"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/lims">ylim</a></span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="ot">NA</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/coord_flip">coord_flip</a></span>()</code></pre></div>
 <p><img src="epiflows-class_files/figure-html/plot-estimate-sim-1.png" width="672"></p>
 </div>
 <div id="using-set_vars-to-update-variable-keys-in-the-object" class="section level1">
@@ -308,146 +308,146 @@
 <h3 class="hasAnchor">
 <a href="#data-preparation" class="anchor"></a>data preparation</h3>
 <p>Such a case may arise if you have several different durations of stay based on the location of origin. For example, let’s imagine that this was the case for the Brazilian data. First, we’ll construct some dummy data.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">data</span>(<span class="st">"YF_Brazil"</span>)</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">set.seed</span>(<span class="dv">5000</span>)</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">short_stays &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">replicate</span>(<span class="dv">5</span>, <span class="kw">rpois</span>(<span class="dv">10</span>, <span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">round</span>(<span class="kw">runif</span>(<span class="dv">10</span>), <span class="dv">1</span>)))</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="kw">colnames</span>(short_stays) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"ES"</span>, <span class="st">"MG"</span>, <span class="st">"RdJ"</span>, <span class="st">"SP"</span>, <span class="st">"SB"</span>)</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="kw">rownames</span>(short_stays) &lt;-<span class="st"> </span><span class="kw">names</span>(YF_Brazil<span class="op">$</span>length_of_stay)</a>
-<a class="sourceLine" id="cb7-6" data-line-number="6">short_stays</a>
-<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="co">#&gt;                            ES  MG RdJ   SP  SB</span></a>
-<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="co">#&gt; Italy                     5.3 6.6 6.8  7.5 8.6</span></a>
-<a class="sourceLine" id="cb7-9" data-line-number="9"><span class="co">#&gt; Spain                     5.9 2.2 3.3  6.4 3.6</span></a>
-<a class="sourceLine" id="cb7-10" data-line-number="10"><span class="co">#&gt; Portugal                  3.9 4.1 3.3 10.5 9.2</span></a>
-<a class="sourceLine" id="cb7-11" data-line-number="11"><span class="co">#&gt; Germany                  10.6 6.5 8.1  7.8 6.8</span></a>
-<a class="sourceLine" id="cb7-12" data-line-number="12"><span class="co">#&gt; United Kingdom            1.1 4.1 4.1  3.1 7.1</span></a>
-<a class="sourceLine" id="cb7-13" data-line-number="13"><span class="co">#&gt; United States of America  6.6 5.3 3.0  3.4 3.5</span></a>
-<a class="sourceLine" id="cb7-14" data-line-number="14"><span class="co">#&gt; Argentina                 7.5 6.4 5.7  5.3 6.6</span></a>
-<a class="sourceLine" id="cb7-15" data-line-number="15"><span class="co">#&gt; Chile                     1.2 6.8 0.8  4.5 2.7</span></a>
-<a class="sourceLine" id="cb7-16" data-line-number="16"><span class="co">#&gt; Uruguay                   4.9 8.9 5.6  3.5 7.8</span></a>
-<a class="sourceLine" id="cb7-17" data-line-number="17"><span class="co">#&gt; Paraguay                  5.2 3.4 5.0  4.9 4.3</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">"YF_Brazil"</span>)
+<span class="kw">set.seed</span>(<span class="dv">5000</span>)
+short_stays &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">replicate</span>(<span class="dv">5</span>, <span class="kw">rpois</span>(<span class="dv">10</span>, <span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">round</span>(<span class="kw">runif</span>(<span class="dv">10</span>), <span class="dv">1</span>)))
+<span class="kw">colnames</span>(short_stays) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"ES"</span>, <span class="st">"MG"</span>, <span class="st">"RdJ"</span>, <span class="st">"SP"</span>, <span class="st">"SB"</span>)
+<span class="kw">rownames</span>(short_stays) &lt;-<span class="st"> </span><span class="kw">names</span>(YF_Brazil<span class="op">$</span>length_of_stay)
+short_stays
+<span class="co">#&gt;                            ES  MG RdJ   SP  SB</span>
+<span class="co">#&gt; Italy                     5.3 6.6 6.8  7.5 8.6</span>
+<span class="co">#&gt; Spain                     5.9 2.2 3.3  6.4 3.6</span>
+<span class="co">#&gt; Portugal                  3.9 4.1 3.3 10.5 9.2</span>
+<span class="co">#&gt; Germany                  10.6 6.5 8.1  7.8 6.8</span>
+<span class="co">#&gt; United Kingdom            1.1 4.1 4.1  3.1 7.1</span>
+<span class="co">#&gt; United States of America  6.6 5.3 3.0  3.4 3.5</span>
+<span class="co">#&gt; Argentina                 7.5 6.4 5.7  5.3 6.6</span>
+<span class="co">#&gt; Chile                     1.2 6.8 0.8  4.5 2.7</span>
+<span class="co">#&gt; Uruguay                   4.9 8.9 5.6  3.5 7.8</span>
+<span class="co">#&gt; Paraguay                  5.2 3.4 5.0  4.9 4.3</span></code></pre></div>
 <p>Now, we can merge it with our original locations metadata using the <code>location_code</code> column to join the two together correctly:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">short_stays<span class="op">$</span>location_code &lt;-<span class="st"> </span><span class="kw">rownames</span>(short_stays)</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">(locations &lt;-<span class="st"> </span><span class="kw">merge</span>(YF_locations, short_stays, <span class="dt">by =</span> <span class="st">"location_code"</span>, <span class="dt">all =</span> <span class="ot">TRUE</span>, <span class="dt">sort =</span> <span class="ot">FALSE</span>))</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co">#&gt;               location_code location_population num_cases_time_window</span></a>
-<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="co">#&gt; 1                 Argentina                  NA                    NA</span></a>
-<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="co">#&gt; 2                     Chile                  NA                    NA</span></a>
-<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="co">#&gt; 3                   Germany                  NA                    NA</span></a>
-<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="co">#&gt; 4                     Italy                  NA                    NA</span></a>
-<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">#&gt; 5                  Paraguay                  NA                    NA</span></a>
-<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="co">#&gt; 6                  Portugal                  NA                    NA</span></a>
-<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">#&gt; 7                     Spain                  NA                    NA</span></a>
-<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">#&gt; 8            United Kingdom                  NA                    NA</span></a>
-<a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co">#&gt; 9  United States of America                  NA                    NA</span></a>
-<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="co">#&gt; 10                  Uruguay                  NA                    NA</span></a>
-<a class="sourceLine" id="cb8-14" data-line-number="14"><span class="co">#&gt; 11           Espirito Santo             3973697                  2600</span></a>
-<a class="sourceLine" id="cb8-15" data-line-number="15"><span class="co">#&gt; 12             Minas Gerais            20997560                  4870</span></a>
-<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="co">#&gt; 13           Rio de Janeiro            16635996                   170</span></a>
-<a class="sourceLine" id="cb8-17" data-line-number="17"><span class="co">#&gt; 14                Sao Paulo            44749699                   200</span></a>
-<a class="sourceLine" id="cb8-18" data-line-number="18"><span class="co">#&gt; 15         Southeast Brazil            86356952                  7840</span></a>
-<a class="sourceLine" id="cb8-19" data-line-number="19"><span class="co">#&gt;    first_date_cases last_date_cases length_of_stay   ES  MG RdJ   SP  SB</span></a>
-<a class="sourceLine" id="cb8-20" data-line-number="20"><span class="co">#&gt; 1              &lt;NA&gt;            &lt;NA&gt;           10.9  7.5 6.4 5.7  5.3 6.6</span></a>
-<a class="sourceLine" id="cb8-21" data-line-number="21"><span class="co">#&gt; 2              &lt;NA&gt;            &lt;NA&gt;           10.3  1.2 6.8 0.8  4.5 2.7</span></a>
-<a class="sourceLine" id="cb8-22" data-line-number="22"><span class="co">#&gt; 3              &lt;NA&gt;            &lt;NA&gt;           22.3 10.6 6.5 8.1  7.8 6.8</span></a>
-<a class="sourceLine" id="cb8-23" data-line-number="23"><span class="co">#&gt; 4              &lt;NA&gt;            &lt;NA&gt;           30.1  5.3 6.6 6.8  7.5 8.6</span></a>
-<a class="sourceLine" id="cb8-24" data-line-number="24"><span class="co">#&gt; 5              &lt;NA&gt;            &lt;NA&gt;            7.3  5.2 3.4 5.0  4.9 4.3</span></a>
-<a class="sourceLine" id="cb8-25" data-line-number="25"><span class="co">#&gt; 6              &lt;NA&gt;            &lt;NA&gt;           27.2  3.9 4.1 3.3 10.5 9.2</span></a>
-<a class="sourceLine" id="cb8-26" data-line-number="26"><span class="co">#&gt; 7              &lt;NA&gt;            &lt;NA&gt;           27.2  5.9 2.2 3.3  6.4 3.6</span></a>
-<a class="sourceLine" id="cb8-27" data-line-number="27"><span class="co">#&gt; 8              &lt;NA&gt;            &lt;NA&gt;           19.5  1.1 4.1 4.1  3.1 7.1</span></a>
-<a class="sourceLine" id="cb8-28" data-line-number="28"><span class="co">#&gt; 9              &lt;NA&gt;            &lt;NA&gt;           18.5  6.6 5.3 3.0  3.4 3.5</span></a>
-<a class="sourceLine" id="cb8-29" data-line-number="29"><span class="co">#&gt; 10             &lt;NA&gt;            &lt;NA&gt;            8.0  4.9 8.9 5.6  3.5 7.8</span></a>
-<a class="sourceLine" id="cb8-30" data-line-number="30"><span class="co">#&gt; 11       2017-01-04      2017-04-30             NA   NA  NA  NA   NA  NA</span></a>
-<a class="sourceLine" id="cb8-31" data-line-number="31"><span class="co">#&gt; 12       2016-12-19      2017-04-20             NA   NA  NA  NA   NA  NA</span></a>
-<a class="sourceLine" id="cb8-32" data-line-number="32"><span class="co">#&gt; 13       2017-02-19      2017-05-10             NA   NA  NA  NA   NA  NA</span></a>
-<a class="sourceLine" id="cb8-33" data-line-number="33"><span class="co">#&gt; 14       2016-12-17      2017-04-20             NA   NA  NA  NA   NA  NA</span></a>
-<a class="sourceLine" id="cb8-34" data-line-number="34"><span class="co">#&gt; 15       2016-12-17      2017-05-10             NA   NA  NA  NA   NA  NA</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">short_stays<span class="op">$</span>location_code &lt;-<span class="st"> </span><span class="kw">rownames</span>(short_stays)
+(locations &lt;-<span class="st"> </span><span class="kw">merge</span>(YF_locations, short_stays, <span class="dt">by =</span> <span class="st">"location_code"</span>, <span class="dt">all =</span> <span class="ot">TRUE</span>, <span class="dt">sort =</span> <span class="ot">FALSE</span>))
+<span class="co">#&gt;               location_code location_population num_cases_time_window</span>
+<span class="co">#&gt; 1                 Argentina                  NA                    NA</span>
+<span class="co">#&gt; 2                     Chile                  NA                    NA</span>
+<span class="co">#&gt; 3                   Germany                  NA                    NA</span>
+<span class="co">#&gt; 4                     Italy                  NA                    NA</span>
+<span class="co">#&gt; 5                  Paraguay                  NA                    NA</span>
+<span class="co">#&gt; 6                  Portugal                  NA                    NA</span>
+<span class="co">#&gt; 7                     Spain                  NA                    NA</span>
+<span class="co">#&gt; 8            United Kingdom                  NA                    NA</span>
+<span class="co">#&gt; 9  United States of America                  NA                    NA</span>
+<span class="co">#&gt; 10                  Uruguay                  NA                    NA</span>
+<span class="co">#&gt; 11           Espirito Santo             3973697                  2600</span>
+<span class="co">#&gt; 12             Minas Gerais            20997560                  4870</span>
+<span class="co">#&gt; 13           Rio de Janeiro            16635996                   170</span>
+<span class="co">#&gt; 14                Sao Paulo            44749699                   200</span>
+<span class="co">#&gt; 15         Southeast Brazil            86356952                  7840</span>
+<span class="co">#&gt;    first_date_cases last_date_cases length_of_stay   ES  MG RdJ   SP  SB</span>
+<span class="co">#&gt; 1              &lt;NA&gt;            &lt;NA&gt;           10.9  7.5 6.4 5.7  5.3 6.6</span>
+<span class="co">#&gt; 2              &lt;NA&gt;            &lt;NA&gt;           10.3  1.2 6.8 0.8  4.5 2.7</span>
+<span class="co">#&gt; 3              &lt;NA&gt;            &lt;NA&gt;           22.3 10.6 6.5 8.1  7.8 6.8</span>
+<span class="co">#&gt; 4              &lt;NA&gt;            &lt;NA&gt;           30.1  5.3 6.6 6.8  7.5 8.6</span>
+<span class="co">#&gt; 5              &lt;NA&gt;            &lt;NA&gt;            7.3  5.2 3.4 5.0  4.9 4.3</span>
+<span class="co">#&gt; 6              &lt;NA&gt;            &lt;NA&gt;           27.2  3.9 4.1 3.3 10.5 9.2</span>
+<span class="co">#&gt; 7              &lt;NA&gt;            &lt;NA&gt;           27.2  5.9 2.2 3.3  6.4 3.6</span>
+<span class="co">#&gt; 8              &lt;NA&gt;            &lt;NA&gt;           19.5  1.1 4.1 4.1  3.1 7.1</span>
+<span class="co">#&gt; 9              &lt;NA&gt;            &lt;NA&gt;           18.5  6.6 5.3 3.0  3.4 3.5</span>
+<span class="co">#&gt; 10             &lt;NA&gt;            &lt;NA&gt;            8.0  4.9 8.9 5.6  3.5 7.8</span>
+<span class="co">#&gt; 11       2017-01-04      2017-04-30             NA   NA  NA  NA   NA  NA</span>
+<span class="co">#&gt; 12       2016-12-19      2017-04-20             NA   NA  NA  NA   NA  NA</span>
+<span class="co">#&gt; 13       2017-02-19      2017-05-10             NA   NA  NA  NA   NA  NA</span>
+<span class="co">#&gt; 14       2016-12-17      2017-04-20             NA   NA  NA  NA   NA  NA</span>
+<span class="co">#&gt; 15       2016-12-17      2017-05-10             NA   NA  NA  NA   NA  NA</span></code></pre></div>
 <p>Now we can create the epiflows object like we did before, but using our added data:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">ef &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make_epiflows.html">make_epiflows</a></span>(<span class="dt">flows         =</span> YF_flows, </a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">                    <span class="dt">locations     =</span> locations, </a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">                    <span class="dt">pop_size      =</span> <span class="st">"location_population"</span>,</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4">                    <span class="dt">duration_stay =</span> <span class="st">"length_of_stay"</span>,</a>
-<a class="sourceLine" id="cb9-5" data-line-number="5">                    <span class="dt">num_cases     =</span> <span class="st">"num_cases_time_window"</span>,</a>
-<a class="sourceLine" id="cb9-6" data-line-number="6">                    <span class="dt">first_date    =</span> <span class="st">"first_date_cases"</span>,</a>
-<a class="sourceLine" id="cb9-7" data-line-number="7">                    <span class="dt">last_date     =</span> <span class="st">"last_date_cases"</span></a>
-<a class="sourceLine" id="cb9-8" data-line-number="8">                   )</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ef &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make_epiflows.html">make_epiflows</a></span>(<span class="dt">flows         =</span> YF_flows, 
+                    <span class="dt">locations     =</span> locations, 
+                    <span class="dt">pop_size      =</span> <span class="st">"location_population"</span>,
+                    <span class="dt">duration_stay =</span> <span class="st">"length_of_stay"</span>,
+                    <span class="dt">num_cases     =</span> <span class="st">"num_cases_time_window"</span>,
+                    <span class="dt">first_date    =</span> <span class="st">"first_date_cases"</span>,
+                    <span class="dt">last_date     =</span> <span class="st">"last_date_cases"</span>
+                   )</code></pre></div>
 </div>
 <div id="using-set_vars" class="section level3">
 <h3 class="hasAnchor">
 <a href="#using-set_vars" class="anchor"></a>Using <code><a href="../reference/get_vars.html">set_vars()</a></code>
 </h3>
 <p>We can run the model the same, but now we have the option to switch out which columns from our locations data frame we want to use:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="../reference/get_vars.html">get_vars</a></span>(ef)<span class="op">$</span>duration_stay</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co">#&gt; [1] "length_of_stay"</span></a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="kw"><a href="../reference/get_vars.html">set_vars</a></span>(ef, <span class="st">"duration_stay"</span>) &lt;-<span class="st"> "ES"</span></a>
-<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="kw"><a href="../reference/get_vars.html">get_vars</a></span>(ef)<span class="op">$</span>duration_stay</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co">#&gt; [1] "ES"</span></a>
-<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="kw">set.seed</span>(<span class="dv">2017-07-25</span>)</a>
-<a class="sourceLine" id="cb10-7" data-line-number="7">incubation &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</a>
-<a class="sourceLine" id="cb10-8" data-line-number="8">  <span class="kw">rlnorm</span>(n, <span class="fl">1.46</span>, <span class="fl">0.35</span>)</a>
-<a class="sourceLine" id="cb10-9" data-line-number="9">}</a>
-<a class="sourceLine" id="cb10-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb10-11" data-line-number="11">infectious &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</a>
-<a class="sourceLine" id="cb10-12" data-line-number="12">  <span class="kw">rnorm</span>(n, <span class="fl">4.5</span>, <span class="fl">1.5</span><span class="op">/</span><span class="fl">1.96</span>)</a>
-<a class="sourceLine" id="cb10-13" data-line-number="13">}</a>
-<a class="sourceLine" id="cb10-14" data-line-number="14"><span class="kw">set.seed</span>(<span class="dv">2017-07-25</span>)</a>
-<a class="sourceLine" id="cb10-15" data-line-number="15">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/estimate_risk_spread.html">estimate_risk_spread</a></span>(ef, </a>
-<a class="sourceLine" id="cb10-16" data-line-number="16">                            <span class="dt">location_code          =</span> <span class="st">"Espirito Santo"</span>,</a>
-<a class="sourceLine" id="cb10-17" data-line-number="17">                            <span class="dt">r_incubation           =</span> incubation,</a>
-<a class="sourceLine" id="cb10-18" data-line-number="18">                            <span class="dt">r_infectious           =</span> infectious,</a>
-<a class="sourceLine" id="cb10-19" data-line-number="19">                            <span class="dt">n_sim                  =</span> <span class="fl">1e5</span>)</a>
-<a class="sourceLine" id="cb10-20" data-line-number="20"><span class="co">#&gt; Exportations done</span></a>
-<a class="sourceLine" id="cb10-21" data-line-number="21"><span class="co">#&gt; Importations done</span></a>
-<a class="sourceLine" id="cb10-22" data-line-number="22">res<span class="op">$</span>location &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">rownames</span>(res), <span class="kw">rownames</span>(res))</a>
-<a class="sourceLine" id="cb10-23" data-line-number="23"><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(res, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> mean_cases, <span class="dt">y =</span> location)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb10-24" data-line-number="24"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_point">geom_point</a></span>(<span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb10-25" data-line-number="25"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_errorbarh">geom_errorbarh</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">xmin =</span> lower_limit_95CI, <span class="dt">xmax =</span> upper_limit_95CI), <span class="dt">height =</span> <span class="fl">.25</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb10-26" data-line-number="26"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">12</span>, <span class="dt">base_family =</span> <span class="st">"Helvetica"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb10-27" data-line-number="27"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(<span class="st">"Risk of yellow fever spread from Espirito Santo, Brazil"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb10-28" data-line-number="28"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Number of cases"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb10-29" data-line-number="29"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/lims">xlim</a></span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="ot">NA</span>))</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/get_vars.html">get_vars</a></span>(ef)<span class="op">$</span>duration_stay
+<span class="co">#&gt; [1] "length_of_stay"</span>
+<span class="kw"><a href="../reference/get_vars.html">set_vars</a></span>(ef, <span class="st">"duration_stay"</span>) &lt;-<span class="st"> "ES"</span>
+<span class="kw"><a href="../reference/get_vars.html">get_vars</a></span>(ef)<span class="op">$</span>duration_stay
+<span class="co">#&gt; [1] "ES"</span>
+<span class="kw">set.seed</span>(<span class="dv">2017</span><span class="op">-</span><span class="dv">07</span><span class="op">-</span><span class="dv">25</span>)
+incubation &lt;-<span class="st"> </span><span class="cf">function</span>(n) {
+  <span class="kw">rlnorm</span>(n, <span class="fl">1.46</span>, <span class="fl">0.35</span>)
+}
+
+infectious &lt;-<span class="st"> </span><span class="cf">function</span>(n) {
+  <span class="kw">rnorm</span>(n, <span class="fl">4.5</span>, <span class="fl">1.5</span><span class="op">/</span><span class="fl">1.96</span>)
+}
+<span class="kw">set.seed</span>(<span class="dv">2017</span><span class="op">-</span><span class="dv">07</span><span class="op">-</span><span class="dv">25</span>)
+res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/estimate_risk_spread.html">estimate_risk_spread</a></span>(ef, 
+                            <span class="dt">location_code          =</span> <span class="st">"Espirito Santo"</span>,
+                            <span class="dt">r_incubation           =</span> incubation,
+                            <span class="dt">r_infectious           =</span> infectious,
+                            <span class="dt">n_sim                  =</span> <span class="fl">1e5</span>)
+<span class="co">#&gt; Exportations done</span>
+<span class="co">#&gt; Importations done</span>
+res<span class="op">$</span>location &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">rownames</span>(res), <span class="kw">rownames</span>(res))
+<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(res, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> mean_cases, <span class="dt">y =</span> location)) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_point">geom_point</a></span>(<span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_errorbarh">geom_errorbarh</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">xmin =</span> lower_limit_95CI, <span class="dt">xmax =</span> upper_limit_95CI), <span class="dt">height =</span> .<span class="dv">25</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">12</span>, <span class="dt">base_family =</span> <span class="st">"Helvetica"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(<span class="st">"Risk of yellow fever spread from Espirito Santo, Brazil"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Number of cases"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/lims">xlim</a></span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="ot">NA</span>))</code></pre></div>
 <p><img src="epiflows-class_files/figure-html/plot-estimate-dummy-1.png" width="672"></p>
 <p>Changing it back is simple:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="kw"><a href="../reference/get_vars.html">set_vars</a></span>(ef, <span class="st">"duration_stay"</span>) &lt;-<span class="st"> "length_of_stay"</span></a>
-<a class="sourceLine" id="cb11-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="kw">set.seed</span>(<span class="dv">2017-07-25</span>)</a>
-<a class="sourceLine" id="cb11-5" data-line-number="5">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/estimate_risk_spread.html">estimate_risk_spread</a></span>(ef, </a>
-<a class="sourceLine" id="cb11-6" data-line-number="6">                            <span class="dt">location_code          =</span> <span class="st">"Espirito Santo"</span>,</a>
-<a class="sourceLine" id="cb11-7" data-line-number="7">                            <span class="dt">r_incubation           =</span> incubation,</a>
-<a class="sourceLine" id="cb11-8" data-line-number="8">                            <span class="dt">r_infectious           =</span> infectious,</a>
-<a class="sourceLine" id="cb11-9" data-line-number="9">                            <span class="dt">n_sim                  =</span> <span class="fl">1e5</span>)</a>
-<a class="sourceLine" id="cb11-10" data-line-number="10"><span class="co">#&gt; Exportations done</span></a>
-<a class="sourceLine" id="cb11-11" data-line-number="11"><span class="co">#&gt; Importations done</span></a>
-<a class="sourceLine" id="cb11-12" data-line-number="12">res<span class="op">$</span>location &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">rownames</span>(res), <span class="kw">rownames</span>(res))</a>
-<a class="sourceLine" id="cb11-13" data-line-number="13"><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(res, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> mean_cases, <span class="dt">y =</span> location)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb11-14" data-line-number="14"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_point">geom_point</a></span>(<span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb11-15" data-line-number="15"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_errorbarh">geom_errorbarh</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">xmin =</span> lower_limit_95CI, <span class="dt">xmax =</span> upper_limit_95CI), <span class="dt">height =</span> <span class="fl">.25</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb11-16" data-line-number="16"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">12</span>, <span class="dt">base_family =</span> <span class="st">"Helvetica"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb11-17" data-line-number="17"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(<span class="st">"Risk of yellow fever spread from Espirito Santo, Brazil"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb11-18" data-line-number="18"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Number of cases"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb11-19" data-line-number="19"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/lims">xlim</a></span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="ot">NA</span>))</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw"><a href="../reference/get_vars.html">set_vars</a></span>(ef, <span class="st">"duration_stay"</span>) &lt;-<span class="st"> "length_of_stay"</span>
+
+<span class="kw">set.seed</span>(<span class="dv">2017</span><span class="op">-</span><span class="dv">07</span><span class="op">-</span><span class="dv">25</span>)
+res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/estimate_risk_spread.html">estimate_risk_spread</a></span>(ef, 
+                            <span class="dt">location_code          =</span> <span class="st">"Espirito Santo"</span>,
+                            <span class="dt">r_incubation           =</span> incubation,
+                            <span class="dt">r_infectious           =</span> infectious,
+                            <span class="dt">n_sim                  =</span> <span class="fl">1e5</span>)
+<span class="co">#&gt; Exportations done</span>
+<span class="co">#&gt; Importations done</span>
+res<span class="op">$</span>location &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">rownames</span>(res), <span class="kw">rownames</span>(res))
+<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(res, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> mean_cases, <span class="dt">y =</span> location)) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_point">geom_point</a></span>(<span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_errorbarh">geom_errorbarh</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">xmin =</span> lower_limit_95CI, <span class="dt">xmax =</span> upper_limit_95CI), <span class="dt">height =</span> .<span class="dv">25</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">12</span>, <span class="dt">base_family =</span> <span class="st">"Helvetica"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(<span class="st">"Risk of yellow fever spread from Espirito Santo, Brazil"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Number of cases"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/lims">xlim</a></span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="ot">NA</span>))</code></pre></div>
 <p><img src="epiflows-class_files/figure-html/plot-estimate-dummy2-1.png" width="672"></p>
 </div>
 <div id="using-a-custom-argument" class="section level3">
 <h3 class="hasAnchor">
 <a href="#using-a-custom-argument" class="anchor"></a>Using a custom argument</h3>
 <p>Or, you can specify it by adding it as an argument in the function</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">2017-07-25</span>)</a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/estimate_risk_spread.html">estimate_risk_spread</a></span>(ef, </a>
-<a class="sourceLine" id="cb12-3" data-line-number="3">                            <span class="dt">location_code          =</span> <span class="st">"Espirito Santo"</span>,</a>
-<a class="sourceLine" id="cb12-4" data-line-number="4">                            <span class="dt">r_incubation           =</span> incubation,</a>
-<a class="sourceLine" id="cb12-5" data-line-number="5">                            <span class="dt">r_infectious           =</span> infectious,</a>
-<a class="sourceLine" id="cb12-6" data-line-number="6">                            <span class="dt">n_sim                  =</span> <span class="fl">1e5</span>,</a>
-<a class="sourceLine" id="cb12-7" data-line-number="7">                            <span class="dt">avg_length_stay_days   =</span> <span class="kw">rep</span>(<span class="dv">2</span>, <span class="dv">10</span>))</a>
-<a class="sourceLine" id="cb12-8" data-line-number="8"><span class="co">#&gt; Exportations done</span></a>
-<a class="sourceLine" id="cb12-9" data-line-number="9"><span class="co">#&gt; Importations done</span></a>
-<a class="sourceLine" id="cb12-10" data-line-number="10">res<span class="op">$</span>location &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">rownames</span>(res), <span class="kw">rownames</span>(res))</a>
-<a class="sourceLine" id="cb12-11" data-line-number="11"><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(res, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> mean_cases, <span class="dt">y =</span> location)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-12" data-line-number="12"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_point">geom_point</a></span>(<span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-13" data-line-number="13"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_errorbarh">geom_errorbarh</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">xmin =</span> lower_limit_95CI, <span class="dt">xmax =</span> upper_limit_95CI), <span class="dt">height =</span> <span class="fl">.25</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-14" data-line-number="14"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">12</span>, <span class="dt">base_family =</span> <span class="st">"Helvetica"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-15" data-line-number="15"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(<span class="st">"Risk of yellow fever spread from Espirito Santo, Brazil"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-16" data-line-number="16"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Number of cases"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-17" data-line-number="17"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/lims">xlim</a></span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="ot">NA</span>))</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2017</span><span class="op">-</span><span class="dv">07</span><span class="op">-</span><span class="dv">25</span>)
+res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/estimate_risk_spread.html">estimate_risk_spread</a></span>(ef, 
+                            <span class="dt">location_code          =</span> <span class="st">"Espirito Santo"</span>,
+                            <span class="dt">r_incubation           =</span> incubation,
+                            <span class="dt">r_infectious           =</span> infectious,
+                            <span class="dt">n_sim                  =</span> <span class="fl">1e5</span>,
+                            <span class="dt">avg_length_stay_days   =</span> <span class="kw">rep</span>(<span class="dv">2</span>, <span class="dv">10</span>))
+<span class="co">#&gt; Exportations done</span>
+<span class="co">#&gt; Importations done</span>
+res<span class="op">$</span>location &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">rownames</span>(res), <span class="kw">rownames</span>(res))
+<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(res, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> mean_cases, <span class="dt">y =</span> location)) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_point">geom_point</a></span>(<span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_errorbarh">geom_errorbarh</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">xmin =</span> lower_limit_95CI, <span class="dt">xmax =</span> upper_limit_95CI), <span class="dt">height =</span> .<span class="dv">25</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">12</span>, <span class="dt">base_family =</span> <span class="st">"Helvetica"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(<span class="st">"Risk of yellow fever spread from Espirito Santo, Brazil"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Number of cases"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/lims">xlim</a></span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="ot">NA</span>))</code></pre></div>
 <p><img src="epiflows-class_files/figure-html/plot-estimate-dummy3-1.png" width="672"></p>
 </div>
 </div>

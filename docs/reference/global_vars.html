@@ -238,7 +238,8 @@ variables listed above. Defaults to <code>FALSE</code></p></td>
 #&gt; 10 Southeast Brazil Spain 88231.
 #&gt; # ... with 90 more rows
 #&gt; </div><div class='input'>
-</div><div class='input'><span class='co'># You will receive an error if a variable is specified incorrectly</span>
+</div><span class='co'># NOT RUN {</span>
+<span class='co'># You will receive an error if a variable is specified incorrectly</span>
 <span class='no'>YF_locations</span>$<span class='no'>random_variable</span> <span class='kw'>&lt;-</span> <span class='fu'>runif</span>(<span class='fu'>nrow</span>(<span class='no'>YF_locations</span>))
 <span class='fu'>try</span>({
   <span class='no'>ef</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='make_epiflows.html'>make_epiflows</a></span>(<span class='kw'>flows</span>         <span class='kw'>=</span> <span class='no'>YF_flows</span>,
@@ -250,7 +251,8 @@ variables listed above. Defaults to <code>FALSE</code></p></td>
                       <span class='kw'>last_date</span>     <span class='kw'>=</span> <span class='st'>"last_date_cases"</span>,
                       <span class='kw'>random</span>        <span class='kw'>=</span> <span class='st'>"random_variable"</span>
                      )
-   })</div><div class='input'>
+   })
+<span class='co'># }</span><div class='input'>
 <span class='co'># If you create a new method and need other varaibles, or just want a shorter</span>
 <span class='co'># representation, they can be added to your options:</span>
 
