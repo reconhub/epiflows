@@ -61,5 +61,5 @@ get_coordinates(ef, location = "Espirito Santo") # coordinates for MEX
 \code{\link[=global_vars]{global_vars()}}
 }
 \author{
-Pawel Piatkowski, Zhian Kamvar
+Pawel Piatkowski, Salla Toikkanen, Zhian Kamvar
 }
