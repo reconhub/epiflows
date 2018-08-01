@@ -117,6 +117,7 @@ make_epiflows.data.frame <- function(flows, locations = NULL,
                                      from = 1L, to = 2L, n = 3L,
                                      id = 1L, ...){
   if (is.null(locations)) {
+    message("Locations data frame not provided. Creating one from the flow data.")
     ids       <- as.character(unique(unlist(flows[c(from, to)])))
     locations <- data.frame(id = ids, stringsAsFactors = FALSE)
   }
@@ -173,11 +174,28 @@ make_epiflows.data.frame <- function(flows, locations = NULL,
 #' @export
 #'
 #' @examples
-#' data(Mex_travel_2009)
-#' flows   <- Mex_travel_2009[[1]]
-#' outflow <- setNames(flows[["MEX"]], rownames(flows))
-#' inflow  <- unlist(flows["MEX", , drop = TRUE])
-#' ef <- make_epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
+#' data(YF_Brazil)
+#' (inflows   <- YF_Brazil$T_O["Espirito Santo", , drop = TRUE])
+#' (outflows  <- YF_Brazil$T_D["Espirito Santo", , drop = TRUE])
+#' (locations <- subset(YF_Brazil$states, location_code == "Espirito Santo", drop = FALSE))
+#' los <- data.frame(location_code    = names(YF_Brazil$length_of_stay), 
+#'                   length_of_stay   = YF_Brazil$length_of_stay,
+#'                   stringsAsFactors = FALSE
+#'                  )
+#' locations <- merge(x   = locations, 
+#'                    y   = los, 
+#'                    by  = "location_code", 
+#'                    all = TRUE)
+#' ef <- make_epiflows(inflow = inflows, 
+#'                     outflow = outflows, 
+#'                     focus = "Espirito Santo", 
+#'                     locations = locations,
+#'                     pop_size = "location_population",
+#'                     duration_stay = "length_of_stay",
+#'                     num_cases = "num_cases_time_window",
+#'                     first_date = "first_date_cases",
+#'                     last_date = "last_date_cases"
+#'                    )
 #' ef
 make_epiflows.integer <- function(inflow, outflow, focus, locations, id = 1L, ...) {
   if (is.null(names(inflow)) || is.null(names(outflow))) {
@@ -189,14 +207,6 @@ make_epiflows.integer <- function(inflow, outflow, focus, locations, id = 1L, ..
   if (length(focus) != 1L || !is.character(focus)) {
     stop("The argument `focus` must be a single character string.")
   }
-  # Check to make sure focus is in the names of inflow and to
-  if (!focus %in% names(inflow) && !focus %in% names(outflow)) {
-    stop("`focus` must be present in both the `inflow` and `to` vectors.")
-  }
-  # TODO: Validate the locations list.
-  #
-  # PUT SOME CODE IN ME! (╯°□°）╯︵ ┻━┻
-  #
   # Create a data frame with inflow and outflow, repeating the focus as necessary
   flows <- data.frame(inflow  = c(rep(focus, length(outflow)), names(inflow)),
                       outflow = c(names(outflow), rep(focus, length(inflow))),

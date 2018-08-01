@@ -124,11 +124,28 @@ ef
 get_pop_size(ef)
 get_vars(ef, "duration_stay")
 get_vars(ef, "num_cases")
-data(Mex_travel_2009)
-flows   <- Mex_travel_2009[[1]]
-outflow <- setNames(flows[["MEX"]], rownames(flows))
-inflow  <- unlist(flows["MEX", , drop = TRUE])
-ef <- make_epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]])
+data(YF_Brazil)
+(inflows   <- YF_Brazil$T_O["Espirito Santo", , drop = TRUE])
+(outflows  <- YF_Brazil$T_D["Espirito Santo", , drop = TRUE])
+(locations <- subset(YF_Brazil$states, location_code == "Espirito Santo", drop = FALSE))
+los <- data.frame(location_code    = names(YF_Brazil$length_of_stay), 
+                  length_of_stay   = YF_Brazil$length_of_stay,
+                  stringsAsFactors = FALSE
+                 )
+locations <- merge(x   = locations, 
+                   y   = los, 
+                   by  = "location_code", 
+                   all = TRUE)
+ef <- make_epiflows(inflow = inflows, 
+                    outflow = outflows, 
+                    focus = "Espirito Santo", 
+                    locations = locations,
+                    pop_size = "location_population",
+                    duration_stay = "length_of_stay",
+                    num_cases = "num_cases_time_window",
+                    first_date = "first_date_cases",
+                    last_date = "last_date_cases"
+                   )
 ef
 }
 \seealso{

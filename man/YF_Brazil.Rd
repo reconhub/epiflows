@@ -68,10 +68,14 @@ flows <- rbind(from, to)
 colnames(flows) <- c("from", "to", "n")
 
 ## Create the locations data frame
-locations <- YF_Brazil$states
-los       <- data.frame(location_code = names(YF_Brazil$length_of_stay), 
-                        length_of_stay = YF_Brazil$length_of_stay)
-locations <- merge(locations, los, by = "location_code", all = TRUE)
+los <- data.frame(location_code    = names(YF_Brazil$length_of_stay), 
+                  length_of_stay   = YF_Brazil$length_of_stay,
+                  stringsAsFactors = FALSE
+                 )
+locations <- merge(x   = YF_Brazil$states, 
+                   y   = los, 
+                   by  = "location_code", 
+                   all = TRUE)
 
 ## Use both to create the epiflows object.
 ef <- make_epiflows(flows, 
