@@ -482,50 +482,92 @@ metadata, <code><a href='get_locations.html'>get_locations()</a></code> to acces
 #&gt; 12                    Spain                    NA
 #&gt; 13           United Kingdom                    NA
 #&gt; 14 United States of America                    NA
-#&gt; 15                  Uruguay                    NA</div><div class='input'><span class='fu'>data</span>(<span class='no'>Mex_travel_2009</span>)
-<span class='no'>flows</span>   <span class='kw'>&lt;-</span> <span class='no'>Mex_travel_2009</span><span class='kw'>[[</span><span class='fl'>1</span>]]
-<span class='no'>outflow</span> <span class='kw'>&lt;-</span> <span class='fu'>setNames</span>(<span class='no'>flows</span><span class='kw'>[[</span><span class='st'>"MEX"</span>]], <span class='fu'>rownames</span>(<span class='no'>flows</span>))
-<span class='no'>inflow</span>  <span class='kw'>&lt;-</span> <span class='fu'>unlist</span>(<span class='no'>flows</span>[<span class='st'>"MEX"</span>, , <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>])
-<span class='no'>ef</span> <span class='kw'>&lt;-</span> <span class='fu'>make_epiflows</span>(<span class='no'>inflow</span>, <span class='no'>outflow</span>, <span class='kw'>focus</span> <span class='kw'>=</span> <span class='st'>"MEX"</span>, <span class='kw'>locations</span> <span class='kw'>=</span> <span class='no'>Mex_travel_2009</span><span class='kw'>[[</span><span class='fl'>2</span>]])</div><div class='output co'>#&gt; <span class='warning'>Warning: Pruning duplicate entries in the flows.</span></div><div class='input'><span class='no'>ef</span></div><div class='output co'>#&gt; 
+#&gt; 15                  Uruguay                    NA</div><div class='input'><span class='fu'>data</span>(<span class='no'>YF_Brazil</span>)
+(<span class='no'>inflows</span>   <span class='kw'>&lt;-</span> <span class='no'>YF_Brazil</span>$<span class='no'>T_O</span>[<span class='st'>"Espirito Santo"</span>, , <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>])</div><div class='output co'>#&gt;                    Italy                    Spain                 Portugal 
+#&gt;                 1566.257                 1170.954                 1258.379 
+#&gt;                  Germany           United Kingdom United States of America 
+#&gt;                 1740.967                 1467.435                 4464.246 
+#&gt;                Argentina                    Chile                  Uruguay 
+#&gt;                16125.229                 2375.037                 2072.586 
+#&gt;                 Paraguay 
+#&gt;                 2340.148 </div><div class='input'>(<span class='no'>outflows</span>  <span class='kw'>&lt;-</span> <span class='no'>YF_Brazil</span>$<span class='no'>T_D</span>[<span class='st'>"Espirito Santo"</span>, , <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>])</div><div class='output co'>#&gt;                    Italy                    Spain                 Portugal 
+#&gt;                 2827.572                 3270.500                 3264.182 
+#&gt;                  Germany           United Kingdom United States of America 
+#&gt;                 1897.668                 1985.482                13597.386 
+#&gt;                Argentina                    Chile                  Uruguay 
+#&gt;                 5898.905                 2794.168                 2629.526 
+#&gt;                 Paraguay 
+#&gt;                 1164.344 </div><div class='input'>(<span class='no'>locations</span> <span class='kw'>&lt;-</span> <span class='fu'>subset</span>(<span class='no'>YF_Brazil</span>$<span class='no'>states</span>, <span class='no'>location_code</span> <span class='kw'>==</span> <span class='st'>"Espirito Santo"</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt;                 location_code location_population num_cases_time_window
+#&gt; Espirito Santo Espirito Santo             3973697                  2600
+#&gt;                first_date_cases last_date_cases
+#&gt; Espirito Santo       2017-01-04      2017-04-30</div><div class='input'><span class='no'>los</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>location_code</span>    <span class='kw'>=</span> <span class='fu'>names</span>(<span class='no'>YF_Brazil</span>$<span class='no'>length_of_stay</span>),
+                  <span class='kw'>length_of_stay</span>   <span class='kw'>=</span> <span class='no'>YF_Brazil</span>$<span class='no'>length_of_stay</span>,
+                  <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+                 )
+<span class='no'>locations</span> <span class='kw'>&lt;-</span> <span class='fu'>merge</span>(<span class='kw'>x</span>   <span class='kw'>=</span> <span class='no'>locations</span>,
+                   <span class='kw'>y</span>   <span class='kw'>=</span> <span class='no'>los</span>,
+                   <span class='kw'>by</span>  <span class='kw'>=</span> <span class='st'>"location_code"</span>,
+                   <span class='kw'>all</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>ef</span> <span class='kw'>&lt;-</span> <span class='fu'>make_epiflows</span>(<span class='kw'>inflow</span> <span class='kw'>=</span> <span class='no'>inflows</span>,
+                    <span class='kw'>outflow</span> <span class='kw'>=</span> <span class='no'>outflows</span>,
+                    <span class='kw'>focus</span> <span class='kw'>=</span> <span class='st'>"Espirito Santo"</span>,
+                    <span class='kw'>locations</span> <span class='kw'>=</span> <span class='no'>locations</span>,
+                    <span class='kw'>pop_size</span> <span class='kw'>=</span> <span class='st'>"location_population"</span>,
+                    <span class='kw'>duration_stay</span> <span class='kw'>=</span> <span class='st'>"length_of_stay"</span>,
+                    <span class='kw'>num_cases</span> <span class='kw'>=</span> <span class='st'>"num_cases_time_window"</span>,
+                    <span class='kw'>first_date</span> <span class='kw'>=</span> <span class='st'>"first_date_cases"</span>,
+                    <span class='kw'>last_date</span> <span class='kw'>=</span> <span class='st'>"last_date_cases"</span>
+                   )
+<span class='no'>ef</span></div><div class='output co'>#&gt; 
 #&gt; /// Epidemiological Flows //
 #&gt; 
 #&gt;   // class: epiflows, epicontacts
-#&gt;   // 41 locations; 81 flows; directed
-#&gt;   // no variables set; use set_vars() to define variables in your locations metadata
+#&gt;   // 11 locations; 20 flows; directed
+#&gt;   // optional variables: pop_size, duration_stay, num_cases, first_date, last_date 
 #&gt; 
 #&gt;   // locations
 #&gt; 
-#&gt; # A tibble: 41 x 3
-#&gt;    id    country     population
-#&gt;  * &lt;chr&gt; &lt;fct&gt;            &lt;int&gt;
-#&gt;  1 ARG   Argentina     40913584
-#&gt;  2 BEL   Belgium       10414336
-#&gt;  3 BHS   Bahamas         309156
-#&gt;  4 BLZ   Belize          307899
-#&gt;  5 BOL   Bolivia        9775246
-#&gt;  6 BRA   Brazil       198739269
-#&gt;  7 BRB   Barbados        284589
-#&gt;  8 CAN   Canada        33487208
-#&gt;  9 CHE   Switzerland    7604467
-#&gt; 10 CHL   Chile         16601707
-#&gt; # ... with 31 more rows
+#&gt; # A tibble: 11 x 6
+#&gt;    id    location_popula… num_cases_time_… first_date_cases last_date_cases
+#&gt;  * &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt;            &lt;fct&gt;          
+#&gt;  1 Espi…          3973697             2600 2017-01-04       2017-04-30     
+#&gt;  2 Italy               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt;  3 Spain               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt;  4 Port…               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt;  5 Germ…               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt;  6 Unit…               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt;  7 Unit…               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt;  8 Arge…               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt;  9 Chile               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt; 10 Urug…               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt; 11 Para…               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt; # ... with 1 more variable: length_of_stay &lt;dbl&gt;
 #&gt; 
 #&gt;   // flows
 #&gt; 
-#&gt; # A tibble: 81 x 3
-#&gt;    from  to          n
-#&gt;  * &lt;chr&gt; &lt;chr&gt;   &lt;int&gt;
-#&gt;  1 MEX   ARG     76867
-#&gt;  2 MEX   BEL      8894
-#&gt;  3 MEX   BHS      1115
-#&gt;  4 MEX   BLZ      1603
-#&gt;  5 MEX   BOL     51700
-#&gt;  6 MEX   BRA     80562
-#&gt;  7 MEX   BRB       634
-#&gt;  8 MEX   CAN   1181693
-#&gt;  9 MEX   CHE         0
-#&gt; 10 MEX   CHL     83277
-#&gt; # ... with 71 more rows
+#&gt; # A tibble: 20 x 3
+#&gt;    from                     to                            n
+#&gt;    &lt;chr&gt;                    &lt;chr&gt;                     &lt;dbl&gt;
+#&gt;  1 Espirito Santo           Italy                     2828.
+#&gt;  2 Espirito Santo           Spain                     3270.
+#&gt;  3 Espirito Santo           Portugal                  3264.
+#&gt;  4 Espirito Santo           Germany                   1898.
+#&gt;  5 Espirito Santo           United Kingdom            1985.
+#&gt;  6 Espirito Santo           United States of America 13597.
+#&gt;  7 Espirito Santo           Argentina                 5899.
+#&gt;  8 Espirito Santo           Chile                     2794.
+#&gt;  9 Espirito Santo           Uruguay                   2630.
+#&gt; 10 Espirito Santo           Paraguay                  1164.
+#&gt; 11 Italy                    Espirito Santo            1566.
+#&gt; 12 Spain                    Espirito Santo            1171.
+#&gt; 13 Portugal                 Espirito Santo            1258.
+#&gt; 14 Germany                  Espirito Santo            1741.
+#&gt; 15 United Kingdom           Espirito Santo            1467.
+#&gt; 16 United States of America Espirito Santo            4464.
+#&gt; 17 Argentina                Espirito Santo           16125.
+#&gt; 18 Chile                    Espirito Santo            2375.
+#&gt; 19 Uruguay                  Espirito Santo            2073.
+#&gt; 20 Paraguay                 Espirito Santo            2340.
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

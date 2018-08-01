@@ -203,12 +203,54 @@ Defaults to `NULL`, indicating all locations.</p></td>
 #&gt; 12                    Spain  -3.749220  40.46367
 #&gt; 13           United Kingdom  -3.435973  55.37805
 #&gt; 14 United States of America -95.712891  37.09024
-#&gt; 15                  Uruguay -55.765835 -32.52278</div><div class='input'><span class='fu'>get_coordinates</span>(<span class='no'>ef</span>, <span class='kw'>location</span> <span class='kw'>=</span> <span class='st'>"Espirito Santo"</span>) <span class='co'># coordinates for MEX</span></div><div class='output co'>#&gt; [1] -40.30886 -19.18342</div><span class='co'># NOT RUN {</span>
-  <span class='co'># You can use google maps' geocode functionality if you have a decent </span>
+#&gt; 15                  Uruguay -55.765835 -32.52278</div><div class='input'><span class='fu'>get_coordinates</span>(<span class='no'>ef</span>, <span class='kw'>location</span> <span class='kw'>=</span> <span class='st'>"Espirito Santo"</span>) <span class='co'># coordinates for Espirito Santo</span></div><div class='output co'>#&gt; [1] -40.30886 -19.18342</div><div class='input'>  <span class='co'># You can use google maps' geocode functionality if you have a decent </span>
   <span class='co'># internet connection</span>
-  <span class='no'>ef2</span> <span class='kw'>&lt;-</span> <span class='fu'>add_coordinates</span>(<span class='no'>Brazil_epiflows</span>, <span class='kw'>loc_column</span> <span class='kw'>=</span> <span class='st'>"id"</span>)
-  <span class='no'>ef2</span>
-<span class='co'># }</span><div class='input'>
+  <span class='no'>ef2</span> <span class='kw'>&lt;-</span> <span class='fu'>add_coordinates</span>(<span class='no'>Brazil_epiflows</span>, <span class='kw'>loc_column</span> <span class='kw'>=</span> <span class='st'>"id"</span>)</div><div class='output co'>#&gt; <span class='message'>Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=Espirito%20Santo&amp;sensor=false</span></div><div class='output co'>#&gt; <span class='warning'>Warning: geocode failed with status OVER_QUERY_LIMIT, location = "Espirito Santo"</span></div><div class='output co'>#&gt; <span class='message'>Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=Minas%20Gerais&amp;sensor=false</span></div><div class='output co'>#&gt; <span class='message'>Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=Rio%20de%20Janeiro&amp;sensor=false</span></div><div class='output co'>#&gt; <span class='message'>Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=Sao%20Paulo&amp;sensor=false</span></div><div class='output co'>#&gt; <span class='message'>Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=Southeast%20Brazil&amp;sensor=false</span></div><div class='output co'>#&gt; <span class='warning'>Warning: geocode failed with status OVER_QUERY_LIMIT, location = "Southeast Brazil"</span></div><div class='output co'>#&gt; <span class='message'>Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=Argentina&amp;sensor=false</span></div><div class='output co'>#&gt; <span class='message'>Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=Chile&amp;sensor=false</span></div><div class='output co'>#&gt; <span class='warning'>Warning: geocode failed with status OVER_QUERY_LIMIT, location = "Chile"</span></div><div class='output co'>#&gt; <span class='message'>Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=Germany&amp;sensor=false</span></div><div class='output co'>#&gt; <span class='warning'>Warning: geocode failed with status OVER_QUERY_LIMIT, location = "Germany"</span></div><div class='output co'>#&gt; <span class='message'>Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=Italy&amp;sensor=false</span></div><div class='output co'>#&gt; <span class='message'>Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=Paraguay&amp;sensor=false</span></div><div class='output co'>#&gt; <span class='message'>.</span></div><div class='output co'>#&gt; <span class='message'>Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=Portugal&amp;sensor=false</span></div><div class='output co'>#&gt; <span class='message'>.</span></div><div class='output co'>#&gt; <span class='message'>Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=Spain&amp;sensor=false</span></div><div class='output co'>#&gt; <span class='message'>.</span></div><div class='output co'>#&gt; <span class='message'>Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=United%20Kingdom&amp;sensor=false</span></div><div class='output co'>#&gt; <span class='message'>.</span></div><div class='output co'>#&gt; <span class='message'>Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=United%20States%20of%20America&amp;sensor=false</span></div><div class='output co'>#&gt; <span class='message'>.</span></div><div class='output co'>#&gt; <span class='message'>Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=Uruguay&amp;sensor=false</span></div><div class='input'>  <span class='no'>ef2</span></div><div class='output co'>#&gt; 
+#&gt; /// Epidemiological Flows //
+#&gt; 
+#&gt;   // class: epiflows, epicontacts
+#&gt;   // 15 locations; 100 flows; directed
+#&gt;   // optional variables: pop_size, duration_stay, num_cases, first_date, last_date, coordinates 
+#&gt; 
+#&gt;   // locations
+#&gt; 
+#&gt; # A tibble: 15 x 8
+#&gt;    id    location_popula… num_cases_time_… first_date_cases last_date_cases
+#&gt;  * &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt;            &lt;fct&gt;          
+#&gt;  1 Espi…          3973697             2600 2017-01-04       2017-04-30     
+#&gt;  2 Mina…         20997560             4870 2016-12-19       2017-04-20     
+#&gt;  3 Rio …         16635996              170 2017-02-19       2017-05-10     
+#&gt;  4 Sao …         44749699              200 2016-12-17       2017-04-20     
+#&gt;  5 Sout…         86356952             7840 2016-12-17       2017-05-10     
+#&gt;  6 Arge…               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt;  7 Chile               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt;  8 Germ…               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt;  9 Italy               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt; 10 Para…               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt; 11 Port…               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt; 12 Spain               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt; 13 Unit…               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt; 14 Unit…               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt; 15 Urug…               NA               NA &lt;NA&gt;             &lt;NA&gt;           
+#&gt; # ... with 3 more variables: length_of_stay &lt;dbl&gt;, lon &lt;dbl&gt;, lat &lt;dbl&gt;
+#&gt; 
+#&gt;   // flows
+#&gt; 
+#&gt; # A tibble: 100 x 3
+#&gt;    from             to         n
+#&gt;    &lt;chr&gt;            &lt;chr&gt;  &lt;dbl&gt;
+#&gt;  1 Espirito Santo   Italy  2828.
+#&gt;  2 Minas Gerais     Italy 15714.
+#&gt;  3 Rio de Janeiro   Italy  8164.
+#&gt;  4 Sao Paulo        Italy 34039.
+#&gt;  5 Southeast Brazil Italy 76282.
+#&gt;  6 Espirito Santo   Spain  3270.
+#&gt;  7 Minas Gerais     Spain 18176.
+#&gt;  8 Rio de Janeiro   Spain  9443.
+#&gt;  9 Sao Paulo        Spain 39371.
+#&gt; 10 Southeast Brazil Spain 88231.
+#&gt; # ... with 90 more rows
+#&gt; </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -243,10 +243,14 @@ the ongoing outbreak in Brazil, December 2016 to May 2017. Euro Surveill.
 <span class='fu'>colnames</span>(<span class='no'>flows</span>) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='st'>"from"</span>, <span class='st'>"to"</span>, <span class='st'>"n"</span>)
 
 <span class='co'>## Create the locations data frame</span>
-<span class='no'>locations</span> <span class='kw'>&lt;-</span> <span class='no'>YF_Brazil</span>$<span class='no'>states</span>
-<span class='no'>los</span>       <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>location_code</span> <span class='kw'>=</span> <span class='fu'>names</span>(<span class='no'>YF_Brazil</span>$<span class='no'>length_of_stay</span>),
-                        <span class='kw'>length_of_stay</span> <span class='kw'>=</span> <span class='no'>YF_Brazil</span>$<span class='no'>length_of_stay</span>)
-<span class='no'>locations</span> <span class='kw'>&lt;-</span> <span class='fu'>merge</span>(<span class='no'>locations</span>, <span class='no'>los</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='st'>"location_code"</span>, <span class='kw'>all</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>los</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>location_code</span>    <span class='kw'>=</span> <span class='fu'>names</span>(<span class='no'>YF_Brazil</span>$<span class='no'>length_of_stay</span>),
+                  <span class='kw'>length_of_stay</span>   <span class='kw'>=</span> <span class='no'>YF_Brazil</span>$<span class='no'>length_of_stay</span>,
+                  <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+                 )
+<span class='no'>locations</span> <span class='kw'>&lt;-</span> <span class='fu'>merge</span>(<span class='kw'>x</span>   <span class='kw'>=</span> <span class='no'>YF_Brazil</span>$<span class='no'>states</span>,
+                   <span class='kw'>y</span>   <span class='kw'>=</span> <span class='no'>los</span>,
+                   <span class='kw'>by</span>  <span class='kw'>=</span> <span class='st'>"location_code"</span>,
+                   <span class='kw'>all</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'>## Use both to create the epiflows object.</span>
 <span class='no'>ef</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='make_epiflows.html'>make_epiflows</a></span>(<span class='no'>flows</span>,
