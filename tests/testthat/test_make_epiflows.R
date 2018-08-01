@@ -2,45 +2,67 @@ context("Test make_epiflows() constructor")
 data("YF_locations")
 data("YF_flows")
 data("Brazil_epiflows")
-data("Mex_travel_2009")
-flows   <- Mex_travel_2009[[1]]
-outflow <- setNames(flows[["MEX"]], rownames(flows))
-inflow  <- unlist(flows["MEX", , drop = TRUE])
+
+data("YF_Brazil")
+inflow <- YF_Brazil$T_O["Espirito Santo", , drop = TRUE]
+outflow <- YF_Brazil$T_D["Espirito Santo", , drop = TRUE]
+locations <- subset(YF_Brazil$states, location_code == "Espirito Santo", drop = FALSE)
+los <- data.frame(location_code    = names(YF_Brazil$length_of_stay), 
+	          length_of_stay   = YF_Brazil$length_of_stay,
+	          stringsAsFactors = FALSE
+	         )
+locations <- merge(x   = locations, 
+		   y   = los, 
+		   by  = "location_code", 
+		   all = TRUE)
+
 
 test_that("make_epiflows() creates correct object", {
-  expect_warning(ef <- make_epiflows(inflow, outflow, focus = "MEX", locations = Mex_travel_2009[[2]]),
-                 "Pruning")
+  ef <- make_epiflows(inflow, outflow, focus = "Espirito Santo", locations = locations)
+  set_vars(ef) <- list(pop_size = "location_population", 
+                       num_cases = "num_cases_time_window", 
+                       first_date = "first_date_cases", 
+                       last_date = "last_date_cases",
+                       duration_stay = "length_of_stay" 
+                      )
   # Test if a valid epiflows object has been created
   expect_s3_class(ef, "epiflows")
   expect_s3_class(ef, "epicontacts")
   expect_named(ef, c("linelist", "contacts", "directed", "vars"))
   # Test location data format
   expect_named(get_flows(ef), c("from", "to", "n"))
-  expect_named(get_locations(ef), c("id", "country", "population"))
+  expect_named(get_locations(ef), c("id", unlist(get_vars(ef), use.names = FALSE)))
+})
+
+test_that("make_epiflows() will give a warning for duplicated entries", {
+  infl <- c(inflow, "Espirito Santo" = 69)
+  oufl <- c(outflow, "Espirito Santo" = 69)
+  oufl_err <- c(outflow, "Espirito Santo" = 6911)
+  expect_warning(make_epiflows(infl, oufl, focus = "Espirito Santo", locations = locations), "Pruning")
+  expect_error(make_epiflows(infl, oufl_err, focus = "Espirito Santo", locations = locations), 
+               "Duplicated IDs found in the data with different flows. Please de-duplicate your data before proceeding.")
 })
 
 test_that("make_epiflows.integer will bork if vectors are not named", {
-  expect_error(make_epiflows(unname(inflow), outflow, focus = "MEX", locations = Mex_travel_2009[[2]]),
+  expect_error(make_epiflows(unname(inflow), outflow, focus = "Espirito Santo", locations = locations),
                "The vectors `inflow` and `outflow` must be named to create an epiflows object.")
 })
 
 test_that("make_epiflows.integer will bork if focus is not correct", {
-  expect_error(make_epiflows(inflow, outflow, focus = 1, locations = Mex_travel_2009[[2]]),
+  expect_error(make_epiflows(inflow, outflow, focus = 1, locations = locations),
                "The argument `focus` must be a single character string.")
-  expect_error(make_epiflows(inflow, outflow, focus = c("TEX", "MEX"), locations = Mex_travel_2009[[2]]),
+  expect_error(make_epiflows(inflow, outflow, focus = c("TEX", "Espirito Santo"), locations = locations),
                "The argument `focus` must be a single character string.")
-  expect_error(make_epiflows(inflow, outflow, focus = "MIX", locations = Mex_travel_2009[[2]]),
-               "`focus` must be present in both the `inflow` and `to` vectors.")
 })
 
 
 
 test_that("make_epiflows() throws an error for incorrect input", {
   # make_epiflows() shouldn't accept incomplete input
-  expect_error(make_epiflows(Mex_travel_2009[[1]], NULL))
-  expect_error(make_epiflows(NULL, Mex_travel_2009[[2]]))
+  expect_message(make_epiflows(locations, NULL), "Locations data frame not provided. Creating one from the flow data.")
+  expect_error(make_epiflows(NULL, locations))
   # It should fail when user provides arguments in the wrong order
-  expect_error(make_epiflows(Mex_travel_2009[[2]], Mex_travel_2009[[1]]))
+  expect_error(make_epiflows(YF_locations, YF_flows))
 })
 
 test_that("make_epiflows.data.frame() works as expected", {
