@@ -1,15 +1,3 @@
-#' Travel data to and from Mexico in 2009
-#'
-#' Travel data to and from Mexico in 2009
-#'
-#' @format A list of 2 elements
-#' \describe{
-#'   \item{1}{An unsymmetrical matrix (data frame object) of numbers of flows
-#'    between locations. Rows denote locations of origin, columns destinations.}
-#'   \item{2}{Country metadata (data frame object): code, name and population.}
-#' }
-"Mex_travel_2009"
-
 #' Yellow Fever Data from Brazil; 2016-12 to 2017-05
 #' 
 #' This data set contains flows to and from five states in Brazil formatted in
@@ -71,10 +59,14 @@
 #' colnames(flows) <- c("from", "to", "n")
 #' 
 #' ## Create the locations data frame
-#' locations <- YF_Brazil$states
-#' los       <- data.frame(location_code = names(YF_Brazil$length_of_stay), 
-#'                         length_of_stay = YF_Brazil$length_of_stay)
-#' locations <- merge(locations, los, by = "location_code", all = TRUE)
+#' los <- data.frame(location_code    = names(YF_Brazil$length_of_stay), 
+#'                   length_of_stay   = YF_Brazil$length_of_stay,
+#'                   stringsAsFactors = FALSE
+#'                  )
+#' locations <- merge(x   = YF_Brazil$states, 
+#'                    y   = los, 
+#'                    by  = "location_code", 
+#'                    all = TRUE)
 #' 
 #' ## Use both to create the epiflows object.
 #' ef <- make_epiflows(flows, 
