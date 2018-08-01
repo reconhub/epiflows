@@ -37,7 +37,10 @@ test_that("make_epiflows() creates correct object", {
 test_that("make_epiflows() will give a warning for duplicated entries", {
   infl <- c(inflow, "Espirito Santo" = 69)
   oufl <- c(outflow, "Espirito Santo" = 69)
+  oufl_err <- c(outflow, "Espirito Santo" = 6911)
   expect_warning(make_epiflows(infl, oufl, focus = "Espirito Santo", locations = locations), "Pruning")
+  expect_error(make_epiflows(infl, oufl_err, focus = "Espirito Santo", locations = locations), 
+               "Duplicated IDs found in the data with different flows. Please de-duplicate your data before proceeding.")
 })
 
 test_that("make_epiflows.integer will bork if vectors are not named", {
