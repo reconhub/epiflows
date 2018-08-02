@@ -139,7 +139,7 @@ ggplot(res, aes(x = mean_cases, y = location)) +
   geom_point(size = 2) +
   geom_errorbarh(aes(xmin = lower_limit_95CI, xmax = upper_limit_95CI), height = .25) +
   theme_bw(base_size = 12, base_family = "Helvetica") +
-  ggtitle("Risk of yellow fever spread from Espirito Santo, Brazil") +
+  ggtitle("Yellow Fever Spread from Espirito Santo, Brazil") +
   xlab("Number of cases") +
   xlim(c(0, NA))
 

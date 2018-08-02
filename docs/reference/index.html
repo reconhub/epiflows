@@ -84,7 +84,7 @@
       <a href="../articles/epiflows-class.html">01 Data Preparation</a>
     </li>
     <li>
-      <a href="../articles/introduction.html">epiflows: package overview</a>
+      <a href="../articles/introduction.html">00 epiflows: package overview</a>
     </li>
   </ul>
 </li>
@@ -126,42 +126,72 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
+          <h2 id="section-package-description" class="hasAnchor"><a href="#section-package-description" class="anchor"></a>Package Description</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
       <tr>
         
         <td>
-          <p><code><a href="YF_Brazil.html">Brazil_epiflows</a></code> <code><a href="YF_Brazil.html">YF_coordinates</a></code> <code><a href="YF_Brazil.html">YF_locations</a></code> <code><a href="YF_Brazil.html">YF_flows</a></code> <code><a href="YF_Brazil.html">YF_Brazil</a></code> </p>
-        </td>
-        <td><p>Yellow Fever Data from Brazil; 2016-12 to 2017-05</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="add_coordinates.html">add_coordinates()</a></code> <code><a href="add_coordinates.html">get_coordinates()</a></code> </p>
-        </td>
-        <td><p>Add/Retrieve location coordinates</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="as.SpatialLinesDataFrame.html">as.SpatialLinesDataFrame()</a></code> </p>
-        </td>
-        <td><p>Convert to SpatialLinesDataFrame class</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="epiflows.html">epiflows</a></code> </p>
         </td>
         <td><p>epiflows</p></td>
-      </tr><tr>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-statistical-procedures" class="hasAnchor"><a href="#section-statistical-procedures" class="anchor"></a>Statistical procedures</h2>
+          <p class="section-desc"><p>Estimate travel-related disease spread</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="estimate_risk_spread.html">estimate_risk_spread()</a></code> </p>
         </td>
         <td><p>Travel-related disease cases spreaded to other locations from an infectious
 location</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-epiflows-class" class="hasAnchor"><a href="#section-epiflows-class" class="anchor"></a>Epiflows class</h2>
+          <p class="section-desc"><p>Constructors and options for the epiflows data class</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="make_epiflows.html">make_epiflows()</a></code> </p>
+        </td>
+        <td><p>Create an epiflows object</p></td>
       </tr><tr>
+        
+        <td>
+          <p><code><a href="global_vars.html">global_vars()</a></code> </p>
+        </td>
+        <td><p>Epiflow Global Variables</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="get_vars.html">get_vars()</a></code> <code><a href="get_vars.html">set_vars()</a></code> <code><a href="get_vars.html">`set_vars<-`()</a></code> </p>
+        </td>
+        <td><p>Access location metadata</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_coordinates.html">add_coordinates()</a></code> <code><a href="add_coordinates.html">get_coordinates()</a></code> </p>
+        </td>
+        <td><p>Add/Retrieve location coordinates</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-accessors-converters" class="hasAnchor"><a href="#section-accessors-converters" class="anchor"></a>Accessors/Converters</h2>
+          <p class="section-desc"><p>Accessors for elements within the epiflows data class</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="get_flows.html">get_flows()</a></code> </p>
@@ -194,45 +224,9 @@ location</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="get_vars.html">get_vars()</a></code> <code><a href="get_vars.html">set_vars()</a></code> <code><a href="get_vars.html">`set_vars<-`()</a></code> </p>
+          <p><code><a href="as.SpatialLinesDataFrame.html">as.SpatialLinesDataFrame()</a></code> </p>
         </td>
-        <td><p>Access location metadata</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="global_vars.html">global_vars()</a></code> </p>
-        </td>
-        <td><p>Epiflow Global Variables</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="grid_epiflows.html">grid_epiflows()</a></code> </p>
-        </td>
-        <td><p>Visualise epidemic flows using a grid</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="make_epiflows.html">make_epiflows()</a></code> </p>
-        </td>
-        <td><p>Create an epiflows object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="map_epiflows.html">map_epiflows()</a></code> </p>
-        </td>
-        <td><p>Map flows of people between locations</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot.epiflows.html">plot(<i>&lt;epiflows&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Various plots for epiflows objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="print.epiflows.html">print(<i>&lt;epiflows&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Print method from epiflows objects</p></td>
+        <td><p>Convert to SpatialLinesDataFrame class</p></td>
       </tr><tr>
         
         <td>
@@ -242,9 +236,55 @@ location</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="print.epiflows.html">print(<i>&lt;epiflows&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Print method from epiflows objects</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-visualization" class="hasAnchor"><a href="#section-visualization" class="anchor"></a>Visualization</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="plot.epiflows.html">plot(<i>&lt;epiflows&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Various plots for epiflows objects</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="grid_epiflows.html">grid_epiflows()</a></code> </p>
+        </td>
+        <td><p>Visualise epidemic flows using a grid</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="map_epiflows.html">map_epiflows()</a></code> </p>
+        </td>
+        <td><p>Map flows of people between locations</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="vis_epiflows.html">vis_epiflows()</a></code> </p>
         </td>
         <td><p>Visualise epidemic flows using visNetwork</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-sets" class="hasAnchor"><a href="#section-data-sets" class="anchor"></a>Data Sets</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="YF_Brazil.html">Brazil_epiflows</a></code> <code><a href="YF_Brazil.html">YF_coordinates</a></code> <code><a href="YF_Brazil.html">YF_locations</a></code> <code><a href="YF_Brazil.html">YF_flows</a></code> <code><a href="YF_Brazil.html">YF_Brazil</a></code> </p>
+        </td>
+        <td><p>Yellow Fever Data from Brazil; 2016-12 to 2017-05</p></td>
       </tr>
     </tbody>
     </table>
@@ -253,7 +293,12 @@ location</p></td>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#section-package-description">Package Description</a></li>
+      <li><a href="#section-statistical-procedures">Statistical procedures</a></li>
+      <li><a href="#section-epiflows-class">Epiflows class</a></li>
+      <li><a href="#section-accessors-converters">Accessors/Converters</a></li>
+      <li><a href="#section-visualization">Visualization</a></li>
+      <li><a href="#section-data-sets">Data Sets</a></li>
     </ul>
   </div>
 </div>

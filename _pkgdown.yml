@@ -1,0 +1,70 @@
+navbar:
+  structure:
+    left:
+    - home
+    - intro
+    - reference
+    - articles
+    - tutorials
+    - news
+    right: github
+  components:
+    home:
+      icon: fa-home fa-lg
+      href: index.html
+    reference:
+      text: Reference
+      href: reference/index.html
+    articles:
+      text: Articles
+      menu:
+      - text: '00 epiflows: package overview'
+        href: articles/introduction.html
+      - text: 01 Data Preparation
+        href: articles/epiflows-class.html
+    news:
+      text: Changelog
+      href: news/index.html
+    github:
+      icon: fa-github fa-lg
+      href: https://github.com/reconhub/epiflows
+
+reference:
+- title: Package Description 
+  desc: ~
+  contents:
+  - '`epiflows`'
+- title: Statistical procedures
+  desc: "Estimate travel-related disease spread"
+  contents:
+  - '`estimate_risk_spread`'
+- title: Epiflows class
+  desc: "Constructors and options for the epiflows data class"
+  contents:
+  - '`make_epiflows`'
+  - '`global_vars`'
+  - '`set_vars`'
+  - '`add_coordinates`'
+- title: Accessors/Converters
+  desc: "Accessors for elements within the epiflows data class"
+  contents:
+  - '`get_flows`'
+  - '`get_id`'
+  - '`get_locations`'
+  - '`get_n`'
+  - '`get_pop_size`'
+  - '`as.SpatialLinesDataFrame`'
+  - '`[.epiflows`'
+  - '`print.epiflows`'
+- title: Visualization
+  desc: ~
+  contents:
+  - '`plot.epiflows`'
+  - '`grid_epiflows`'
+  - '`map_epiflows`'
+  - '`vis_epiflows`'
+- title: Data Sets
+  desc: ~
+  contents:
+  - '`YF_Brazil`'
+
