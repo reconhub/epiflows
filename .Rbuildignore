@@ -8,6 +8,7 @@
 ^\.lintr$
 ^appveyor\.yml$
 ^codecov\.yml$
+^_pkgdown\.yml$
 ^cran-comments\.md$
 ^docs/
 
