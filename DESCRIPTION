@@ -1,12 +1,15 @@
 Package: epiflows
 Title: Predicting disease spread from flow data
 Version: 0.1.0.9000
-Authors@R: c(person("Pawel", "Piatkowski", email = "pawel.piatkowski@posteo.net", role = c("aut", "cre")),
-    person("Paula", "Moraga", email = "p.e.moraga-serrano@lancaster.ac.uk", role = "aut"),
-    person("Isobel", "Blake", email = "isobel.blake@imperial.ac.uk", role = "aut"),
+Authors@R: c(person("Pawel", "Piatkowski", email = "pawel.piatkowski@posteo.net", role = c("aut", "cre"),
+             comment = c(ORCID = "0000-0002-0822-5592")),
+    person("Paula", "Moraga", email = "p.e.moraga-serrano@lancaster.ac.uk", role = "aut",
+           comment = c(ORCID = "0000-0001-5266-0201")),
+    person("Isobel", "Blake", email = "isobel.blake@imperial.ac.uk", role = c("ctb", "dtc")),
     person("Thibaut", "Jombart", email = "thibautjombart@gmail.com", role = "aut"),
     person("VP", "Nagraj", email = "vpnagraj@virginia.edu", role = "aut"),
-    person("Zhian N.", "Kamvar", email = "zkamvar@gmail.com", role = "aut"),
+    person("Zhian N.", "Kamvar", email = "zkamvar@gmail.com", role = "aut",
+           comment = c(ORCID = "0000-0003-1458-7108")),
     person("Salla E.", "Toikkanen", email = "Salla.e.toikkanen@gmail.com", role = "aut"))
 Description: A collection of tools for the processing and visualisation of flow data.
 License: MIT + file LICENSE
@@ -35,6 +38,6 @@ Suggests:
     curl,
     rmarkdown
 RoxygenNote: 6.1.0
-URL: https://github.com/reconhub/epiflows
+URL: https://repidemicsconsortium.org/epiflows
 BugReports: https://github.com/reconhub/epiflows/issues
 VignetteBuilder: knitr
