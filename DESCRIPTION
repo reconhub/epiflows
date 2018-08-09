@@ -1,6 +1,6 @@
 Package: epiflows
 Title: Predicting disease spread from flow data
-Version: 0.1.0.9000
+Version: 0.2.0
 Authors@R: c(person("Pawel", "Piatkowski", email = "pawel.piatkowski@posteo.net", role = c("aut", "cre"),
              comment = c(ORCID = "0000-0002-0822-5592")),
     person("Paula", "Moraga", email = "p.e.moraga-serrano@lancaster.ac.uk", role = "aut",
