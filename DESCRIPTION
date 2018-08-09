@@ -38,6 +38,6 @@ Suggests:
     curl,
     rmarkdown
 RoxygenNote: 6.1.0
-URL: http://repidemicsconsortium.org/epiflows
+URL: https://www.repidemicsconsortium.org/epiflows
 BugReports: https://github.com/reconhub/epiflows/issues
 VignetteBuilder: knitr
