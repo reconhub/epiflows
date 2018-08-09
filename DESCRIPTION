@@ -1,5 +1,5 @@
 Package: epiflows
-Title: Predicting disease spread from flow data
+Title: Predicting Disease Spread From Flow Data
 Version: 0.2.0
 Authors@R: c(person("Pawel", "Piatkowski", email = "pawel.piatkowski@posteo.net", role = c("aut", "cre"),
              comment = c(ORCID = "0000-0002-0822-5592")),
@@ -38,6 +38,6 @@ Suggests:
     curl,
     rmarkdown
 RoxygenNote: 6.1.0
-URL: https://repidemicsconsortium.org/epiflows
+URL: http://repidemicsconsortium.org/epiflows
 BugReports: https://github.com/reconhub/epiflows/issues
 VignetteBuilder: knitr
