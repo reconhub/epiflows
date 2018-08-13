@@ -56,7 +56,7 @@ ef <- make_epiflows(flows         = YF_flows,
                    )
 ef
 
-\dontrun{
+\donttest{
 # You will receive an error if a variable is specified incorrectly
 YF_locations$random_variable <- runif(nrow(YF_locations))
 try({

@@ -134,6 +134,12 @@ res <- estimate_risk_spread(
 head(res)
 
 }
+\references{
+Dorigatti I, Hamlet A, Aguas R, Cattarino L, Cori A, Donnelly CA,
+Garske T, Imai N, Ferguson NM. International risk of yellow fever spread from
+the ongoing outbreak in Brazil, December 2016 to May 2017. Euro Surveill.
+2017;22(28):pii=30572. DOI: \href{http://dx.doi.org/10.2807/1560-7917.ES.2017.22.28.30572}{10.2807/1560-7917.ES.2017.22.28.30572}
+}
 \seealso{
 Construction of epiflows object: \code{\link[=make_epiflows]{make_epiflows()}}\cr
 Default variables used in the epiflows implementation: \code{\link[=global_vars]{global_vars()}}\cr

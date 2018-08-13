@@ -11,5 +11,6 @@
 ^_pkgdown\.yml$
 ^cran-comments\.md$
 ^docs/
-
+install.R
+runtime.txt
 ^CONDUCT\.md$
