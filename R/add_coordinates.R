@@ -25,7 +25,7 @@
 #' ef <- add_coordinates(Brazil_epiflows, YF_coordinates[-1])
 #' get_coordinates(ef)
 #' get_coordinates(ef, location = "Espirito Santo") # coordinates for Espirito Santo
-#' \dontrun{
+#' \donttest{
 #'   # You can use google maps' geocode functionality if you have a decent 
 #'   # internet connection
 #'   ef2 <- add_coordinates(Brazil_epiflows, loc_column = "id")
