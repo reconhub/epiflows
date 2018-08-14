@@ -113,9 +113,23 @@ You can use `plot()` to plot flows from an `epiflows` object on one of:
   - a [*visNetwork*](https://datastorm-open.github.io/visNetwork/) interactive graph (default if no coordinates; standalone function: `vis_epiflows()`)
   - a grid/bubble plot (standalone function: `grid_epiflows()`).
 
-```{r plotting}
+```{r vis_show, eval = FALSE}
 vis_epiflows(ef)
+```
+```{r vis_eval, echo = FALSE}
+v <- vis_epiflows(ef)
+v$elementId <- "introduction-epiflows-vis"
+v
+```
+```{r map_show, eval = FALSE}
 map_epiflows(ef)
+```
+```{r map_eval, echo = FALSE}
+m <- map_epiflows(ef)
+m$elementId <- "introduction-epiflows-map"
+m
+```
+```{r grid}
 grid_epiflows(ef)
 ```
 
