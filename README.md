@@ -37,6 +37,17 @@ if (!require("remotes")) install.packages("remotes", repos = "https://cloud.rstu
 remotes::install_github("reconhub/epiflows")
 ```
 
+## Citation
+
+A publication describing this package has been submitted to F1000
+research and can be cited as:
+
+> Moraga P, Dorigatti I, Kamvar ZN, Piatkowski P, Toikkanen SE, Nagraj
+> V, Donnelly CA, and Jombart T epiflows: an R package for risk
+> assessment of travel-related spread of disease \[version 1; referees:
+> awaiting peer review\]. F1000Research 2018, 7:1374
+> ([doi: 10.12688/f1000research.16032.1](https://doi.org/10.12688/f1000research.16032.1))
+
 # What does it do?
 
 The main features of the package include:
