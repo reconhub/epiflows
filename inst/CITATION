@@ -1,0 +1,28 @@
+citHeader("To cite package `epiflows` in publications use:")
+
+citEntry(
+  entry       = "Article",
+  title       = "epiflows: an R package for risk assessment of travel-related spread of disease",
+  author      = personList(
+    as.person("Paula Moraga"),
+    as.person("Ilaria Dorigatti"),
+    as.person("Zhian N. Kamvar"),
+    as.person("Pawel Piatkowski"),
+    as.person("Salla E. Toikkanen"),
+    as.person("VP Nagraj"),
+    as.person("Christl A. Donnelly"),
+    as.person("Thibaut Jombart")
+  ),
+  journal     = "F1000Research",
+  year        = "2018",
+  volume      = "7",
+  number      = "1374",
+  doi         = "10.12688/f1000research.16032.1",
+  
+  textVersion = paste(
+    "Moraga P, Dorigatti I, Kamvar ZN et al.",
+    "epiflows: an R package for risk assessment of travel-related spread of disease.",
+    "F1000Research 2018, 7:1374",
+    "(doi: 10.12688/f1000research.16032.1)"
+  )
+)
