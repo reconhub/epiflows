@@ -21,8 +21,8 @@ citEntry(
   
   textVersion = paste(
     "Moraga P, Dorigatti I, Kamvar ZN, Piatkowski P, Toikkanen SE, Nagraj V,", 
-    "Donnelly CA, and Jombart T epiflows: an R package for risk assessment of"
-    "travel-related spread of disease [version 1; referees: awaiting peer review]." 
+    "Donnelly CA, and Jombart T epiflows: an R package for risk assessment of",
+    "travel-related spread of disease [version 1; referees: awaiting peer review].",
     "F1000Research 2018, 7:1374 (doi: 10.12688/f1000research.16032.1)" 
   )
 )
