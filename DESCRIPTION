@@ -25,7 +25,6 @@ Depends:
 Imports:
     epicontacts,
     leaflet,
-    ggmap,
     geosphere,
     ggplot2,
     tibble,
@@ -41,7 +40,9 @@ Suggests:
     outbreaks,
     vdiffr,
     curl,
-    rmarkdown
+    rmarkdown,
+    nominatim,
+    ggmap
 RoxygenNote: 6.1.0
 URL: https://www.repidemicsconsortium.org/epiflows
 BugReports: https://github.com/reconhub/epiflows/issues

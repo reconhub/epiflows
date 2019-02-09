@@ -7,7 +7,7 @@
 \title{Add/Retrieve location coordinates}
 \usage{
 add_coordinates(x, coordinates = c("lon", "lat"), loc_column = "id",
-  overwrite = FALSE)
+  overwrite = FALSE, backend = "nominatim", ...)
 
 get_coordinates(x, ...)
 
@@ -25,11 +25,15 @@ and latitudes, respectively (default: "lon" and "lat") or a data frame with long
 \item{overwrite}{If TRUE, retrieves all geocodes, even those already
 retrieved. If FALSE (default), overwrites only NAs.}
 
-\item{...}{unused}
+\item{backend}{Geocoding backend. See \link{get_geocoding_function}.}
+
+\item{...}{Optional parameters passed to the geocoding function.}
 
 \item{location}{a character specifying a single location to return as a vector of
 coordinates. You cannot specify multiple locations with this parameter.
 Defaults to `NULL`, indicating all locations.}
+
+\item{...}{unused}
 }
 \value{
 An updated \code{epiflows} object.
