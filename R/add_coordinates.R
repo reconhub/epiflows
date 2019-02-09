@@ -11,6 +11,8 @@
 #' and latitudes, respectively (default: "lon" and "lat") or a data frame with longitude and latitude columns.
 #' @param overwrite If TRUE, retrieves all geocodes, even those already
 #' retrieved. If FALSE (default), overwrites only NAs.
+#' @param backend Geocoding backend. See \link{get_geocoding_function}.
+#' @param ... Optional parameters passed to the geocoding function.
 #' 
 #' @return An updated `epiflows` object.
 #' @md
@@ -40,11 +42,17 @@
 add_coordinates <- function(x,
                             coordinates = c("lon", "lat"),
                             loc_column = "id",
-                            overwrite = FALSE) {
+                            overwrite = FALSE,
+                            backend = "nominatim",
+                            ...) {
     
   if (!inherits(x, "epiflows")) {
     efprint <- as.character(deparse(substitute(x)))
     stop(sprintf("%s must be an object of class epiflows", efprint))
+  }
+  geocoding_fun <- get_geocoding_function(backend)
+  if (!is.function(geocoding_fun)) {
+    stop("Invalid geocoding function. Please specify a supported backend.")
   }
   if (!is.null(x$vars$coordinates) && !overwrite) {
     stop("coordinates are present in the object. Use `overwrite = TRUE` to replace them.")
@@ -81,12 +89,50 @@ add_coordinates <- function(x,
       # overwrite only rows with NA lon and lat
       which_rows <- !complete.cases(get_coordinates(x))
       if (any(which_rows)) {
-        x$linelist[which_rows, coordinates] <- ggmap::geocode(the_locations[which_rows])
+        x$linelist[which_rows, coordinates] <- geocoding_fun(the_locations[which_rows], ...)
       }
     } else {
       # Otherwise, get all geocodes and write them to lon/lat columns
-      x$linelist[, coordinates] <- ggmap::geocode(as.character(the_locations))
+      x$linelist[, coordinates] <- geocoding_fun(as.character(the_locations), ...)
     }
   }
   x
+}
+
+#' Get geocoding function
+#' 
+#' Retrieves a function used by \link{add_coordinates} to geocode coordinates
+#' for locations from an `epiflows` object.
+#' 
+#' @param backend Either a function, or a character string pointing to one of
+#' the supported geocoding backends. If `backend` is a function, it should
+#' accept a vector of character strings as input (optional parameters can also
+#' be passed from \code{add_coordinates()}) and return a data frame or a tibble.
+#' 
+#' @return A function object.
+get_geocoding_function <- function(backend) {
+  if (is.function(backend)) {
+    backend
+  } else {
+    switch(
+      backend,
+      "nominatim" = nominatim_backend_function,
+      "ggmap" = ggmap::geocode,
+      stop("Please specify a geocoding backend. Supported backends: nominatim, ggmap")
+    )
+  }
+}
+
+#' Nominatim geocoding backend
+#' 
+#' Wrapper for Nominatim geocoding function provided by `nominatim` package.
+#' See the documentation at https://github.com/hrbrmstr/nominatim for details.
+#' 
+#' @param query Geocoding query.
+#' @param ... Optional parameters.
+#' 
+#' @return A data frame with two columns: `lat` and `lon`.
+nominatim_backend_function <- function(query, ...) {
+  output <- nominatim::osm_geocode(query = query, ...)
+  output[c("lat", "lon")]
 }
