@@ -3,7 +3,6 @@
 \docType{package}
 \name{epiflows}
 \alias{epiflows}
-\alias{epiflows-package}
 \title{epiflows}
 \description{
 \code{epiflows} is a package for predicting and visualising spread of infectious

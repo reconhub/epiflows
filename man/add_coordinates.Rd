@@ -6,8 +6,12 @@
 \alias{get_coordinates.epiflows}
 \title{Add/Retrieve location coordinates}
 \usage{
-add_coordinates(x, coordinates = c("lon", "lat"), loc_column = "id",
-  overwrite = FALSE)
+add_coordinates(
+  x,
+  coordinates = c("lon", "lat"),
+  loc_column = "id",
+  overwrite = FALSE
+)
 
 get_coordinates(x, ...)
 
@@ -48,9 +52,11 @@ get_coordinates(Brazil_epiflows) # no coordinates yet
 ef <- add_coordinates(Brazil_epiflows, YF_coordinates[-1])
 get_coordinates(ef)
 get_coordinates(ef, location = "Espirito Santo") # coordinates for Espirito Santo
-\donttest{
+if (interactive()) {
   # You can use google maps' geocode functionality if you have a decent 
   # internet connection
+  # NOTE: you may need to authenticate with Google Maps API beforehand
+  # using ggmap::register_google()
   ef2 <- add_coordinates(Brazil_epiflows, loc_column = "id")
   ef2
 }

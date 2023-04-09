@@ -7,8 +7,7 @@
 \usage{
 get_flows(x, ...)
 
-\method{get_flows}{epiflows}(x, from = NULL, to = NULL, all = FALSE,
-  ...)
+\method{get_flows}{epiflows}(x, from = NULL, to = NULL, all = FALSE, ...)
 }
 \arguments{
 \item{x}{An `epiflows` object.}

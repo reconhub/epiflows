@@ -8,7 +8,9 @@
 \alias{YF_locations}
 \alias{YF_coordinates}
 \title{Yellow Fever Data from Brazil; 2016-12 to 2017-05}
-\format{An object of class \code{list} of length 4.}
+\format{
+An object of class \code{list} of length 4.
+}
 \usage{
 data("Brazil_epiflows")
   data("YF_coordinates")
@@ -22,20 +24,20 @@ a list with the following items:
 }
 \details{
 \itemize{
-\item \code{$states}: a data frame containing metadata for five Brazilian States:
+\item \verb{$states}: a data frame containing metadata for five Brazilian States:
 Espirito Santo, Minas Gerais, Rio de Janeiro, Sao Paulo, and Southeast
 Brazil
 \itemize{
-\item \code{$location_code} : names of the states
-\item \code{$location_population} : population size for each state
-\item \code{$num_cases_time_window} : number of cases recorded between 2016-12 and 2017-05
-\item \code{$first_date_cases} : date of first disease case in the given location in ISO 8601 format
-\item \code{$last_date_cases} : date of last disease case in the given location in ISO 8601 format
+\item \verb{$location_code} : names of the states
+\item \verb{$location_population} : population size for each state
+\item \verb{$num_cases_time_window} : number of cases recorded between 2016-12 and 2017-05
+\item \verb{$first_date_cases} : date of first disease case in the given location in ISO 8601 format
+\item \verb{$last_date_cases} : date of last disease case in the given location in ISO 8601 format
 }
-\item \code{$T_D} A matrix containing the number of travellers from the infectious
+\item \verb{$T_D} A matrix containing the number of travellers from the infectious
 location visiting other locations
-\item \code{$T_O} A matrix containing the number of travellers visiting the infectious location
-\item \code{$length_of_stay} A named vector containing the average length of stay in
+\item \verb{$T_O} A matrix containing the number of travellers visiting the infectious location
+\item \verb{$length_of_stay} A named vector containing the average length of stay in
 days of travellers from other locations visiting the infectious locations.
 }
 }
@@ -91,7 +93,7 @@ ef <- make_epiflows(flows,
 Dorigatti I, Hamlet A, Aguas R, Cattarino L, Cori A, Donnelly CA,
 Garske T, Imai N, Ferguson NM. International risk of yellow fever spread from
 the ongoing outbreak in Brazil, December 2016 to May 2017. Euro Surveill.
-2017;22(28):pii=30572. DOI: \href{http://dx.doi.org/10.2807/1560-7917.ES.2017.22.28.30572}{10.2807/1560-7917.ES.2017.22.28.30572}
+2017;22(28):pii=30572. DOI: \doi{10.2807/1560-7917.ES.2017.22.28.30572}
 }
 \seealso{
 \code{\link[=make_epiflows]{make_epiflows()}} for transformation to an epiflows object

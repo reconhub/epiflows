@@ -9,18 +9,35 @@ location}
 \usage{
 estimate_risk_spread(...)
 
-\method{estimate_risk_spread}{default}(location_code = character(0),
-  location_population = numeric(0), num_cases_time_window = numeric(0),
-  first_date_cases = character(0), last_date_cases = character(0),
+\method{estimate_risk_spread}{default}(
+  location_code = character(0),
+  location_population = numeric(0),
+  num_cases_time_window = numeric(0),
+  first_date_cases = character(0),
+  last_date_cases = character(0),
   num_travellers_to_other_locations = numeric(0),
   num_travellers_from_other_locations = numeric(0),
-  avg_length_stay_days = numeric(0), r_incubation = function(n) { },
-  r_infectious = function(n) { }, n_sim = 1000,
-  return_all_simulations = FALSE, ...)
+  avg_length_stay_days = numeric(0),
+  r_incubation = function(n) {
+ },
+  r_infectious = function(n) {
+ },
+  n_sim = 1000,
+  return_all_simulations = FALSE,
+  ...
+)
 
-\method{estimate_risk_spread}{epiflows}(x, location_code = character(0),
-  r_incubation = function(n) { }, r_infectious = function(n) { },
-  n_sim = 1000, return_all_simulations = FALSE, ...)
+\method{estimate_risk_spread}{epiflows}(
+  x,
+  location_code = character(0),
+  r_incubation = function(n) {
+ },
+  r_infectious = function(n) {
+ },
+  n_sim = 1000,
+  return_all_simulations = FALSE,
+  ...
+)
 }
 \arguments{
 \item{...}{Arguments passed onto the default method.}
@@ -59,24 +76,24 @@ generating 'n' random durations of infectious period}
 infectious distributions}
 
 \item{return_all_simulations}{logical value indicating whether the returned object is a data frame with all simulations
-(\code{return_all_simulations = TRUE}) or a data frame with the mean and lower and upper limits of a 95% confidence interval of
+(\code{return_all_simulations = TRUE}) or a data frame with the mean and lower and upper limits of a 95\% confidence interval of
 the number of cases spread to each location (\code{return_all_simulations = FALSE})}
 
 \item{x}{an epiflows object}
 }
 \value{
 if \code{return_all_simulations} is \code{TRUE}, data frame with all simulations. If \code{return_all_simulations} is \code{FALSE},
-data frame with the mean and lower and upper limits of a 95% confidence interval of the number
+data frame with the mean and lower and upper limits of a 95\% confidence interval of the number
 of cases spread to each location
 }
 \description{
-Calculates the mean and 95% confidence interval of the estimated number of
+Calculates the mean and 95\% confidence interval of the estimated number of
 disease cases that could potentially seed a disease outbreak in the locations
 they are travelling to, comprising exportations (infected residents of the infectious
 location travelling abroad during the incubation or infectious period), and
 importations (international tourists infected by the disease during
 their stay in the infectious location and returning to their home location).
-The mean and 95% confidence intervals are obtained by numerically sampling
+The mean and 95\% confidence intervals are obtained by numerically sampling
 \code{n_sim} times from the incubation and infectious period distributions.
 If parameter \code{return_all_simulations} is set to \code{TRUE}, the function returns all simulations
 for each location.
@@ -138,7 +155,7 @@ head(res)
 Dorigatti I, Hamlet A, Aguas R, Cattarino L, Cori A, Donnelly CA,
 Garske T, Imai N, Ferguson NM. International risk of yellow fever spread from
 the ongoing outbreak in Brazil, December 2016 to May 2017. Euro Surveill.
-2017;22(28):pii=30572. DOI: \href{http://dx.doi.org/10.2807/1560-7917.ES.2017.22.28.30572}{10.2807/1560-7917.ES.2017.22.28.30572}
+2017;22(28):pii=30572. DOI: \doi{10.2807/1560-7917.ES.2017.22.28.30572}
 }
 \seealso{
 Construction of epiflows object: \code{\link[=make_epiflows]{make_epiflows()}}\cr

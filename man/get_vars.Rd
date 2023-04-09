@@ -11,8 +11,7 @@
 \usage{
 get_vars(x, ...)
 
-\method{get_vars}{epiflows}(x, what = NULL, id = TRUE,
-  vector = FALSE, ...)
+\method{get_vars}{epiflows}(x, what = NULL, id = TRUE, vector = FALSE, ...)
 
 set_vars(x, ...)
 

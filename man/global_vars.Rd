@@ -21,7 +21,7 @@ The metadata in \strong{locations} such as population size, duration of stay in 
 given location, date of first and last cases, etc. can be useful in estimating
 the risk of spread, but not everyone will code their data with identical column
 names. To facilitate their use in the function \code{estimate_risk_spread()}, the
-epiflows object stores a dictionary of variables in a place called \code{$vars}.
+epiflows object stores a dictionary of variables in a place called \verb{$vars}.
 We can tell epiflows what variables are important when we create the object.
 }
 \details{
