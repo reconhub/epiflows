@@ -14,3 +14,4 @@
 install.R
 runtime.txt
 ^CONDUCT\.md$
+^drat\.sh$
