@@ -23,8 +23,8 @@ print.epiflows <- function(x, ...) {
     cat("\n  // no variables set; use set_vars() to define variables in your locations metadata\n")
   }
   cat("\n  // locations\n\n")
-  print(tibble::as_data_frame(x$linelist))
+  print(tibble::as_tibble(x$linelist))
   cat("\n  // flows\n\n")
-  print(tibble::as_data_frame(x$contacts))
+  print(tibble::as_tibble(x$contacts))
   cat("\n")
 }
