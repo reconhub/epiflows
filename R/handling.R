@@ -7,7 +7,7 @@
 #' @param j An integer, logical, or character vector to subset the flows data frame.
 #' @param k A character vector of one or more columns to be retained in the location data.
 #' @param l A character vector of one or more columns to be retained in the flows data frame. Note: if using numbers, the first column stands for the first column after "n".
-#' @param ... Additional parameters passed to \code{\link{[.epicontacts}}.
+#' @param ... Additional parameters passed to \code{\link[epicontacts:[.epicontacts]{epicontacts::[.epicontacts}}.
 #'
 #' @return An \code{epiflows} object.
 #' 

@@ -2,6 +2,7 @@
 % Please edit documentation in R/epiflows-package.r
 \docType{package}
 \name{epiflows}
+\alias{epiflows-package}
 \alias{epiflows}
 \title{epiflows}
 \description{
@@ -18,4 +19,31 @@ potential spread. Visualization is available for maps, networks, and grids.
 For details, see the vignettes: \cr
 \code{vignette("introduction", package = "epiflows")}\cr
 \code{vignette("epiflows-class", package = "epiflows")}
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://www.repidemicsconsortium.org/epiflows/}
+  \item \url{https://github.com/reconhub/epiflows}
+  \item Report bugs at \url{https://github.com/reconhub/epiflows/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Pawel Piatkowski \email{pawel.piatkowski@posteo.net} (\href{https://orcid.org/0000-0002-0822-5592}{ORCID})
+
+Authors:
+\itemize{
+  \item Paula Moraga \email{p.e.moraga-serrano@lancaster.ac.uk} (\href{https://orcid.org/0000-0001-5266-0201}{ORCID})
+  \item Thibaut Jombart \email{thibautjombart@gmail.com}
+  \item VP Nagraj \email{vpnagraj@virginia.edu}
+  \item Zhian N. Kamvar \email{zkamvar@gmail.com} (\href{https://orcid.org/0000-0003-1458-7108}{ORCID})
+  \item Salla E. Toikkanen \email{Salla.e.toikkanen@gmail.com}
+}
+
+Other contributors:
+\itemize{
+  \item Isobel Blake \email{isobel.blake@imperial.ac.uk} [contributor, data contributor]
+}
+
 }
