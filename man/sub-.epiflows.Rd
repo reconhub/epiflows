@@ -17,7 +17,7 @@
 
 \item{l}{A character vector of one or more columns to be retained in the flows data frame. Note: if using numbers, the first column stands for the first column after "n".}
 
-\item{...}{Additional parameters passed to \code{\link{[.epicontacts}}.}
+\item{...}{Additional parameters passed to \code{\link[epicontacts:[.epicontacts]{epicontacts::[.epicontacts}}.}
 }
 \value{
 An \code{epiflows} object.
