@@ -29,7 +29,7 @@
 #' @references Dorigatti I, Hamlet A, Aguas R, Cattarino L, Cori A, Donnelly CA,
 #' Garske T, Imai N, Ferguson NM. International risk of yellow fever spread from
 #' the ongoing outbreak in Brazil, December 2016 to May 2017. Euro Surveill.
-#' 2017;22(28):pii=30572. DOI: [10.2807/1560-7917.ES.2017.22.28.30572](http://dx.doi.org/10.2807/1560-7917.ES.2017.22.28.30572)
+#' 2017;22(28):pii=30572. DOI: \doi{10.2807/1560-7917.ES.2017.22.28.30572}
 #' @examples
 #' # This is an example of an epiflows object
 #' data("Brazil_epiflows")
