@@ -62,7 +62,7 @@ make_SpatialLinesDataFrame <- function(the_flows, the_coordinates) {
                                   n = 100L,
                                   breakAtDateLine = TRUE,
                                   addStartEnd = TRUE,
-                                  sp = TRUE
+                                  output = "sp"
   )
   # Third step: rename the lines because they get named generic numbers
   row.names(SL)        <- paste(from_coordinates$id, to_coordinates$id, sep = ":")
